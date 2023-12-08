@@ -1,6 +1,7 @@
 package com.desafioestagio.Projeto_Estagio.Services;
 
 import com.desafioestagio.Projeto_Estagio.Repositorys.MonitoradorRepositorys;
+import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class MonitoradorServices {
 
     public Monitorador findById(Long id){
         Optional<Monitorador>obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(()->new ResourceNotFoundException(id));
     }
 
     public Monitorador insert(Monitorador obj){
