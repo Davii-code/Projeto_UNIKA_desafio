@@ -1,9 +1,13 @@
 package com.desafioestagio.Projeto_Estagio.Resources.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.Instant;
 
 public class StandrError implements Serializable {
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",timezone = "GMT")
     private Instant timesTamp;
     private int status;
     private String message;

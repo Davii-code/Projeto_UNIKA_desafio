@@ -1,6 +1,7 @@
 package com.desafioestagio.Projeto_Estagio.Resources.exceptions;
 
 
+import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,14 @@ public class ResourceExeptionHandler {
     public ResponseEntity<StandrError>resourceNotFound(ResourceNotFoundException e, HttpServletRequest request){
         String error = "Resource not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandrError err = new StandrError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DataBaseExeception.class)
+    public ResponseEntity<StandrError>dataBaseExeception(DataBaseExeception e, HttpServletRequest request){
+        String error = "Error Data base";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandrError err = new StandrError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
