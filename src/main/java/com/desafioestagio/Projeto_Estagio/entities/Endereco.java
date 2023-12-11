@@ -22,9 +22,9 @@ public class Endereco {
     private String estado;
     private Boolean principal;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JsonIgnore
     @JoinColumn(name = "monitorador_id")
-
     private  Monitorador monitorador;
 
     public Endereco(){

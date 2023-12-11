@@ -3,8 +3,10 @@ package com.desafioestagio.Projeto_Estagio.Resources;
 
 
 import com.desafioestagio.Projeto_Estagio.Services.EnderecoServices;
+import com.desafioestagio.Projeto_Estagio.Services.MonitoradorServices;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ public class EnderecoResouserces {
 
     @Autowired
     private EnderecoServices services;
+    @Autowired
+    MonitoradorServices monitorador ;
+
 
     @GetMapping
     public ResponseEntity<List<Endereco>>findAll(){
@@ -33,11 +38,25 @@ public class EnderecoResouserces {
     }
 
     @PostMapping
-    public  ResponseEntity<Endereco>insert(@RequestBody Endereco obj){
-        obj = services.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public  ResponseEntity<Endereco>insert(@Valid @RequestBody Endereco obj){
+        Monitorador moni = monitorador.ultimo();
+        obj.setMonitorador(moni);
+        System.out.println(moni);
+        Endereco end = services.insert(obj);
+        return ResponseEntity.ok(end);
+    }
 
+    @DeleteMapping(value = "/{id}")
+    public  ResponseEntity<Void>delete(@PathVariable Long id){
+        services.delete(id);
+        return  ResponseEntity.noContent().build();
 
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Endereco>update(@PathVariable Long id, @RequestBody Endereco obj){
+        obj = services.update(id,obj);
+        return ResponseEntity.ok().body(obj);
+    }
+
 }

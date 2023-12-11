@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MonitoradorRepositorys extends JpaRepository<Monitorador,Long> {
 
+    Monitorador findTopByOrderByIdDesc();
 }

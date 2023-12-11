@@ -1,8 +1,12 @@
 package com.desafioestagio.Projeto_Estagio.entities;
 
+import com.desafioestagio.Projeto_Estagio.Validator.IRValidator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -16,11 +20,17 @@ public class Monitorador implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String cnpj;
-    private String cpf;
+    @CNPJ
+    private String cnpj = null;
+    @CPF
+    private String cpf = null;
+    @NotEmpty
     private String nome;
     private String email = null;
+
+    @IRValidator()
     private String Rg = null;
+    @IRValidator()
     private String inscricao_Estadual = null;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",timezone = "GMT")
     private Instant Data_nascimento = null;
@@ -28,7 +38,6 @@ public class Monitorador implements Serializable {
     private boolean Ativo = true;
 
     @OneToMany(mappedBy = "monitorador")
-    @JsonIgnore
     private List<Endereco> enderecos= new ArrayList<>();
 
     public Monitorador(){}
@@ -75,6 +84,7 @@ public class Monitorador implements Serializable {
     public String setTipoId(String TipoId){
         if (this.tipo.equals("Fisica")){
                 return this.cpf = TipoId;
+
         }
         return this.cnpj = TipoId;
     }

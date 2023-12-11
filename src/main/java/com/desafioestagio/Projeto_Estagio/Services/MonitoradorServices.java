@@ -40,6 +40,10 @@ public class MonitoradorServices {
         }
     }
 
+    public Monitorador ultimo(){
+        return repository.findTopByOrderByIdDesc();
+    }
+
     public Monitorador update(Long id, Monitorador obj){
         try {
             Monitorador entity = repository.getReferenceById(id);
