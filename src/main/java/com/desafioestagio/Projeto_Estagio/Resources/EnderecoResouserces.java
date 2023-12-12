@@ -10,9 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,6 +21,8 @@ public class EnderecoResouserces {
     private EnderecoServices services;
     @Autowired
     MonitoradorServices monitorador ;
+
+
 
 
     @GetMapping
@@ -37,19 +37,25 @@ public class EnderecoResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
+
     @PostMapping
     public  ResponseEntity<Endereco>insert(@Valid @RequestBody Endereco obj){
-        Monitorador moni = monitorador.ultimo();
-        obj.setMonitorador(moni);
-        System.out.println(moni);
-        Endereco end = services.insert(obj);
-        return ResponseEntity.ok(end);
+        if (!services.Validador(obj)) {
+            Monitorador moni = monitorador.ultimo();
+            obj.setMonitorador(moni);
+            Endereco end = services.insert(obj);
+            return ResponseEntity.ok(end);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping(value = "/{id}")
     public  ResponseEntity<Void>delete(@PathVariable Long id){
-        services.delete(id);
-        return  ResponseEntity.noContent().build();
+        if(services.ValidadorMonitorador(id)) {
+            services.delete(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
 
     }
 

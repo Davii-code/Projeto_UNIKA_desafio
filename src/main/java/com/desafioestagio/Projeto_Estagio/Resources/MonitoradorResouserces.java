@@ -21,7 +21,12 @@ public class MonitoradorResouserces {
     @Autowired
     private MonitoradorServices services;
 
+    @Autowired
     private EnderecoServices enderecoServices;
+
+
+
+
 
     @GetMapping
     public ResponseEntity<List<Monitorador>>findAll(){
@@ -38,13 +43,17 @@ public class MonitoradorResouserces {
 
     @PostMapping
     public  ResponseEntity<Monitorador>insert(@Valid @RequestBody Monitorador obj){
+        if (!services.ValidadorIgualID(obj)) {
             obj = services.insert(obj);
-         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+            return ResponseEntity.created(uri).body(obj);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping(value = "/{id}/enderecos")
     public ResponseEntity<Endereco> insertEnd(@PathVariable Long id, @RequestBody Endereco endereco){
+
         Monitorador monitorador = services.findById(id);
         endereco.setMonitorador(monitorador);
         Endereco end = enderecoServices.insert(endereco);
@@ -53,6 +62,7 @@ public class MonitoradorResouserces {
 
     @DeleteMapping(value = "/{id}")
     public  ResponseEntity<Void>delete(@PathVariable Long id){
+        enderecoServices.deleteListEnd(id);
         services.delete(id);
         return  ResponseEntity.noContent().build();
 

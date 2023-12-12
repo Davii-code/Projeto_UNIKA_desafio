@@ -48,6 +48,35 @@ public class EnderecoServices {
         }
     }
 
+    public void deleteListEnd(Long id ){
+     List<Long> id_End = enderecoRepositorys.deleteEnderecoByIdIn(id);
+        for (int i = 0; i < id_End.size(); i++) {
+            try {
+                enderecoRepositorys.deleteById(id_End.get(i));
+            }catch (EmptyResultDataAccessException e){
+                throw new ResourceNotFoundException(id);
+            } catch (DataIntegrityViolationException e){
+                throw new DataBaseExeception(e.getMessage());
+            }
+        }
+
+    }
+
+    public boolean ValidadorMonitorador(Long id) {
+        Long id_monitorador = enderecoRepositorys.VerificaMonitorador(id);
+        List<Long> id_End = enderecoRepositorys.ValidadorEstrangeiro(id_monitorador);
+        if (id_End.size()> 1 ){
+            return true;
+        }
+        return false;
+    }
+    public boolean Validador(Endereco obj){
+        if (enderecoRepositorys.existsByPrincipal(obj.getPrincipal()) && enderecoRepositorys.existsByCep(obj.getCep())){
+            return true;
+        }
+        return false;
+    }
+
     public Endereco update(Long id, Endereco obj){
         try {
             Endereco entity = enderecoRepositorys.getReferenceById(id);

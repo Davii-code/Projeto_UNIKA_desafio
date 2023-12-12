@@ -29,9 +29,9 @@ public class Monitorador implements Serializable {
     private String email = null;
 
     @IRValidator()
-    private String Rg = null;
+    private String rg = null;
     @IRValidator()
-    private String inscricao_Estadual = null;
+    private String inscricao = null;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'",timezone = "GMT")
     private Instant Data_nascimento = null;
     private String tipo;
@@ -50,11 +50,11 @@ public class Monitorador implements Serializable {
        if (tipo == "Fisica") {
            this.cpf = TipoId;
            this.Data_nascimento = data_nascimento;
-           this.Rg = TipoIR;
+           this.rg = TipoIR;
 
        }else {
            this.cnpj = TipoId;
-           this.inscricao_Estadual = TipoIR;
+           this.inscricao = TipoIR;
 
        }
         this.Ativo = ativo;
@@ -106,20 +106,20 @@ public class Monitorador implements Serializable {
     }
 
     public String getRg() {
-        return Rg;
+        return rg;
     }
 
 
-    public String getInscricao_Estadual() {
-        return inscricao_Estadual;
+    public String getinscricao() {
+        return inscricao;
     }
 
     public void setRg(String rg) {
-        Rg = rg;
+        rg = rg;
     }
 
     public void setInscricao_Estadual(String inscricao_Estadual) {
-        this.inscricao_Estadual = inscricao_Estadual;
+        this.inscricao = inscricao_Estadual;
     }
 
     public Instant getData_nascimento() {
@@ -175,8 +175,8 @@ public class Monitorador implements Serializable {
                 ", cpf='" + cpf + '\'' +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
-                ", Rg='" + Rg + '\'' +
-                ", inscricao_Estadual='" + inscricao_Estadual + '\'' +
+                ", Rg='" + rg + '\'' +
+                ", inscricao_Estadual='" + inscricao + '\'' +
                 ", Data_nascimento=" + Data_nascimento +
                 ", tipo='" + tipo + '\'' +
                 ", Ativo=" + Ativo +
