@@ -65,7 +65,15 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.20.6</version>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<plugins>

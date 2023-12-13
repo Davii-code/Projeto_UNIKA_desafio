@@ -3,15 +3,24 @@ package com.desafioestagio.Projeto_Estagio.Resources;
 
 import com.desafioestagio.Projeto_Estagio.Services.EnderecoServices;
 import com.desafioestagio.Projeto_Estagio.Services.MonitoradorServices;
+import com.desafioestagio.Projeto_Estagio.Services.Relatorios.RelatoriosServices;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.repo.Resource;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -24,8 +33,8 @@ public class MonitoradorResouserces {
     @Autowired
     private EnderecoServices enderecoServices;
 
-
-
+    @Autowired
+    private RelatoriosServices relatoriosServices;
 
 
     @GetMapping
@@ -72,6 +81,13 @@ public class MonitoradorResouserces {
     public ResponseEntity<Monitorador>update(@PathVariable Long id, @RequestBody Monitorador obj){
         obj = services.update(id,obj);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping( value = "/relatorio")
+    public ResponseEntity<Resource> downloadRelatorio() throws JRException, SQLException, IOException {
+        Resource file = relatoriosServices.exportReport();
+        return ResponseEntity.ok(file);
+
     }
 
 }
