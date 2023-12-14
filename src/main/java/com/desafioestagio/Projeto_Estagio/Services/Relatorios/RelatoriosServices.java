@@ -1,52 +1,63 @@
 package com.desafioestagio.Projeto_Estagio.Services.Relatorios;
 
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.repo.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.desafioestagio.Projeto_Estagio.Config.ConnectionGenerico;
+import net.sf.jasperreports.engine.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+
 
 
 @Service
 public class RelatoriosServices {
 
+    private static String Jasper_Diretorio = "classpath:jasper/";
+    private static String Jasper_PrefixoMoni = "Monitorador";
+
+    private static String Jasper_PrefixoEnd = "Endereco";
+    private static  String Jasper_Sufixo = ".jasper";
 
     @Autowired
-    private DataSource dataSource;
+    private Connection conn;
 
-    public Resource exportReport() {
-        try{
-            JasperPrint jasperPrint = JasperFillManager.fillReport("src/main/resources/Monitorador.jasper", null, dataSource.getConnection());
+    private Map<String, Object> params = new HashMap<>();
 
-            JRPdfExporter exporter = new JRPdfExporter();
-            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("MONITORADORES.pdf"));
-
-            exporter.exportReport();
-
-            //returning the file
-            String filePath = "src/main/resources";
-
-            Path file = Paths.get(filePath).resolve("MONITORADORES.pdf");
-            Resource resource = (Resource) new UrlResource(file.toUri());
-
-
+    public byte[] exportaPDFMonitorador(){
+        byte[] bytes = null;
+        try {
+            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoni).concat(Jasper_Sufixo));
+            JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
+            bytes = JasperExportManager.exportReportToPdf(print);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
         }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return null;
-
+        return bytes;
     }
+
+    public byte[] exportaPDFEndereco(){
+        byte[] bytes = null;
+        try {
+            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoEnd).concat(Jasper_Sufixo));
+            JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
+            bytes = JasperExportManager.exportReportToPdf(print);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+        return bytes;
+    }
+
+
 
 
 

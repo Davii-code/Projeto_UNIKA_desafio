@@ -6,21 +6,16 @@ import com.desafioestagio.Projeto_Estagio.Services.MonitoradorServices;
 import com.desafioestagio.Projeto_Estagio.Services.Relatorios.RelatoriosServices;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.repo.Resource;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -83,11 +78,14 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping( value = "/relatorio")
-    public ResponseEntity<Resource> downloadRelatorio() throws JRException, SQLException, IOException {
-        Resource file = relatoriosServices.exportReport();
-        return ResponseEntity.ok(file);
-
+    @GetMapping(value = "/relatorio/pdfs" )
+    public ResponseEntity<String> GerarPDFMonitorador( HttpServletResponse response){
+        byte [] bytes = relatoriosServices.exportaPDFMonitorador();
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        String base64Pdf = "data:application/pdf;base64," + Base64.encodeBase64String(bytes);
+        return ResponseEntity.ok(base64Pdf);
     }
+
+
 
 }
