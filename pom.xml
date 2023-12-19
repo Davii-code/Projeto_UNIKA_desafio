@@ -72,6 +72,14 @@
 			<version>6.20.6</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.wicket/wicket-core -->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<version>10.0.0-M2</version>
+		</dependency>
+
+
 
 	</dependencies>
 

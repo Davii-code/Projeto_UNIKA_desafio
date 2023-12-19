@@ -48,10 +48,7 @@ public class EnderecoResouserces {
     @PostMapping
     public  ResponseEntity<Endereco>insert(@Valid @RequestBody Endereco obj){
         if (!services.Validador(obj)) {
-            Monitorador moni = monitorador.ultimo();
-            obj.setMonitorador(moni);
-            Endereco end = services.insert(obj);
-            return ResponseEntity.ok(end);
+
         }
         return ResponseEntity.badRequest().build();
     }

@@ -1,45 +1,39 @@
-package com.desafioestagio.Projeto_Estagio.entities;
+package com.projetounika.entities;
 
-import com.desafioestagio.Projeto_Estagio.Validator.IRValidator;
+
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.htrace.shaded.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-@Entity
-@Table(name = "tb_monitorador")
+
 public class Monitorador implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    @CNPJ
+
     private String cnpj = null;
-    @CPF
+
     private String cpf = null;
-    @NotEmpty
+
     private String nome;
     private String email = null;
 
-    @IRValidator()
     private String rg = null;
-    @IRValidator()
     private String inscricao = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
 
+    @JsonIgnore
     private Instant Data_nascimento = null;
     private String tipo;
     private boolean Ativo = true;
 
-    @OneToMany(mappedBy = "monitorador")
-    private List<Endereco> enderecos= new ArrayList<>();
+    private final List<Endereco> enderecos= new ArrayList<>();
 
     public Monitorador(){}
 
@@ -48,16 +42,16 @@ public class Monitorador implements Serializable {
         this.tipo = tipo;
         this.nome = nome;
 
-       if (tipo == "Fisica") {
-           this.cpf = TipoId;
-           this.Data_nascimento = data_nascimento;
-           this.rg = TipoIR;
+        if (tipo == "Fisica") {
+            this.cpf = TipoId;
+            this.Data_nascimento = data_nascimento;
+            this.rg = TipoIR;
 
-       }else {
-           this.cnpj = TipoId;
-           this.inscricao = TipoIR;
+        }else {
+            this.cnpj = TipoId;
+            this.inscricao = TipoIR;
 
-       }
+        }
         this.Ativo = ativo;
         this.email = email;
     }
@@ -84,7 +78,7 @@ public class Monitorador implements Serializable {
 
     public String setTipoId(String TipoId){
         if (this.tipo.equals("Fisica")){
-                return this.cpf = TipoId;
+            return this.cpf = TipoId;
 
         }
         return this.cnpj = TipoId;
@@ -92,10 +86,6 @@ public class Monitorador implements Serializable {
 
     public String getNome() {
         return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getEmail() {
@@ -125,6 +115,9 @@ public class Monitorador implements Serializable {
 
     public Instant getData_nascimento() {
         return Data_nascimento;
+    }
+    public static Instant parseInstant(String dateString) {
+        return Instant.from(DateTimeFormatter.ISO_INSTANT.parse(dateString));
     }
 
     public Instant setTipoData(Instant TipoData){
