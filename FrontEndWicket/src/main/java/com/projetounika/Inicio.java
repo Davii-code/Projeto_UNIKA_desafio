@@ -12,15 +12,16 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import java.util.List;
 
 
-
 public class Inicio extends WebPage {
 
 
     public Inicio() {
         MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
 
+
         // Obtém a lista de monitoradores usando o HttpClient
         List<Monitorador> list = monitoradorHttpClient.listarTodos();
+
 
         // Cria um modelo para a lista usando CompoundPropertyModel
         final CompoundPropertyModel<List<Monitorador>> monitoradorListModel = new CompoundPropertyModel<>(list);
@@ -35,29 +36,15 @@ public class Inicio extends WebPage {
                 listItem.add(new Label("nome", monitorador.getNome()));
                 listItem.add(new Label("CNPJ", monitorador.getCnpj()));
                 listItem.add(new Label("CPF", monitorador.getCpf()));
-                listItem.add(new Label("ativo", monitorador.isAtivo() ? "Sim":"Não"));
+                listItem.add(new Label("ativo", monitorador.isAtivo() ? "Sim" : "Não"));
 
 
                 listItem.add(new Link<Void>("editarLink") {
                     @Override
                     public void onClick() {
-                        setResponsePage(Editar.class);
+                        setResponsePage(new DetalhesMonitorador(monitorador));
 
                     }
-
-
-
-//                    @Override
-//                    public void onClick() {
-//
-//                    }
-
-
-
-//                    @Override
-//                    public void onClick() {
-//                        setResponsePage(new Editar(monitorador,Inicio.this));
-//                    }
 
                 });
 
@@ -65,10 +52,6 @@ public class Inicio extends WebPage {
         };
 
         add(monitoradorListView);
-
-
-
-
 
 
     }

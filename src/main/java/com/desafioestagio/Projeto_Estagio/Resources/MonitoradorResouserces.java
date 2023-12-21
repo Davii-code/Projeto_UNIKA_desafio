@@ -45,6 +45,19 @@ public class MonitoradorResouserces {
     }
 
 
+    @GetMapping(value = "/{id}/enderecos")
+    public ResponseEntity<List<Endereco>> findByEnde(@PathVariable Long id) {
+        Monitorador monitorador = services.findById(id);
+
+        if (monitorador != null) {
+            List<Endereco> enderecos = monitorador.getEnderecos();
+            return ResponseEntity.ok().body(enderecos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     @PostMapping
     public  ResponseEntity<Monitorador>insert(@Valid @RequestBody Monitorador obj){
         if (!services.ValidadorIgualID(obj)) {
@@ -57,7 +70,6 @@ public class MonitoradorResouserces {
 
     @PostMapping(value = "/{id}/enderecos")
     public ResponseEntity<Endereco> insertEnd(@PathVariable Long id, @RequestBody Endereco endereco){
-
         Monitorador monitorador = services.findById(id);
         endereco.setMonitorador(monitorador);
         Endereco end = enderecoServices.insert(endereco);

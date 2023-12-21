@@ -1,9 +1,7 @@
 package com.projetounika.entities;
 
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Setter;
 import org.apache.htrace.shaded.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
@@ -16,6 +14,7 @@ import java.util.Objects;
 public class Monitorador implements Serializable {
 
 
+    @Setter
     private Long id;
 
     private String cnpj = null;
@@ -59,10 +58,6 @@ public class Monitorador implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCnpj() {

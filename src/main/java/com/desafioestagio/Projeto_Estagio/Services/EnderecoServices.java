@@ -30,7 +30,7 @@ public class EnderecoServices {
 
     public Endereco findById(Long id){
         Optional<Endereco>obj = enderecoRepositorys.findById(id);
-        return obj.get();
+        return obj.orElseThrow(()->new ResourceNotFoundException(id));
     }
 
     public Endereco insert(Endereco obj){
@@ -66,12 +66,6 @@ public class EnderecoServices {
         Long id_monitorador = enderecoRepositorys.VerificaMonitorador(id);
         List<Long> id_End = enderecoRepositorys.ValidadorEstrangeiro(id_monitorador);
         if (id_End.size()> 1 ){
-            return true;
-        }
-        return false;
-    }
-    public boolean Validador(Endereco obj){
-        if (enderecoRepositorys.existsByPrincipal(obj.getPrincipal()) && enderecoRepositorys.existsByCep(obj.getCep())){
             return true;
         }
         return false;

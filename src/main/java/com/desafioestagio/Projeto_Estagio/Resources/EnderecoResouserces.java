@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -46,11 +48,13 @@ public class EnderecoResouserces {
 
 
     @PostMapping
-    public  ResponseEntity<Endereco>insert(@Valid @RequestBody Endereco obj){
-        if (!services.Validador(obj)) {
+    public  ResponseEntity<Endereco>insert( @RequestBody Endereco obj){
+        Monitorador moni = monitorador.ultimo();
+        obj.setMonitorador(moni);
+        Endereco endereco = services.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(endereco);
 
-        }
-        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping(value = "/{id}")
