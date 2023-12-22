@@ -14,11 +14,6 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-    <script type="text/javascript">
-        const select = document.getElementById("id");
-
-            console.log(select);
-    </script>
     <style>
         #formSpacing div {
             margin-right: 30px;
@@ -34,7 +29,8 @@
             margin-right: 50px;
             margin-left: 10px;
         }
-        #id{
+
+        #id {
 
         }
 
@@ -42,58 +38,38 @@
 
 </head>
 <body>
-<h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Endereço</h1>
-    <form wicket:id="edit">
-        <div class="d-flex" id="formSpacing">
+<wicket:panel>
+  <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Endereço</h1>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>Código</th>
+            <th>Endereco</th>
+            <th>Numero</th>
+            <th>Cep</th>
+            <th>Estado</th>
+            <th>Cidade</th>
+            <th>Principal</th>
 
-            <div class="form-group col-md-2">
-                <label>Código</label>
-                <input type="text" class="form-control" wicket:id="id" readonly>
-            </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="end">
+            <td><span wicket:id="id"></span></td>
+            <td><span wicket:id="en"></span></td>
+            <td><span wicket:id="num"></span></td>
+            <td><span wicket:id="cep"></span></td>
+            <td><span wicket:id="est"></span></td>
+            <td><span wicket:id="cid"></span></td>
+            <td wicket:id="principal"></td>
+            <td> <a href="#" wicket:id="editarLinkEndereco"><i class="bi bi-pencil-square"></i></a></td>
+        </tr>
+        </tbody>
+    </table>
 
-            <div class="form-group col-md-3">
-                <label>Endereco</label>
-                <input type="text" class="form-control " wicket:id="endereco">
-            </div>
+    <div wicket:id="modal"></div>
 
+</wicket:panel>
 
-            <div class="form-group col-md-3">
-                <label>Telefone</label>
-                <input type="text" class="form-control " wicket:id="telefone">
-            </div>
-
-            <div class="form-group col-md-3">
-                <label>CEP</label>
-                <input type="text" class="form-control" wicket:id="cep">
-            </div>
-        </div>
-
-        <div class="d-flex" id="formSpacingId">
-            <div class="form-group col-md-6">
-                <label>Numero</label>
-                <input type="text" class="form-control" wicket:id="numero">
-            </div>
-
-            <div class="form-group  col-md-5">
-                <label>Cidade</label>
-                <input type="text" class="form-control" wicket:id="cidade">
-            </div>
-        </div>
-        <div class="d-flex" id="formSpacingSelect">
-            <div class="form-group  col-md-6">
-                <label>Estado</label>
-                <select wicket:id="estado" class="form-control">
-
-                </select>
-
-            </div>
-            <div class="form-group  col-md-5">
-                <label>Principal</label>
-                <select id="id" class="form-control" wicket:id="principal">
-
-                </select>
-            </div>
-        </div>
-    </form>
 </body>
 </html>

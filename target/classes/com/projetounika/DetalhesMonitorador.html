@@ -32,88 +32,74 @@
             margin-left: 10px;
         }
 
+        .botao button {
+            margin-right: 8px;
+            width: 100px;
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
     </style>
 </head>
 <body>
-<h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Monitorador</h1>
-<form wicket:id="edit">
-    <div class="d-flex" id="formSpacing">
+<wicket:panel>
+    <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Monitorador</h1>
+    <form wicket:id="edit">
+        <div class="d-flex" id="formSpacing">
+            <div class="form-group col-md-4">
+                <label>Código</label>
+                <input type="text" class="form-control" wicket:id="id" readonly>
+            </div>
 
-        <div class="form-group col-md-4">
-            <label>Código</label>
-            <input type="text" class="form-control" wicket:id="id" readonly>
+            <div class="form-group col-md-3">
+                <label>Nome/Razão Social</label>
+                <input type="text" class="form-control " wicket:id="nome">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>Email</label>
+                <input type="text" class="form-control" wicket:id="email">
+            </div>
         </div>
 
-        <div class="form-group col-md-3">
-            <label>Nome</label>
-            <input type="text" class="form-control " wicket:id="nome">
-        </div>
+        <div class="d-flex" id="formSpacingId">
+            <div class="form-group col-md-6">
+                <label>CPF/CNPJ</label>
+                <input type="text" class="form-control" wicket:id="cpf">
+            </div>
 
-        <div class="form-group col-md-4">
-            <label>Email</label>
-            <input type="text" class="form-control" wicket:id="email">
+            <div class="form-group  col-md-5">
+                <label>RG</label>
+                <input type="text" class="form-control" wicket:id="rg">
+            </div>
         </div>
-    </div>
-
-    <div class="d-flex" id="formSpacingId">
-        <div class="form-group col-md-6">
-            <label>CPF</label>
-            <input type="text" class="form-control" wicket:id="cpf">
+        <div class="form-group  col-md-5">
+            <label>Inscrição</label>
+            <input type="text" class="form-control" wicket:id="inscricao">
         </div>
 
         <div class="form-group  col-md-5">
-            <label>RG</label>
-            <input type="text" class="form-control" wicket:id="rg">
+            <label>Data Nascimento</label>
+            <input type="text" class="form-control" wicket:id="Data_nascimento">
         </div>
-    </div>
-    <div class="d-flex" id="formSpacingSelect">
-        <div class="form-group  col-md-6">
-            <label>Tipo</label>
-            <select class="form-control  col-md-6" wicket:id="tipo">
-                <option>Física</option>
-                <option>Juridica</option>
-            </select>
+
+        <div class="d-flex" id="formSpacingSelect">
+            <div class="form-group  col-md-6">
+                <label>Tipo</label>
+                <select class="form-control  col-md-6" wicket:id="escolheTipo">
+                    <option>Física</option>
+                    <option>Juridica</option>
+                </select>
+            </div>
+            <div class="form-group  col-md-5">
+                <label>Ativo</label>
+                <select class="form-control" wicket:id="escolheAtivo">
+                    <option>Sim</option>
+                    <option>Não</option>
+                </select>
+            </div>
         </div>
-        <div class="form-group  col-md-5">
-            <label>Tipo</label>
-            <select class="form-control" wicket:id="Ativo">
-                <option>Sim</option>
-                <option>Não</option>
-            </select>
-        </div>
-    </div>
-</form>
-<table class="table table-striped table-bordered">
-    <thead class="thead-light">
-    <tr>
-        <th>Código</th>
-        <th>Endereco</th>
-        <th>Numero</th>
-        <th>Cep</th>
-        <th>Estado</th>
-        <th>Cidade</th>
-        <th>Principal</th>
-
-    </tr>
-    </thead>
-    <tbody>
-    <tr wicket:id="end">
-        <td wicket:id="id"></td>
-        <td wicket:id="en"></td>
-        <td wicket:id="num"></td>
-        <td wicket:id="cep"></td>
-        <td wicket:id="est"></td>
-        <td wicket:id="cid"></td>
-        <td wicket:id="principal"></td>
-        <td style="width: 90px">
-            <a href="#" wicket:id="detalhesEnd"><i class="bi bi-pencil-square"></i></a>
-            <i class="bi bi-trash3"></i>
-            <i class="bi bi-person-fill"></i>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
+    </form>
+</wicket:panel>
 </body>
 </html>

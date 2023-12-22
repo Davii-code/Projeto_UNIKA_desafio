@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="FrontEndWicket" />
+        <module name="Projeto_Estagio" />
       </profile>
     </annotationProcessing>
   </component>

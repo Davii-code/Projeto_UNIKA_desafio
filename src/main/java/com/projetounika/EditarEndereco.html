@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <wicket:panel>
+            <form wicket:id="edit">
+                <div class="d-flex" id="formSpacing">
+
+                    <div class="form-group col-md-2">
+                        <label>Código</label>
+                        <input type="text" class="form-control" wicket:id="id" readonly>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label>Endereco</label>
+                        <input type="text" class="form-control " wicket:id="endereco">
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                        <label>Telefone</label>
+                        <input type="text" class="form-control " wicket:id="telefone">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label>CEP</label>
+                        <input type="text" class="form-control" wicket:id="cep">
+                    </div>
+                </div>
+
+                <div class="d-flex" id="formSpacingId">
+                    <div class="form-group col-md-6">
+                        <label>Numero</label>
+                        <input type="text" class="form-control" wicket:id="numero">
+                    </div>
+
+                    <div class="form-group  col-md-5">
+                        <label>Cidade</label>
+                        <input type="text" class="form-control" wicket:id="cidade">
+                    </div>
+                </div>
+                <div class="d-flex" id="formSpacingSelect">
+                    <div class="form-group  col-md-6">
+                        <label>Estado</label>
+                        <select wicket:id="estado" class="form-control">
+
+                        </select>
+
+                    </div>
+                    <div class="form-group  col-md-5">
+                        <label>Principal</label>
+                        <select id="id" class="form-control" wicket:id="principal">
+
+                        </select>
+                    </div>
+                </div>
+            </form>
+    </wicket:panel>
+</body>
+</html>

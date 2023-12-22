@@ -27,7 +27,6 @@ public class Monitorador implements Serializable {
     private String rg = null;
     private String inscricao = null;
 
-    @JsonIgnore
     private Instant Data_nascimento = null;
     private String tipo;
     private boolean Ativo = true;

@@ -2,30 +2,30 @@ package com.projetounika;
 
 import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
-import com.projetounika.services.EnderecoHttpClient;
-import org.apache.wicket.extensions.markup.html.form.select.Select;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
+
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
+import java.time.Instant;
 import java.util.List;
 
-public class DetalhesMonitorador extends WebPage {
-    // Construtor padrão sem argumentos
-    public DetalhesMonitorador(){}
+public class DetalhesMonitorador extends Panel {
 
-    // Construtor principal
-    public DetalhesMonitorador(Monitorador monitorador ) {
 
+
+
+    public DetalhesMonitorador(Monitorador monitorador, String id, ModalWindow modalWindow ) {
+        super(id);
         Endereco endereco = new Endereco();
-
         IModel<Monitorador> monitoradorIModel = new CompoundPropertyModel<>(monitorador);
 
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
@@ -38,43 +38,22 @@ public class DetalhesMonitorador extends WebPage {
         form.add(new TextField<>("cpf"));
         form.add(new TextField<>("email"));
         form.add(new TextField<>("rg"));
-        form.add(new Select<>("tipo"));
-        form.add(new Select<>("Ativo", new AbstractReadOnlyModel<String>() {
-            @Override
-            public String getObject() {
-                return monitorador.isAtivo() ? "Sim" : "Não";
-            }
-        }));
+        form.add(new TextField<>("inscricao"));
+        form.add(new DateTextField("Data_nascimento", String.valueOf(monitoradorIModel.getObject().getData_nascimento())));
+
+        DropDownChoice<String> escolheTipo =  new DropDownChoice<>("escolheTipo",
+                Model.of(monitorador.getTipo()),
+                List.of("Física", "Juridica"));
+
+        DropDownChoice<String> escolheAtivo =  new DropDownChoice<>("escolheAtivo",
+                Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
+                List.of("Sim", "Não"));
+
+
+        form.add(escolheTipo);
+        form.add(escolheAtivo);
         add(form);
 
-        EnderecoHttpClient enderecoHttpClient = new EnderecoHttpClient("http://localhost:8080/monitorador/"+monitorador.getId()+"/enderecos");
-        List<Endereco> enderecoList = enderecoHttpClient.listarTodos();
-        final  CompoundPropertyModel<List<Endereco>> enderecoListModel = new CompoundPropertyModel<>(enderecoList);
-
-        final ListView<Endereco> enderecoListView = new ListView<Endereco>("end",enderecoListModel) {
-            @Override
-            protected void populateItem(ListItem<Endereco> listItem) {
-                final Endereco endereco = listItem.getModelObject();
-                listItem.add(new Label("id",endereco.getId()));
-                listItem.add(new Label("en",endereco.getEndereco()));
-                listItem.add(new Label("num",endereco.getNumero()));
-                listItem.add(new Label("cep",endereco.getCep()));
-                listItem.add(new Label("est",endereco.getEstado()));
-                listItem.add(new Label("cid",endereco.getCidade()));
-                listItem.add(new Label("principal",endereco.getPrincipal() ? "Sim" : "Não") );
-
-
-                listItem.add(new Link<Void>("detalhesEnd") {
-
-                    @Override
-                    public void onClick() {
-                        setResponsePage(new DetalhesEndereco(endereco));
-                    }
-                });
-
-            }
-        };
-        add(enderecoListView);
     }
 }
 

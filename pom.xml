@@ -41,7 +41,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>7.18.0</wicket.version>
+		<wicket.version>8.0.0</wicket.version>
 		<jetty9.version>9.2.19.v20160908</jetty9.version>
 		<log4j.version>2.6.2</log4j.version>
 		<junit.version>4.12</junit.version>
@@ -56,13 +56,14 @@
 			<artifactId>wicket-core</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
-		<!-- OPTIONAL DEPENDENCY
+
+
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>${wicket.version}</version>
+			<version>8.0.0</version>
 		</dependency>
-		-->
+
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>
@@ -144,11 +145,7 @@
             <artifactId>wicket-extensions</artifactId>
             <version>9.17.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-examples</artifactId>
-            <version>9.17.0-SNAPSHOT</version>
-        </dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.apache.wicket/wicket-bootstrap -->
 		<dependency>
@@ -157,6 +154,19 @@
 			<version>0.17</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.github.openjson/openjson -->
+		<dependency>
+			<groupId>com.github.openjson</groupId>
+			<artifactId>openjson</artifactId>
+			<version>1.0.13</version>
+		</dependency>
 
 	</dependencies>
 	<build>

@@ -1,9 +1,10 @@
 package com.projetounika.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 
-public class Endereco {
+public class Endereco implements Serializable {
 
 
     private Long id;
@@ -13,7 +14,7 @@ public class Endereco {
     private String telefone;
     private String cidade;
     private String estado;
-    private Boolean principal;
+    private Boolean principal = true;
 
 
     private  Monitorador monitorador;
