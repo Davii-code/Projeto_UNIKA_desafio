@@ -14,15 +14,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 
-import java.io.Serializable;
 import java.util.List;
 
 
-public class Inicio extends WebPage{
+public class MonitoradorJuridica extends WebPage{
 
 
-    public Inicio() {
-        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
+    public MonitoradorJuridica() {
+        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador/PessoaJuridica");
         Endereco endereco = new Endereco();
         //Modal
         final ModalWindow modal = new ModalWindow("modal");
@@ -46,8 +45,7 @@ public class Inicio extends WebPage{
                 final Monitorador monitorador = listItem.getModelObject();
                 listItem.add(new Label("id", monitorador.getId()));
                 listItem.add(new Label("nome", monitorador.getNome()));
-                listItem.add(new Label("CNPJ", monitorador.getCnpj()));
-                listItem.add(new Label("CPF", monitorador.getCpf()));
+                listItem.add(new Label("CNPJ", monitorador.getCpf()));
                 listItem.add(new Label("ativo", monitorador.isAtivo() ? "Sim" : "Não"));
 
 
@@ -60,7 +58,7 @@ public class Inicio extends WebPage{
                     @Override
                     public void onClick(AjaxRequestTarget target) {
 
-                        modal.setContent(new DetalhesMonitorador(listItem.getModelObject(),modal.getContentId(),modal));
+                        modal.setContent(new DetalhesMonitoradorJuridica(listItem.getModelObject(),modal.getContentId(),modal));
                         modal.show(target);
 
                     }
@@ -82,12 +80,18 @@ public class Inicio extends WebPage{
         modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                setResponsePage(Inicio.class);
+                setResponsePage(MonitoradorJuridica.class);
             }
         });
         add(monitoradorListView);
 
-
+        Link<Void> link = new Link<Void>("TelaFisica") {
+            @Override
+            public void onClick() {
+                setResponsePage(MonitoradorFisica.class);
+            }
+        };
+        add(link);
     }
 }
 
