@@ -1,44 +1,33 @@
 package com.projetounika;
 
-import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
-
 import com.projetounika.services.MonitoradorHttpClient;
-import lombok.SneakyThrows;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.markup.html.panel.Panel;
 
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
-public class DetalhesMonitoradorFisica extends Panel {
 
-
-
-
-    public DetalhesMonitoradorFisica(Monitorador monitorador, String id, ModalWindow modalWindow ) {
+public class DeleteMonitoradorFisica extends Panel {
+    public DeleteMonitoradorFisica(Monitorador monitorador, String id, ModalWindow modalWindow) {
         super(id);
-        Endereco endereco = new Endereco();
 
+        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
         IModel<Monitorador> monitoradorIModel = new CompoundPropertyModel<>(monitorador);
-        MonitoradorHttpClient monitoradorHttpClient =new MonitoradorHttpClient("http://localhost:8080/monitorador");
+
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
-            @SneakyThrows
             @Override
             protected void onSubmit() {
 
-                  monitoradorHttpClient.Atualizar(monitorador);
-
-
+                monitoradorHttpClient.deletar(monitorador.getId());
             }
         };
         form.add(new TextField<>("id"));
@@ -54,17 +43,11 @@ public class DetalhesMonitoradorFisica extends Panel {
 
         DropDownChoice<String> escolheAtivo =  new DropDownChoice<>("escolheAtivo",
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
-                List.of("Sim", "Não"));
+                List.of(monitorador.isAtivo() ? "Sim" : "Não"));
 
 
         form.add(escolheTipo);
         form.add(escolheAtivo);
         add(form);
-
     }
 }
-
-
-
-
-

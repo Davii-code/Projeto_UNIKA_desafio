@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -75,6 +76,17 @@ public class MonitoradorJuridica extends WebPage{
 
                 });
 
+                listItem.add(new AjaxLink<Void>("LinkDeletar") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+
+                        modal.setContent(new DeleteMonitoradorJuridica(monitorador,modal.getContentId(),modal));
+                        modal.show(target);
+
+                    }
+
+                });
+
             }
         };
         modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
@@ -92,6 +104,9 @@ public class MonitoradorJuridica extends WebPage{
             }
         };
         add(link);
+        ExternalLink linkpdf = new ExternalLink("pdf", "http://localhost:8080/monitorador/relatorio/pdfs/PessoaJuridica");
+        add(linkpdf);
+
     }
 }
 

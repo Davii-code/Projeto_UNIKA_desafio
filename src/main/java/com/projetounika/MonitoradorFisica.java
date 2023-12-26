@@ -4,20 +4,29 @@ import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
 import com.projetounika.services.EnderecoHttpClient;
 import com.projetounika.services.MonitoradorHttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
 
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 
-public class MonitoradorFisica extends WebPage{
+public class MonitoradorFisica extends WebPage {
 
 
     public MonitoradorFisica() {
@@ -75,6 +84,18 @@ public class MonitoradorFisica extends WebPage{
 
                 });
 
+
+                listItem.add(new AjaxLink<Void>("LinkDeletar") {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+
+                        modal.setContent(new DeleteMonitoradorFisica(monitorador,modal.getContentId(),modal));
+                        modal.show(target);
+
+                    }
+
+                });
+
             }
         };
         modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
@@ -91,6 +112,11 @@ public class MonitoradorFisica extends WebPage{
             }
         };
         add(link);
+
+        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/monitorador/relatorio/pdfs/PessoaFisica");
+        add(linkPdf);
+
+
     }
 }
 

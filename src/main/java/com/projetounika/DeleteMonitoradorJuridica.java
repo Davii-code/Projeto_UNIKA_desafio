@@ -1,56 +1,41 @@
 package com.projetounika;
 
-import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
-
 import com.projetounika.services.MonitoradorHttpClient;
-import lombok.SneakyThrows;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import java.io.IOException;
 import java.util.List;
 
-public class DetalhesMonitoradorFisica extends Panel {
 
-
-
-
-    public DetalhesMonitoradorFisica(Monitorador monitorador, String id, ModalWindow modalWindow ) {
+public class DeleteMonitoradorJuridica extends Panel {
+    public DeleteMonitoradorJuridica(Monitorador monitorador, String id, ModalWindow modalWindow) {
         super(id);
-        Endereco endereco = new Endereco();
 
+        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
         IModel<Monitorador> monitoradorIModel = new CompoundPropertyModel<>(monitorador);
-        MonitoradorHttpClient monitoradorHttpClient =new MonitoradorHttpClient("http://localhost:8080/monitorador");
+
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
-            @SneakyThrows
             @Override
             protected void onSubmit() {
-
-                  monitoradorHttpClient.Atualizar(monitorador);
-
-
+                monitoradorHttpClient.deletar(monitorador.getId());
             }
         };
         form.add(new TextField<>("id"));
         form.add(new TextField<>("nome"));
-        form.add(new TextField<>("cpf"));
+        form.add(new TextField<>("cnpj"));
         form.add(new TextField<>("email"));
-        form.add(new TextField<>("rg"));
-        form.add(new DateTextField("Data_nascimento", String.valueOf(monitoradorIModel.getObject().getData_nascimento())));
-
+        form.add(new TextField<>("inscricao"));
         DropDownChoice<String> escolheTipo =  new DropDownChoice<>("escolheTipo",
                 Model.of(monitorador.getTipo()),
-                List.of("Física"));
+                List.of("Juridica"));
 
         DropDownChoice<String> escolheAtivo =  new DropDownChoice<>("escolheAtivo",
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
@@ -60,11 +45,5 @@ public class DetalhesMonitoradorFisica extends Panel {
         form.add(escolheTipo);
         form.add(escolheAtivo);
         add(form);
-
     }
 }
-
-
-
-
-
