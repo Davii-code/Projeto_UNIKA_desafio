@@ -29,6 +29,15 @@ public class MonitoradorServices {
         return obj.orElseThrow(()->new ResourceNotFoundException(id));
     }
 
+    public List<Monitorador>PessoaFisica(){
+        return repository.PessoaFisica();
+    }
+
+    public List<Monitorador>PessoaJuridica(){
+        return repository.PessoaJuridica();
+    }
+
+
     public Monitorador insert(Monitorador obj){
         return repository.save(obj);
     }

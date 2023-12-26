@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -37,6 +38,19 @@ public class MonitoradorResouserces {
         List<Monitorador> list = services.findAll();
         return ResponseEntity.ok().body(list);
     }
+
+    @GetMapping(value = "/PessoaFisica")
+    public ResponseEntity<List<Monitorador>>PessoaFisica(){
+        List<Monitorador> list = services.PessoaFisica();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/PessoaJuridica")
+    public ResponseEntity<List<Monitorador>>PessoaJuridica(){
+        List<Monitorador> list = services.PessoaJuridica();
+        return ResponseEntity.ok().body(list);
+    }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Monitorador>findByid(@PathVariable Long id){
@@ -90,14 +104,21 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value = "/relatorio/pdfs" )
-    public ResponseEntity<String> GerarPDFMonitorador( HttpServletResponse response){
-        byte [] bytes = relatoriosServices.exportaPDFMonitorador();
+    @GetMapping(value = "/relatorio/pdfs/PessoaFisica" )
+    public void GerarPDFMonitorador( HttpServletResponse response) throws IOException {
+        byte [] bytes = relatoriosServices.exportaPDFMonitoradorPessoaFisica();
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        String base64Pdf = "data:application/pdf;base64," + Base64.encodeBase64String(bytes);
-        return ResponseEntity.ok(base64Pdf);
+        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitoradorFisica.pdf" );
+        response.getOutputStream().write(bytes);
     }
 
+    @GetMapping(value = "/relatorio/pdfs/PessoaJuridica" )
+    public void GerarPDFMonitoradorJuridica( HttpServletResponse response) throws IOException {
+        byte [] bytes = relatoriosServices.exportaPDFMonitoradorPessoaJuridica();
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitoradorJuridica.pdf" );
+        response.getOutputStream().write(bytes);
+    }
 
 
 }
