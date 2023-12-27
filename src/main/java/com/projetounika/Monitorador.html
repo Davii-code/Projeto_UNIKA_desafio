@@ -31,20 +31,8 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="#" wicket:id="TelaFisica">Pessoa Física</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link"   href="#" >Pessoa Jurídica</a>
-            </li>
-        </ul>
 
-    </div>
-</nav>
-<h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Monitorador Pessoa Jurídica</h1>
+<h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Monitorador</h1>
 
 <div style="padding-bottom:15px" class="shadow p-3 mb-5 bg-white rounded">
     <form class="d-flex flex-nowrap">
@@ -53,12 +41,12 @@
             <input type="text" placeholder="Código" class="form-control">
         </div>
         <div class="fieldcontain col-lg-3 filtro">
-            <label>Razão Social</label>
+            <label>Nome</label>
             <input type="text" placeholder="Nome" class="form-control">
         </div>
         <div class="fieldcontain col-lg-3 filtro ">
-            <label>CNPJ</label>
-            <input type="text" placeholder="CNPJ" class="form-control">
+            <label>CPF</label>
+            <input type="text" placeholder="CPF" class="form-control">
         </div>
     </form>
     <div class="fieldcontain col-lg-3" style="padding-top: 10px">
@@ -71,7 +59,7 @@
 </div>
 <div class="d-flex flex-row-reverse">
     <div class="botao">
-        <button type="button" class="btn btn-outline-success">Criar+</button>
+        <button type="button" class="btn btn-outline-success" wicket:id="linkCriar">Criar+</button>
         <button type="button" class="btn btn-outline-dark">Filtros</button>
         <button type="button" class="btn btn-outline-success">EXCEL</button>
         <button type="button" class="btn btn-outline-primary" wicket:id="pdf">PDF</button>
@@ -84,6 +72,7 @@
         <tr>
             <th>Código</th>
             <th>Nome</th>
+            <th>CPF</th>
             <th>CNPJ</th>
             <th>Ativo</th>
 
@@ -93,12 +82,13 @@
         <tr wicket:id="monitorador">
             <td wicket:id="id">[id]</td>
             <td wicket:id="nome">[nome]</td>
+            <td wicket:id="CPF">[CPF]</td>
             <td wicket:id="CNPJ">[CPF]</td>
             <td wicket:id="ativo"></td>
             <td style="width: 100px" id="icon">
                 <a href="#" wicket:id="editarLink"><i class="bi bi-pencil-square"></i></a>
                 <a wicket:id="editarLinkEndereco"><i class="bi bi-geo-alt"></i></a>
-               <a wicket:id="LinkDeletar"> <i class="bi bi-trash3"></i></a>
+               <a  wicket:id="LinkDeletar"><i class="bi bi-trash3"></i></a>
             </td>
 
         </tr>

@@ -1,29 +1,22 @@
 package com.projetounika.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.projetounika.MonitoradorJuridica;
 import com.projetounika.entities.Monitorador;
 import org.apache.flink.fs.azure.shaded.org.apache.http.HttpStatus;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.request.resource.ResourceStreamResource;
-import org.apache.wicket.util.resource.AbstractResourceStream;
+
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.List;
 
 public class MonitoradorHttpClient implements Serializable {
@@ -105,12 +98,34 @@ public class MonitoradorHttpClient implements Serializable {
                 throw new IOException("Falha ao adicionar/atualizar o Monitorador. Código de resposta: " + statusCode);
             }
         } finally {
-            // Garante que a resposta e o cliente HTTP são fechados, mesmo em caso de exceção
             if (response != null) {
                 response.close();
             }
             httpClient.close();
         }
+    }
+
+
+    public Monitorador Criar (Monitorador monitorador) throws IOException {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost (baseUrl);
+            String json = objectMapper.writeValueAsString(monitorador);
+            StringEntity entity = new StringEntity(json,ContentType.APPLICATION_JSON);
+
+            post.setEntity(entity);
+            post.setHeader("Content-type","application/json");
+
+            CloseableHttpResponse response = httpClient.execute(post);
+
+            HttpEntity httpEntity = response.getEntity();
+            String obj = EntityUtils.toString(httpEntity);
+
+            httpClient.close();
+            response.close();
+
+            return objectMapper.readValue(obj, new TypeReference<Monitorador>(){});
+
+
     }
 
 

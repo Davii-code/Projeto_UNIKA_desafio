@@ -1,7 +1,6 @@
 package com.projetounika;
 
 import com.projetounika.entities.Endereco;
-import com.projetounika.entities.Monitorador;
 import com.projetounika.services.EnderecoHttpClient;
 import com.projetounika.services.MonitoradorHttpClient;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -15,14 +14,15 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 
+
 import java.util.List;
 
 
-public class MonitoradorJuridica extends WebPage{
+public class Monitorador extends WebPage {
 
 
-    public MonitoradorJuridica() {
-        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador/PessoaJuridica");
+    public Monitorador() {
+        MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
         Endereco endereco = new Endereco();
         //Modal
         final ModalWindow modal = new ModalWindow("modal");
@@ -32,21 +32,22 @@ public class MonitoradorJuridica extends WebPage{
 
 
         // Obtém a lista de monitoradores usando o HttpClient
-        List<Monitorador> list = monitoradorHttpClient.listarTodos();
+        List<com.projetounika.entities.Monitorador> list = monitoradorHttpClient.listarTodos();
 
 
         // Cria um modelo para a lista usando CompoundPropertyModel
-        final CompoundPropertyModel<List<Monitorador>> monitoradorListModel = new CompoundPropertyModel<>(list);
+        final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>> monitoradorListModel = new CompoundPropertyModel<>(list);
 
 
         // Cria um ListView usando a lista de monitoradores
-        final ListView<Monitorador> monitoradorListView = new ListView<Monitorador>("monitorador", monitoradorListModel) {
+        final ListView<com.projetounika.entities.Monitorador> monitoradorListView = new ListView<com.projetounika.entities.Monitorador>("monitorador", monitoradorListModel) {
             @Override
-            protected void populateItem(ListItem<Monitorador> listItem) {
-                final Monitorador monitorador = listItem.getModelObject();
+            protected void populateItem(ListItem<com.projetounika.entities.Monitorador> listItem) {
+                final com.projetounika.entities.Monitorador monitorador = listItem.getModelObject();
                 listItem.add(new Label("id", monitorador.getId()));
                 listItem.add(new Label("nome", monitorador.getNome()));
-                listItem.add(new Label("CNPJ", monitorador.getCpf()));
+                listItem.add(new Label("CPF", monitorador.getCpf()));
+                listItem.add(new Label("CNPJ", monitorador.getCnpj()));
                 listItem.add(new Label("ativo", monitorador.isAtivo() ? "Sim" : "Não"));
 
 
@@ -59,7 +60,7 @@ public class MonitoradorJuridica extends WebPage{
                     @Override
                     public void onClick(AjaxRequestTarget target) {
 
-                        modal.setContent(new DetalhesMonitoradorJuridica(listItem.getModelObject(),modal.getContentId(),modal));
+                        modal.setContent(new DetalhesMonitorador(listItem.getModelObject(),modal.getContentId(),modal));
                         modal.show(target);
 
                     }
@@ -76,11 +77,12 @@ public class MonitoradorJuridica extends WebPage{
 
                 });
 
+
                 listItem.add(new AjaxLink<Void>("LinkDeletar") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
 
-                        modal.setContent(new DeleteMonitoradorJuridica(monitorador,modal.getContentId(),modal));
+                        modal.setContent(new DeleteMonitorador(monitorador,modal.getContentId(),modal));
                         modal.show(target);
 
                     }
@@ -92,21 +94,24 @@ public class MonitoradorJuridica extends WebPage{
         modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                setResponsePage(MonitoradorJuridica.class);
+                setResponsePage(Monitorador.class);
             }
         });
         add(monitoradorListView);
 
-        Link<Void> link = new Link<Void>("TelaFisica") {
+
+        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/monitorador/relatorio/pdfs/PessoaFisica");
+        add(linkPdf);
+
+        AjaxLink<Void> linkCriar = new AjaxLink<Void>("linkCriar") {
             @Override
-            public void onClick() {
-                setResponsePage(MonitoradorFisica.class);
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                modal.setContent(new CadastroMonitorador(modal.getContentId(),modal));
+                modal.show(ajaxRequestTarget);
             }
         };
-        add(link);
-        ExternalLink linkpdf = new ExternalLink("pdf", "http://localhost:8080/monitorador/relatorio/pdfs/PessoaJuridica");
-        add(linkpdf);
 
+        add(linkCriar);
     }
 }
 

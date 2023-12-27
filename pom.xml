@@ -58,11 +58,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>8.0.0</version>
-		</dependency>
 
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
@@ -140,11 +135,14 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-extensions</artifactId>
-            <version>9.17.0-SNAPSHOT</version>
-        </dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.wicket/wicket-extensions -->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+			<version>9.16.0</version>
+		</dependency>
+
 
 
 		<!-- https://mvnrepository.com/artifact/org.apache.wicket/wicket-bootstrap -->
@@ -167,16 +165,21 @@
 			<artifactId>openjson</artifactId>
 			<version>1.0.13</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.phoenix</groupId>
-            <artifactId>phoenix-client</artifactId>
-            <version>5.1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.phoenix</groupId>-->
+<!--            <artifactId>phoenix-client</artifactId>-->
+<!--            <version>5.1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pulsar</groupId>
+			<artifactId>pulsar-broker-shaded</artifactId>
+			<version>2.0.0-incubating-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

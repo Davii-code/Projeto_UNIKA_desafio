@@ -1,6 +1,7 @@
 package com.projetounika.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Setter;
 import org.apache.htrace.shaded.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,7 +15,6 @@ import java.util.Objects;
 public class Monitorador implements Serializable {
 
 
-    @Setter
     private Long id;
 
     private String cnpj = null;
@@ -27,27 +27,28 @@ public class Monitorador implements Serializable {
     private String rg = null;
     private String inscricao = null;
 
-    private Instant Data_nascimento = null;
+    private String Data_nascimento = null;
     private String tipo;
+
     private boolean Ativo = true;
 
     private final List<Endereco> enderecos= new ArrayList<>();
 
     public Monitorador(){}
 
-    public Monitorador(Long id, String tipo ,String TipoId, String nome, String email, String TipoIR, Instant data_nascimento, boolean ativo) {
+    public Monitorador(Long id, String tipo ,String cpf,String cnpj, String nome, String email, String rg,String inscricao,String data_nascimento, boolean ativo) {
         this.id = id;
         this.tipo = tipo;
         this.nome = nome;
 
         if (tipo == "Fisica") {
-            this.cpf = TipoId;
+            this.cpf = cpf;
             this.Data_nascimento = data_nascimento;
-            this.rg = TipoIR;
+            this.rg = rg;
 
         }else {
-            this.cnpj = TipoId;
-            this.inscricao = TipoIR;
+            this.cnpj = cnpj;
+            this.inscricao = inscricao;
 
         }
         this.Ativo = ativo;
@@ -70,24 +71,12 @@ public class Monitorador implements Serializable {
 
 
 
-    public String setTipoId(String TipoId){
-        if (this.tipo.equals("Fisica")){
-            return this.cpf = TipoId;
-
-        }
-        return this.cnpj = TipoId;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getRg() {
@@ -99,48 +88,62 @@ public class Monitorador implements Serializable {
         return inscricao;
     }
 
-    public void setRg(String rg) {
-        rg = rg;
-    }
 
-    public void setInscricao_Estadual(String inscricao_Estadual) {
-        this.inscricao = inscricao_Estadual;
-    }
-
-    public Instant getData_nascimento() {
+    public String getData_nascimento() {
         return Data_nascimento;
     }
-    public static Instant parseInstant(String dateString) {
-        return Instant.from(DateTimeFormatter.ISO_INSTANT.parse(dateString));
-    }
 
-    public Instant setTipoData(Instant TipoData){
-        if (tipo == "Fisica"){
-            return this.Data_nascimento = TipoData;
-        }
-        return null;
-    }
     public String getTipo() {
         return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     public boolean isAtivo() {
         return Ativo;
     }
 
-    public void setAtivo(boolean ativo) {
-        Ativo = ativo;
-    }
-
     public List<Endereco> getEnderecos() {
         return enderecos;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
+
+    public void setInscricao(String inscricao) {
+        this.inscricao = inscricao;
+    }
+
+    public void setData_nascimento(String data_nascimento) {
+        Data_nascimento = data_nascimento;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        Ativo = ativo;
+    }
 
     @Override
     public boolean equals(Object o) {

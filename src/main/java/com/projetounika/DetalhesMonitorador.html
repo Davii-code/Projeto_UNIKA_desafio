@@ -40,6 +40,7 @@
         }
 
     </style>
+
 </head>
 <body>
 <wicket:panel>
@@ -75,7 +76,7 @@
         </div>
         <div class="form-group  col-md-5">
             <label>Data Nascimento</label>
-            <input type="text" class="form-control" wicket:id="Data_nascimento">
+            <input type="text" class="form-control" id="dataInput"  placeholder="DD/MM/YYYY" wicket:id="Data_nascimento">
         </div>
 
         <div class="d-flex" id="formSpacingSelect">
@@ -88,10 +89,19 @@
             <div class="form-group  col-md-5">
                 <label>Ativo</label>
                 <select class="form-control" wicket:id="escolheAtivo">
-                    <option>Sim</option>
-                    <option>Não</option>
+                    <option value=true>Sim</option>
+                    <option value=false>Não</option>
                 </select>
             </div>
+        </div>
+
+        <div class="form-group  col-md-5">
+            <label>CNPJ</label>
+            <input type="text" class="form-control" wicket:id="cnpj">
+        </div>
+        <div class="form-group  col-md-5">
+            <label>Inscrição</label>
+            <input type="text" class="form-control" wicket:id="inscricao">
         </div>
 
         <div class="form-group  col-md-5">

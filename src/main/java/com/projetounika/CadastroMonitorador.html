@@ -44,7 +44,7 @@
 </head>
 <body>
 <wicket:panel>
-    <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Deletar Monitorador</h1>
+    <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Criar Monitorador</h1>
     <form wicket:id="edit">
         <div class="d-flex" id="formSpacing">
             <div class="form-group col-md-4">
@@ -53,7 +53,7 @@
             </div>
 
             <div class="form-group col-md-3">
-                <label>Razão Social</label>
+                <label>Nome/Razão Social</label>
                 <input type="text" class="form-control " wicket:id="nome">
             </div>
 
@@ -65,20 +65,21 @@
 
         <div class="d-flex" id="formSpacingId">
             <div class="form-group col-md-6">
-                <label>CNPJ</label>
-                <input type="text" class="form-control" wicket:id="cnpj">
+                <label>CPF</label>
+                <input type="text" class="form-control" wicket:id="cpf">
             </div>
 
             <div class="form-group  col-md-5">
-                <label>Inscrição</label>
-                <input type="text" class="form-control" wicket:id="inscricao">
+                <label>RG</label>
+                <input type="text" class="form-control" wicket:id="rg">
             </div>
         </div>
+        <div class="form-group  col-md-5">
+            <label>Data Nascimento</label>
+            <input type="text" class="form-control" wicket:id="Data_nascimento">
+        </div>
 
-
-
-
-        <div class="d-flex">
+        <div class="d-flex" id="formSpacingSelect">
             <div class="form-group  col-md-6">
                 <label>Tipo</label>
                 <select class="form-control  col-md-6" wicket:id="escolheTipo">
@@ -95,7 +96,16 @@
         </div>
 
         <div class="form-group  col-md-5">
-            <button type="button" class="btn btn-outline-danger" style="margin-top: 110%">Apagar</button>
+            <label>Inscricao</label>
+            <input type="text" class="form-control" wicket:id="inscricao">
+        </div>
+        <div class="form-group  col-md-5">
+            <label>Cnpj</label>
+            <input type="text" class="form-control" wicket:id="cnpj">
+        </div>
+
+        <div class="form-group  col-md-5">
+            <button type="submit" class="btn btn-outline-danger" style="margin-top: 90%">Criar+</button>
         </div>
     </form>
 
