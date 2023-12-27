@@ -39,17 +39,7 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping(value = "/PessoaFisica")
-    public ResponseEntity<List<Monitorador>>PessoaFisica(){
-        List<Monitorador> list = services.PessoaFisica();
-        return ResponseEntity.ok().body(list);
-    }
 
-    @GetMapping(value = "/PessoaJuridica")
-    public ResponseEntity<List<Monitorador>>PessoaJuridica(){
-        List<Monitorador> list = services.PessoaJuridica();
-        return ResponseEntity.ok().body(list);
-    }
 
 
     @GetMapping(value = "/{id}")
@@ -94,7 +84,7 @@ public class MonitoradorResouserces {
     public  ResponseEntity<Void>delete(@PathVariable Long id){
         enderecoServices.deleteListEnd(id);
         services.delete(id);
-        return  ResponseEntity.noContent().build();
+        return  ResponseEntity.status(200).build();
 
     }
 

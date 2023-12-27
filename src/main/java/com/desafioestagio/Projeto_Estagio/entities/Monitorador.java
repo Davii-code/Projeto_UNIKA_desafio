@@ -28,34 +28,34 @@ public class Monitorador implements Serializable {
     private String nome;
     private String email = null;
 
-    @IRValidator()
-    private String rg = null;
+   // @IRValidator()
+    private String rg;
     @IRValidator()
     private String inscricao = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.000'Z'", timezone = "GMT")
 
-    private Instant Data_nascimento = null;
+    private String Data_nascimento = null;
     private String tipo;
-    private boolean Ativo = true;
+    private boolean Ativo;
 
     @OneToMany(mappedBy = "monitorador")
     private List<Endereco> enderecos= new ArrayList<>();
 
     public Monitorador(){}
 
-    public Monitorador(Long id, String tipo ,String TipoId, String nome, String email, String TipoIR, Instant data_nascimento, boolean ativo) {
+    public Monitorador(Long id, String tipo ,String cnpj,String cpf, String nome, String email, String rg,String inscricao, String data_nascimento, boolean ativo) {
         this.id = id;
         this.tipo = tipo;
         this.nome = nome;
 
        if (tipo == "Fisica") {
-           this.cpf = TipoId;
+           this.cpf = cpf;
            this.Data_nascimento = data_nascimento;
-           this.rg = TipoIR;
+           this.rg = rg;
 
        }else {
-           this.cnpj = TipoId;
-           this.inscricao = TipoIR;
+           this.cnpj = cnpj;
+           this.inscricao = inscricao;
 
        }
         this.Ativo = ativo;
@@ -81,14 +81,15 @@ public class Monitorador implements Serializable {
     }
 
 
-
-    public String setTipoId(String TipoId){
-        if (this.tipo.equals("Fisica")){
-                return this.cpf = TipoId;
-
-        }
-        return this.cnpj = TipoId;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+
 
     public String getNome() {
         return nome;
@@ -115,24 +116,20 @@ public class Monitorador implements Serializable {
         return inscricao;
     }
 
-    public void setRg(String rg) {
-        rg = rg;
-    }
+    public void setRg(String rg) {this.rg = rg;}
 
     public void setInscricao_Estadual(String inscricao_Estadual) {
         this.inscricao = inscricao_Estadual;
     }
 
-    public Instant getData_nascimento() {
+    public String getData_nascimento() {
         return Data_nascimento;
     }
 
-    public Instant setTipoData(Instant TipoData){
-        if (tipo == "Fisica"){
-            return this.Data_nascimento = TipoData;
-        }
-        return null;
+    public void setData_nascimento(String data_nascimento) {
+        Data_nascimento = data_nascimento;
     }
+
     public String getTipo() {
         return tipo;
     }
@@ -146,7 +143,7 @@ public class Monitorador implements Serializable {
     }
 
     public void setAtivo(boolean ativo) {
-        Ativo = ativo;
+        this.Ativo = ativo;
     }
 
     public List<Endereco> getEnderecos() {

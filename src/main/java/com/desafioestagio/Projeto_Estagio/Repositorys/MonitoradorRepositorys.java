@@ -16,10 +16,7 @@ public interface MonitoradorRepositorys extends JpaRepository<Monitorador,Long> 
     boolean existsByRg(String Rg);
     boolean existsByInscricao(String inscricao);
 
-    @Query(value = "SELECT *FROM tb_monitorador WHERE tipo ='Fisica'",nativeQuery = true)
-    List<Monitorador> PessoaFisica();
-    @Query(value = "SELECT *FROM tb_monitorador WHERE tipo ='Juridica'",nativeQuery = true)
-    List<Monitorador> PessoaJuridica();
+
 
 
 }

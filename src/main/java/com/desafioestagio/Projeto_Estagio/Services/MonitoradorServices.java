@@ -29,13 +29,7 @@ public class MonitoradorServices {
         return obj.orElseThrow(()->new ResourceNotFoundException(id));
     }
 
-    public List<Monitorador>PessoaFisica(){
-        return repository.PessoaFisica();
-    }
 
-    public List<Monitorador>PessoaJuridica(){
-        return repository.PessoaJuridica();
-    }
 
 
     public Monitorador insert(Monitorador obj){
@@ -55,19 +49,15 @@ public class MonitoradorServices {
         return repository.findTopByOrderByIdDesc();
     }
 
-    public Monitorador update(Long id, Monitorador obj){
-        try {
-            Monitorador entity = repository.getReferenceById(id);
-            updateData(entity, obj);
-            return repository.save(entity);
-        }catch (EntityNotFoundException e){
-            throw new ResourceNotFoundException(id);
-        }
+    public Monitorador update(Long id, Monitorador obj) throws EntityNotFoundException {
+        Monitorador entity = repository.getReferenceById(id);
+        updateData(entity, obj);
+        return repository.save(entity);
     }
 
 
  public boolean ValidadorIgualID(Monitorador obj){
-        if (obj.getTipo().equals("Juridica")) {
+        if ("Juridica".equals(obj.getTipo())) {
            return repository.existsByCnpj(obj.getCnpj()) && repository.existsByInscricao(obj.getinscricao());
         }else{
             return  repository.existsByCpf(obj.getCpf()) && repository.existsByRg(obj.getRg());
@@ -76,11 +66,15 @@ public class MonitoradorServices {
 
 
 
-    private void updateData(Monitorador entity, Monitorador obj) {
+    public void updateData(Monitorador entity, Monitorador obj) {
         entity.setNome(obj.getNome());
         entity.setEmail(obj.getEmail());
         entity.setInscricao_Estadual(obj.getinscricao());
         entity.setAtivo(obj.isAtivo());
+        entity.setRg(obj.getRg());
+        entity.setCpf(obj.getCpf());
+        entity.setCnpj(obj.getCnpj());
+        entity.setData_nascimento(obj.getData_nascimento());
     }
 
 
