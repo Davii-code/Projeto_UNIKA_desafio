@@ -94,21 +94,15 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value = "/relatorio/pdfs/PessoaFisica" )
+    @GetMapping(value = "/relatorio/pdfs" )
     public void GerarPDFMonitorador( HttpServletResponse response) throws IOException {
-        byte [] bytes = relatoriosServices.exportaPDFMonitoradorPessoaFisica();
+        byte [] bytes = relatoriosServices.exportaPDFMonitorador();
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitoradorFisica.pdf" );
+        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf" );
         response.getOutputStream().write(bytes);
     }
 
-    @GetMapping(value = "/relatorio/pdfs/PessoaJuridica" )
-    public void GerarPDFMonitoradorJuridica( HttpServletResponse response) throws IOException {
-        byte [] bytes = relatoriosServices.exportaPDFMonitoradorPessoaJuridica();
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitoradorJuridica.pdf" );
-        response.getOutputStream().write(bytes);
-    }
+
 
 
 }

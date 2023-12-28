@@ -19,9 +19,7 @@ import java.util.Map;
 public class RelatoriosServices {
 
     private static String Jasper_Diretorio = "classpath:jasper/";
-    private static String Jasper_PrefixoMoniPessoaFisica = "MonitoradorPessoaFisica";
-
-    private static String Jasper_PrefixoMoniPessoaJuridica = "MonitoradorPessoaJuridica";
+    private static String Jasper_PrefixoMoni= "Monitorador";
 
     private static String Jasper_PrefixoEnd = "Endereco";
     private static  String Jasper_Sufixo = ".jasper";
@@ -31,10 +29,10 @@ public class RelatoriosServices {
 
     private Map<String, Object> params = new HashMap<>();
 
-    public byte[] exportaPDFMonitoradorPessoaFisica(){
+    public byte[] exportaPDFMonitorador(){
         byte[] bytes = null;
         try {
-            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoniPessoaFisica).concat(Jasper_Sufixo));
+            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoni).concat(Jasper_Sufixo));
             JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
             bytes = JasperExportManager.exportReportToPdf(print);
         } catch (FileNotFoundException e) {
@@ -44,19 +42,19 @@ public class RelatoriosServices {
         }
         return bytes;
     }
-    public byte[] exportaPDFMonitoradorPessoaJuridica(){
-        byte[] bytes = null;
-        try {
-            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoniPessoaJuridica).concat(Jasper_Sufixo));
-            JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
-            bytes = JasperExportManager.exportReportToPdf(print);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (JRException e) {
-            throw new RuntimeException(e);
-        }
-        return bytes;
-    }
+//    public byte[] exportaPDFMonitoradorPessoaJuridica(){
+//        byte[] bytes = null;
+//        try {
+//            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoniPessoaJuridica).concat(Jasper_Sufixo));
+//            JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
+//            bytes = JasperExportManager.exportReportToPdf(print);
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (JRException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return bytes;
+//    }
     public byte[] exportaPDFEndereco(){
         byte[] bytes = null;
         try {
