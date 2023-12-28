@@ -21,7 +21,7 @@
 
         .botao button {
             margin-right: 8px;
-            width: 100px;
+            width: 130px;
             height: 50px;
         }
 
@@ -59,7 +59,8 @@
 </div>
 <div class="d-flex flex-row-reverse">
     <div class="botao">
-        <button type="button" class="btn btn-outline-success" wicket:id="linkCriar">Criar+</button>
+        <button type="button" class="btn btn-outline-success" wicket:id="linkCriarJ">Criar Juridica+</button>
+        <button type="button" class="btn btn-outline-success" wicket:id="linkCriarF">Criar Fisica+</button>
         <button type="button" class="btn btn-outline-dark">Filtros</button>
         <button type="button" class="btn btn-outline-success">EXCEL</button>
         <button type="button" class="btn btn-outline-primary" wicket:id="pdf">PDF</button>
@@ -88,14 +89,15 @@
             <td style="width: 100px" id="icon">
                 <a href="#" wicket:id="editarLink"><i class="bi bi-pencil-square"></i></a>
                 <a wicket:id="editarLinkEndereco"><i class="bi bi-geo-alt"></i></a>
-               <a  wicket:id="LinkDeletar"><i class="bi bi-trash3"></i></a>
+                <a  wicket:id="LinkDeletar"><i class="bi bi-trash3"></i></a>
             </td>
 
         </tr>
         </tbody>
 
     </table>
-        <div wicket:id="modal"></div>
+    <div wicket:id="modal"></div>
+
 </div>
 
 </body>

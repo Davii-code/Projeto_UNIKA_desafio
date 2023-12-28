@@ -26,9 +26,11 @@ public class Monitorador extends WebPage {
         Endereco endereco = new Endereco();
         //Modal
         final ModalWindow modal = new ModalWindow("modal");
-        modal.setInitialHeight(700);
+        modal.setInitialHeight(350);
         modal.setInitialWidth(850);
         add(modal);
+
+
 
 
         // Obtém a lista de monitoradores usando o HttpClient
@@ -100,18 +102,27 @@ public class Monitorador extends WebPage {
         add(monitoradorListView);
 
 
-        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/monitorador/relatorio/pdfs/PessoaFisica");
+        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/monitorador/relatorio/pdfs");
         add(linkPdf);
 
-        AjaxLink<Void> linkCriar = new AjaxLink<Void>("linkCriar") {
+        AjaxLink<Void> linkCriarPessoaJuridica = new AjaxLink<Void>("linkCriarJ") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                modal.setContent(new CadastroMonitorador(modal.getContentId(),modal));
+                modal.setContent(new CadastroMonitorador(modal.getContentId(),modal,"Juridica"));
                 modal.show(ajaxRequestTarget);
             }
         };
 
-        add(linkCriar);
+        add(linkCriarPessoaJuridica);
+
+        AjaxLink<Void> linkCriarPessoaFisica = new AjaxLink<Void>("linkCriarF") {
+            @Override
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                modal.setContent(new CadastroMonitorador(modal.getContentId(),modal,"Fisica"));
+                modal.show(ajaxRequestTarget);
+            }
+        };
+
+        add(linkCriarPessoaFisica);
     }
 }
-

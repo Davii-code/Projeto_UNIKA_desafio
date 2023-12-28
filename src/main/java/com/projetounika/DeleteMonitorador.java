@@ -26,6 +26,7 @@ public class DeleteMonitorador extends Panel {
             protected void onSubmit() {
 
                 monitoradorHttpClient.deletar(monitorador.getId());
+
             }
         };
         form.add(new TextField<>("id"));

@@ -65,17 +65,20 @@
 
         <div class="d-flex" id="formSpacingId">
             <div class="form-group col-md-6">
-                <label>CPF</label>
+                <label >CNPJ/CPF</label>
                 <input type="text" class="form-control" wicket:id="cpf">
+                <input type="text" class="form-control" wicket:id="cnpj">
             </div>
 
             <div class="form-group  col-md-5">
-                <label>RG</label>
+                <label wicket:id="ins"></label>
+                <label wicket:id="RG"></label>
                 <input type="text" class="form-control" wicket:id="rg">
+                <input type="text" class="form-control" wicket:id="inscricao">
             </div>
         </div>
         <div class="form-group  col-md-5">
-            <label>Data Nascimento</label>
+            <label wicket:id="date"></label>
             <input type="text" class="form-control" id="dataInput"  placeholder="DD/MM/YYYY" wicket:id="Data_nascimento">
         </div>
 
@@ -93,15 +96,6 @@
                     <option value=false>Não</option>
                 </select>
             </div>
-        </div>
-
-        <div class="form-group  col-md-5">
-            <label>CNPJ</label>
-            <input type="text" class="form-control" wicket:id="cnpj">
-        </div>
-        <div class="form-group  col-md-5">
-            <label>Inscrição</label>
-            <input type="text" class="form-control" wicket:id="inscricao">
         </div>
 
         <div class="form-group  col-md-5">
