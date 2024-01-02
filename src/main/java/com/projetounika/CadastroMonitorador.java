@@ -30,30 +30,7 @@ public class CadastroMonitorador extends Panel {
         DropDownChoice<String> escolheAtivo = new DropDownChoice<>("escolheAtivo",
                 Model.of(),
                 List.of("Sim", "Não"));
-//        DropDownChoice<String> escolheTipo = new DropDownChoice<>("escolheTipo",
-//                Model.of("Fisica"), // Default value
-//                List.of("Fisica", "Juridica"));
-//
-//         = escolheTipo.getModelObject();
-        Form<Monitorador> form = new Form<>("edit", new CompoundPropertyModel<>(monitorador)) {
-            @Override
-            protected void onSubmit() {
-                String valorAtivo = escolheAtivo.getModelObject();
-                if (valorAtivo.equals("Sim")) {
-                    monitorador.setAtivo(true);
-                } else {
-                    monitorador.setAtivo(false);
-                }
-                monitorador.setTipo(valorTipo);
-                try {
-                    monitoradorHttpClient.Criar(monitorador);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
 
-            }
-        };
-        add(form);
         final TextField<String> cpf = new TextField<>("cpf");
         final TextField<String> cnpj = new TextField<>("cnpj");
         final TextField<String> codigo = new TextField<>("id");
@@ -65,6 +42,39 @@ public class CadastroMonitorador extends Panel {
         final Label IE = new Label("ins", "Inscrição Estadual");
         final Label RG = new Label("RG", "RG");
         final Label date = new Label("date", "Data de Nascimento");
+
+        Form<Monitorador> form = new Form<>("edit", new CompoundPropertyModel<>(monitorador)) {
+            @Override
+            protected void onSubmit() {
+                String valorAtivo = escolheAtivo.getModelObject();
+                if (valorAtivo.equals("Sim")) {
+                    monitorador.setAtivo(true);
+                } else {
+                    monitorador.setAtivo(false);
+                }
+                monitorador.setTipo(valorTipo);
+            if (monitorador.getTipo().equals("Fisica")){
+                String Fcpf = cpf.getModelObject();
+                monitorador.setCpf(formatarCPF(Fcpf));
+                String fData = data.getModelObject();
+                monitorador.setData_nascimento(formatarDataComBarra(fData));
+            }else {
+                String cnpjFormatado = cnpj.getModelObject();
+                cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");  // Usando "\\D" para representar qualquer caractere não numérico
+                monitorador.setCnpj(cnpjFormatado);
+            }
+
+
+                try {
+                    monitoradorHttpClient.Criar(monitorador);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
+        add(form);
+
 
         if (valorTipo.equals("Fisica")){
             cpf.setVisible(true);
@@ -138,15 +148,15 @@ public class CadastroMonitorador extends Panel {
                 cpf.substring(6, 9) + "-" + cpf.substring(9, 11);
     }
 
-    public static String formatarCNPJ(String cnpj) {
-        cnpj = cnpj.replaceAll("[^0-14]", "");
-        // Verificar se o CPF tem 11 dígitos
-        if (cnpj.length() != 14) {
-            throw new IllegalArgumentException("O CPF deve conter 11 dígitos numéricos.");
-        }
-
-        // Formatando o CPF com pontos e traço
-        return cnpj.substring(0, 2) + "." + cnpj.substring(2, 5) + "." +
-                cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-";
-    }
+//    public static String formatarCNPJ(String cnpj) {
+//        cnpj = cnpj.replaceAll("[^0-14]", "");
+//        // Verificar se o CPF tem 11 dígitos
+//        if (cnpj.length() != 14) {
+//            throw new IllegalArgumentException("O CPF deve conter 11 dígitos numéricos.");
+//        }
+//
+//        // Formatando o CPF com pontos e traço
+//        return cnpj.substring(0, 2) + "." + cnpj.substring(2, 5) + "." +
+//                cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-";
+//    }
 }

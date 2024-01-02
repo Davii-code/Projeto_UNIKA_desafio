@@ -49,6 +49,25 @@ public class MonitoradorHttpClient implements Serializable {
         return null;
     }
 
+    public Monitorador listarPorID() {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpGet request = new HttpGet(baseUrl);
+            CloseableHttpResponse response = httpClient.execute(request);
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity);
+
+            httpClient.close();
+            response.close();
+
+            return objectMapper.readValue(responseString, new TypeReference<Monitorador>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public int deletar(Long id) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 

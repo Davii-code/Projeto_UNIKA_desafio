@@ -40,37 +40,37 @@ public class DetalhesMonitorador extends Panel {
         DropDownChoice<String> escolheAtivo = new DropDownChoice<>("escolheAtivo",
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
                 List.of("Sim", "Não"));
-
+        final TextField<String> cnpj = new TextField<>("cnpj",Model.of(formatarCNPJ(monitorador.getCnpj())));
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
             @Override
             protected void onSubmit() {
                 String valorAtivo = escolheAtivo.getModelObject();
 
-                if (valorAtivo.equals("Sim")){
+                if (valorAtivo.equals("Sim")) {
                     monitorador.setAtivo(true);
-                }else{
+                } else {
                     monitorador.setAtivo(false);
                 }
-                String dataNascimento = monitorador.getData_nascimento();
-                if (!dataNascimento.contains("/") && dataNascimento.length() == 8) {
-                    String dataFormatada = formatarDataComBarra(dataNascimento);
-                    monitorador.setData_nascimento(dataFormatada);
-                }
+
                 if (monitorador.getTipo().equals("Fisica")) {
                     String cpf = monitorador.getCpf();
                     String cpfFormatado = formatarCPF(cpf);
                     monitorador.setCpf(cpfFormatado);
-                }else {
-                    String cnpj = monitorador.getCnpj();
-                    String cnpjFormatado = formatarCNPJ(cnpj);
+                    String dataNascimento = monitorador.getData_nascimento();
+                    if (!dataNascimento.contains("/") && dataNascimento.length() == 8) {
+                        String dataFormatada = formatarDataComBarra(dataNascimento);
+                        monitorador.setData_nascimento(dataFormatada);
+                    }
+                } else {
+                    String cnpjFormatado = cnpj.getModelObject();
+                    cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");  // Usando "\\D" para representar qualquer caractere não numérico
                     monitorador.setCnpj(cnpjFormatado);
                 }
                 try {
-                        monitoradorHttpClient.Atualizar(monitorador);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
+                    monitoradorHttpClient.Atualizar(monitorador);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
 
             }
@@ -81,16 +81,15 @@ public class DetalhesMonitorador extends Panel {
         final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> cpf = new TextField<>("cpf");
-        final TextField<String> cnpj = new TextField<>("cnpj");
         final TextField<String> email = new TextField<>("email");
         final TextField<String> rg = new TextField<>("rg");
         final TextField<String> data = new TextField<>("Data_nascimento");
         final TextField<String> inscricao = new TextField<>("inscricao");
-        final Label IE = new Label("ins","Inscrição Estadual");
-        final Label RG = new Label("RG","RG");
-        final Label date = new Label("date","Data de Nascimento");
+        final Label IE = new Label("ins", "Inscrição Estadual");
+        final Label RG = new Label("RG", "RG");
+        final Label date = new Label("date", "Data de Nascimento");
 
-        if (monitorador.getTipo().equals("Fisica")){
+        if (monitorador.getTipo().equals("Fisica")) {
             cpf.setVisible(true);
             cpf.setOutputMarkupPlaceholderTag(true);
             rg.setVisible(true);
@@ -107,26 +106,26 @@ public class DetalhesMonitorador extends Panel {
             RG.setOutputMarkupPlaceholderTag(true);
             date.setVisible(true);
             date.setOutputMarkupPlaceholderTag(true);
-        }else{if (monitorador.getTipo().equals("Juridica")) {
-            cnpj.setVisible(true);
-            cnpj.setOutputMarkupPlaceholderTag(true);
-            inscricao.setVisible(true);
-            inscricao.setOutputMarkupPlaceholderTag(true);
-            IE.setVisible(true);
-            IE.setOutputMarkupPlaceholderTag(true);
-            RG.setVisible(false);
-            RG.setOutputMarkupPlaceholderTag(true);
-            cpf.setVisible(false);
-            cpf.setOutputMarkupPlaceholderTag(true);
-            rg.setVisible(false);
-            rg.setOutputMarkupPlaceholderTag(true);
-            data.setVisible(false);
-            data.setOutputMarkupPlaceholderTag(true);
-            date.setVisible(false);
-            date.setOutputMarkupPlaceholderTag(true);
+        } else {
+            if (monitorador.getTipo().equals("Juridica")) {
+                cnpj.setVisible(true);
+                cnpj.setOutputMarkupPlaceholderTag(true);
+                inscricao.setVisible(true);
+                inscricao.setOutputMarkupPlaceholderTag(true);
+                IE.setVisible(true);
+                IE.setOutputMarkupPlaceholderTag(true);
+                RG.setVisible(false);
+                RG.setOutputMarkupPlaceholderTag(true);
+                cpf.setVisible(false);
+                cpf.setOutputMarkupPlaceholderTag(true);
+                rg.setVisible(false);
+                rg.setOutputMarkupPlaceholderTag(true);
+                data.setVisible(false);
+                data.setOutputMarkupPlaceholderTag(true);
+                date.setVisible(false);
+                date.setOutputMarkupPlaceholderTag(true);
+            }
         }
-        }
-
 
 
         form.add(codigo);
@@ -145,6 +144,7 @@ public class DetalhesMonitorador extends Panel {
 
 
     }
+
     private String formatarDataComBarra(String dataNascimento) {
         try {
             DateFormat formatoEntrada = new SimpleDateFormat("ddMMyyyy");
@@ -154,6 +154,7 @@ public class DetalhesMonitorador extends Panel {
             throw new RuntimeException("Erro ao formatar a data.", e);
         }
     }
+
     public static String formatarCPF(String cpf) {
         cpf = cpf.replaceAll("[^0-9]", "");
         // Verificar se o CPF tem 11 dígitos
@@ -167,15 +168,15 @@ public class DetalhesMonitorador extends Panel {
     }
 
     public static String formatarCNPJ(String cnpj) {
-        cnpj = cnpj.replaceAll("[^0-14]", "");
+        cnpj = cnpj.replaceAll("[^0-9]", "");
         // Verificar se o CPF tem 11 dígitos
         if (cnpj.length() != 14) {
-            throw new IllegalArgumentException("O CPF deve conter 11 dígitos numéricos.");
+            throw new IllegalArgumentException("O Cnpj deve conter 14 dígitos numéricos.");
         }
 
         // Formatando o CPF com pontos e traço
         return cnpj.substring(0, 2) + "." + cnpj.substring(2, 5) + "." +
-                cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-";
+                cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-" + cnpj.substring(12,14);
     }
 }
 

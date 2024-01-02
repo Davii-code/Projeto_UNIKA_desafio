@@ -40,6 +40,11 @@
 <body>
 <wicket:panel>
   <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Endereço</h1>
+    <div class="d-flex flex-row-reverse">
+        <button type="button" class="btn btn-outline-success" wicket:id="linkCadastroEnd" >Criar+</button>
+        <button type="button" class="btn btn-outline-success" wicket:id="excel">EXCEL</button>
+        <button type="button" class="btn btn-outline-primary" wicket:id="pdf" >PDF</button>
+    </div>
     <table class="table table-striped table-bordered">
         <thead class="thead-light">
         <tr>
@@ -62,7 +67,10 @@
             <td><span wicket:id="est"></span></td>
             <td><span wicket:id="cid"></span></td>
             <td wicket:id="principal"></td>
-            <td> <a href="#" wicket:id="editarLinkEndereco"><i class="bi bi-pencil-square"></i></a></td>
+            <td>
+                <a href="#" wicket:id="editarLinkEndereco"><i class="bi bi-pencil-square"></i></a>
+                <a  wicket:id="linkdeletar"><i class="bi bi-trash3"></i></a>
+            </td>
         </tr>
         </tbody>
     </table>
