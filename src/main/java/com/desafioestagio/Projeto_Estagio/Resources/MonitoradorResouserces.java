@@ -8,13 +8,16 @@ import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -96,13 +99,46 @@ public class MonitoradorResouserces {
 
     @GetMapping(value = "/relatorio/pdfs" )
     public void GerarPDFMonitorador( HttpServletResponse response) throws IOException {
-        byte [] bytes = relatoriosServices.exportaPDFMonitorador();
+        byte [] bytes = relatoriosServices.exportaPDFEndereco();
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf" );
         response.getOutputStream().write(bytes);
     }
 
+    @GetMapping("/relatorio/excel")
+    public ResponseEntity<InputStreamResource> exportarMonitoradoresParaExcel() {
+        ByteArrayOutputStream byteArrayOutputStream = services.exportarMonitoradoresParaExcel();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=monitoradores.xlsx");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
+    }
+
+
+    //Filtros
+
+    @GetMapping(value = "/filtroNome/{nome}")
+    public ResponseEntity<List<Monitorador>>findByNome(@PathVariable String nome){
+        List<Monitorador> obj = services.findByNome(nome);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping(value = "/filtroCnpj/{cnpj}")
+    public ResponseEntity<Monitorador>findBycnpj(@PathVariable String cnpj){
+        Monitorador obj = services.findBycnpj(cnpj);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping(value = "/filtroCpf/{cpf}")
+    public ResponseEntity<Monitorador>findByCpf(@PathVariable String cpf){
+        Monitorador obj = services.findByCpf(cpf);
+        return ResponseEntity.ok().body(obj);
+    }
 
 
 }

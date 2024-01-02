@@ -21,7 +21,7 @@ public class RelatoriosServices {
     private static String Jasper_Diretorio = "classpath:jasper/";
     private static String Jasper_PrefixoMoni= "Monitorador";
 
-    private static String Jasper_PrefixoEnd = "Endereco";
+    private static String Jasper_PrefixoEndereco = "Endereco";
     private static  String Jasper_Sufixo = ".jasper";
 
     @Autowired
@@ -42,23 +42,11 @@ public class RelatoriosServices {
         }
         return bytes;
     }
-//    public byte[] exportaPDFMonitoradorPessoaJuridica(){
-//        byte[] bytes = null;
-//        try {
-//            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoMoniPessoaJuridica).concat(Jasper_Sufixo));
-//            JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
-//            bytes = JasperExportManager.exportReportToPdf(print);
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (JRException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return bytes;
-//    }
+
     public byte[] exportaPDFEndereco(){
         byte[] bytes = null;
         try {
-            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoEnd).concat(Jasper_Sufixo));
+            File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoEndereco).concat(Jasper_Sufixo));
             JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  conn);
             bytes = JasperExportManager.exportReportToPdf(print);
         } catch (FileNotFoundException e) {

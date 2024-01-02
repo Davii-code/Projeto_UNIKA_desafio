@@ -20,7 +20,7 @@ public class Monitorador implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CNPJ
+  //  @CNPJ
     private String cnpj = null;
     @CPF
     private String cpf = null;
