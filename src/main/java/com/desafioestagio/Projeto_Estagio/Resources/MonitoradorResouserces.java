@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -97,17 +98,68 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
-    @GetMapping(value = "/relatorio/pdfs" )
-    public void GerarPDFMonitorador( HttpServletResponse response) throws IOException {
-        byte [] bytes = relatoriosServices.exportaPDFEndereco();
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf" );
-        response.getOutputStream().write(bytes);
+    @GetMapping(value = "/relatorio/pdfs")
+    public void GerarPDFMonitorador(    @RequestParam(required = false) String nome,
+                                        @RequestParam(required = false) String cnpj,
+                                        @RequestParam(required = false) String cpf,
+                                        @RequestParam(required = false) Long id, String params, HttpServletResponse response) throws IOException {
+
+        byte[] bytes;
+
+        if (nome != null){
+            List<Monitorador> monitoradores = services.findByNome(nome);
+            bytes = relatoriosServices.exportaPDFMonitorador(monitoradores);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf");
+            response.getOutputStream().write(bytes);
+        } else if (cnpj != null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findBycnpj(cnpj));
+            bytes = relatoriosServices.exportaPDFMonitorador(monitoradores);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf");
+            response.getOutputStream().write(bytes);
+        } else if (cpf!=null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findByCpf(cpf));
+            bytes = relatoriosServices.exportaPDFMonitorador(monitoradores);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf");
+            response.getOutputStream().write(bytes);
+        } else if (id != null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findById(id));
+            bytes = relatoriosServices.exportaPDFMonitorador(monitoradores);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf");
+            response.getOutputStream().write(bytes);
+        } else if (nome == null && cnpj == null && cpf == null && id == null) {
+            List<Monitorador> monitoradores = services.findAll();
+            bytes = relatoriosServices.exportaPDFMonitorador(monitoradores);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioMonitorador.pdf");
+            response.getOutputStream().write(bytes);
+        }
+
+
     }
 
     @GetMapping("/relatorio/excel")
-    public ResponseEntity<InputStreamResource> exportarMonitoradoresParaExcel() {
-        ByteArrayOutputStream byteArrayOutputStream = services.exportarMonitoradoresParaExcel();
+    public ResponseEntity<InputStreamResource> exportarMonitoradoresParaExcel( @RequestParam(required = false) String nome, @RequestParam(required = false) String cnpj, @RequestParam(required = false) String cpf, @RequestParam(required = false) Long id) {
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        if (nome!= null){
+            List<Monitorador> monitoradores =services.findByNome(nome);
+            byteArrayOutputStream = services.exportarMonitoradoresParaExcel(monitoradores);
+        } else if (cnpj != null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findBycnpj(cnpj));
+            byteArrayOutputStream = services.exportarMonitoradoresParaExcel(monitoradores);
+        } else if (cpf!= null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findByCpf(cpf));
+            byteArrayOutputStream = services.exportarMonitoradoresParaExcel(monitoradores);
+        } else if (id!=null) {
+            List<Monitorador> monitoradores = Collections.singletonList(services.findById(id));
+            byteArrayOutputStream = services.exportarMonitoradoresParaExcel(monitoradores);
+        } else if (nome == null && cnpj == null && cpf == null && id == null) {
+            List<Monitorador> monitoradores =services.findAll();
+            byteArrayOutputStream = services.exportarMonitoradoresParaExcel(monitoradores);
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=monitoradores.xlsx");

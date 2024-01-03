@@ -1,15 +1,11 @@
 package com.desafioestagio.Projeto_Estagio.entities;
 
 import com.desafioestagio.Projeto_Estagio.Validator.IRValidator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -112,13 +108,13 @@ public class Monitorador implements Serializable {
     }
 
 
-    public String getinscricao() {
+    public String getInscricao() {
         return inscricao;
     }
 
     public void setRg(String rg) {this.rg = rg;}
 
-    public void setInscricao_Estadual(String inscricao_Estadual) {
+    public void setInscricaol(String inscricao_Estadual) {
         this.inscricao = inscricao_Estadual;
     }
 

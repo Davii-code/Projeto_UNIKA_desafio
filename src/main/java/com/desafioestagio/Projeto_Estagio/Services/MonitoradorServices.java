@@ -3,7 +3,6 @@ package com.desafioestagio.Projeto_Estagio.Services;
 import com.desafioestagio.Projeto_Estagio.Repositorys.MonitoradorRepositorys;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
-import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,9 +15,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,15 +77,14 @@ public class MonitoradorServices {
 
  public boolean ValidadorIgualID(Monitorador obj){
         if ("Juridica".equals(obj.getTipo())) {
-           return repository.existsByCnpj(obj.getCnpj()) && repository.existsByInscricao(obj.getinscricao());
+           return repository.existsByCnpj(obj.getCnpj()) && repository.existsByInscricao(obj.getInscricao());
         }else{
             return  repository.existsByCpf(obj.getCpf()) && repository.existsByRg(obj.getRg());
         }
     }
 
 
-    public ByteArrayOutputStream exportarMonitoradoresParaExcel() {
-        List<Monitorador> monitoradores = repository.findAll();
+    public ByteArrayOutputStream exportarMonitoradoresParaExcel(List<Monitorador> monitoradores) {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Monitoradores");
 
@@ -116,7 +112,7 @@ public class MonitoradorServices {
                 row.createCell(4).setCellValue(monitorador.getNome());
                 row.createCell(5).setCellValue(monitorador.getEmail());
                 row.createCell(6).setCellValue(monitorador.getRg());
-                row.createCell(7).setCellValue(monitorador.getinscricao());
+                row.createCell(7).setCellValue(monitorador.getInscricao());
                 row.createCell(8).setCellValue(monitorador.getData_nascimento());
                 row.createCell(9).setCellValue(monitorador.isAtivo() ? "Sim" : "Não");
             }
@@ -134,7 +130,7 @@ public class MonitoradorServices {
     public void updateData(Monitorador entity, Monitorador obj) {
         entity.setNome(obj.getNome());
         entity.setEmail(obj.getEmail());
-        entity.setInscricao_Estadual(obj.getinscricao());
+        entity.setInscricaol(obj.getInscricao());
         entity.setAtivo(obj.isAtivo());
         entity.setRg(obj.getRg());
         entity.setCpf(obj.getCpf());
