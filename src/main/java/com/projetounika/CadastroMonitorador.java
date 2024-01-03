@@ -114,7 +114,6 @@ public class CadastroMonitorador extends Panel {
         }
 
         form.add(codigo);
-      //  form.add(escolheTipo);
         form.add(nome);
         form.add(cpf);
         form.add(cnpj);
