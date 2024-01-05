@@ -1,7 +1,6 @@
 package com.desafioestagio.Projeto_Estagio.Services;
 
 import com.desafioestagio.Projeto_Estagio.Repositorys.EnderecoRepositorys;
-import com.desafioestagio.Projeto_Estagio.Repositorys.MonitoradorRepositorys;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +26,8 @@ public class EnderecoServices {
 
     @Autowired
     private EnderecoRepositorys enderecoRepositorys;
-
+    @Autowired
+    private MonitoradorServices monitoradorServices;
 
 
 
@@ -71,7 +72,7 @@ public class EnderecoServices {
     public boolean ValidadorMonitorador(Long id) {
         Long id_monitorador = enderecoRepositorys.VerificaMonitorador(id);
         List<Long> id_End = enderecoRepositorys.ValidadorEstrangeiro(id_monitorador);
-        if (id_End.size()> 1 ){
+        if (id_End.size()>= 1 ){
             return true;
         }
         return false;
@@ -87,8 +88,9 @@ public class EnderecoServices {
         }
     }
 
-    public ByteArrayOutputStream exportaEnderecoParaExcel(){
-        List<Endereco> enderecos = enderecoRepositorys.findAll();
+    public ByteArrayOutputStream exportaEnderecoParaExcel(Long id){
+        Monitorador monitorador = monitoradorServices.findById(id);
+        List<Endereco> enderecos =monitorador.getEnderecos();
         try(Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()){
             Sheet sheet = workbook.createSheet("Endereco");
             Row headerRow = sheet.createRow(0);
@@ -99,7 +101,8 @@ public class EnderecoServices {
             headerRow.createCell(4).setCellValue("Telefone");
             headerRow.createCell(5).setCellValue("Cidade");
             headerRow.createCell(6).setCellValue("Estado");
-            headerRow.createCell(7).setCellValue("Principal");
+            headerRow.createCell(7).setCellValue("Bairro");
+            headerRow.createCell(8).setCellValue("Principal");
 
 
 
@@ -113,7 +116,8 @@ public class EnderecoServices {
                 row.createCell(4).setCellValue(endereco.getTelefone());
                 row.createCell(5).setCellValue(endereco.getCidade());
                 row.createCell(6).setCellValue(endereco.getEstado());
-                row.createCell(7).setCellValue(endereco.getPrincipal() ? "Sim" : "Não");
+                row.createCell(7).setCellValue(endereco.getBairro());
+                row.createCell(8).setCellValue(endereco.getPrincipal() ? "Sim" : "Não");
 
             }
             workbook.write(out);
@@ -124,6 +128,8 @@ public class EnderecoServices {
         }
     }
 
+
+
     private void updateData(Endereco entity, Endereco obj) {
         entity.setEndereco(obj.getEndereco());
         entity.setNumero(obj.getNumero());
@@ -131,6 +137,7 @@ public class EnderecoServices {
         entity.setEstado(obj.getEstado());
         entity.setTelefone(obj.getTelefone());
         entity.setCidade(obj.getCidade());
+        entity.setBairro(obj.getBairro());
         entity.setPrincipal(obj.getPrincipal());
 
     }

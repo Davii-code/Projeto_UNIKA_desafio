@@ -26,4 +26,8 @@ public interface MonitoradorRepositorys extends JpaRepository<Monitorador,Long> 
 
 
 
+
+
+
+
 }

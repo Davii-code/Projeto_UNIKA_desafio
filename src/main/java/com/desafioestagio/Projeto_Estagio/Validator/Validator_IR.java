@@ -13,9 +13,18 @@ public class Validator_IR implements ConstraintValidator<IRValidator, String> {
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        if (s == null || s.length() > 1){
-            return true;
+        if (s == null) {
+            // Trata o caso em que a string é nula
+            return true; // Ou false, dependendo da lógica que você deseja
         }
-        return false;
-    }
-}
+
+        for (char c : s.toCharArray()) {
+            if (Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
+    }}
+
+
+

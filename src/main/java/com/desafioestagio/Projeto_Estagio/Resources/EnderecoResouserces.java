@@ -1,14 +1,14 @@
 package com.desafioestagio.Projeto_Estagio.Resources;
 
 
+import com.desafioestagio.Projeto_Estagio.Services.ConsumoApi;
 import com.desafioestagio.Projeto_Estagio.Services.EnderecoServices;
 import com.desafioestagio.Projeto_Estagio.Services.MonitoradorServices;
 import com.desafioestagio.Projeto_Estagio.Services.Relatorios.RelatoriosServices;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
+import com.desafioestagio.Projeto_Estagio.entities.EntitiesApiViaCep;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +24,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/endereco")
+@RequestMapping(value = "/endereco",produces = "application/json; charset=UTF-8")
 public class EnderecoResouserces {
 
     @Autowired
@@ -35,6 +35,8 @@ public class EnderecoResouserces {
     @Autowired
     private RelatoriosServices relatoriosServices;
 
+    @Autowired
+    private ConsumoApi consumoApi;
 
     @GetMapping
     public ResponseEntity<List<Endereco>> findAll() {
@@ -75,17 +77,30 @@ public class EnderecoResouserces {
         return ResponseEntity.ok().body(obj);
     }
 
+    @GetMapping("/buscarCEP/{cep}")
+    public ResponseEntity<Endereco> BuscaApi(@PathVariable String cep) {
+        EntitiesApiViaCep entitiesApiViaCep = consumoApi.obterDados(cep);
+        Endereco endereco = entitiesApiViaCep.toEnderecoEntity();
+        return ResponseEntity.ok().body(endereco);
+    }
+
     @GetMapping(value = "/relatorio/pdfs")
-    public void GerarPDFEndereco(HttpServletResponse response) throws IOException {
-        byte[] bytes = relatoriosServices.exportaPDFEndereco();
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "attachment; filename=relatorioEndereco.pdf");
-        response.getOutputStream().write(bytes);
+    public void GerarPDFEndereco(@RequestParam (required = false) Long id, HttpServletResponse response) throws IOException {
+        Monitorador monitorador1 = monitorador.findById(id);
+        List<Endereco>  enderecos = monitorador1.getEnderecos();;
+
+            byte[] bytes = relatoriosServices.exportaPDFEndereco(enderecos);
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+            response.setHeader("Content-disposition", "attachment; filename=relatorioEndereco.pdf");
+            response.getOutputStream().write(bytes);
+
+
+
     }
 
     @GetMapping(value = "/relatorio/excel")
-    public ResponseEntity<InputStreamResource> esportaEnderecoParaExcel() {
-        ByteArrayOutputStream byteArrayOutputStream = services.exportaEnderecoParaExcel();
+    public ResponseEntity<InputStreamResource> esportaEnderecoParaExcel(@RequestParam (required = false) Long id) {
+        ByteArrayOutputStream byteArrayOutputStream = services.exportaEnderecoParaExcel(id);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=monitoradores.xlsx");
         return ResponseEntity.ok()

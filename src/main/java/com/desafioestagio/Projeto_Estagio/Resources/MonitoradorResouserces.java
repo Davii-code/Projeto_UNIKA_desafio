@@ -11,9 +11,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -24,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/monitorador")
+@RequestMapping(value = "/monitorador",produces = "application/json; charset=UTF-8")
 public class MonitoradorResouserces {
 
     @Autowired
@@ -35,6 +37,7 @@ public class MonitoradorResouserces {
 
     @Autowired
     private RelatoriosServices relatoriosServices;
+
 
 
     @GetMapping
@@ -102,7 +105,7 @@ public class MonitoradorResouserces {
     public void GerarPDFMonitorador(    @RequestParam(required = false) String nome,
                                         @RequestParam(required = false) String cnpj,
                                         @RequestParam(required = false) String cpf,
-                                        @RequestParam(required = false) Long id, String params, HttpServletResponse response) throws IOException {
+                                        @RequestParam(required = false) Long id, HttpServletResponse response) throws IOException {
 
         byte[] bytes;
 
@@ -170,6 +173,19 @@ public class MonitoradorResouserces {
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(new InputStreamResource(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
     }
+
+    @PostMapping("/importar-excel")
+    public String importarMonitoradoresDoExcel() {
+        try {
+            List<Monitorador> monitoradores = services.criarExcel();
+            return "Importação bem-sucedida";
+        } catch (Exception e) {
+            e.printStackTrace(); // Tratar exceções adequadamente
+            return "Erro durante a importação: " + e.getMessage();
+        }
+    }
+
+
 
 
     //Filtros

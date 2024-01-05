@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface  IRValidator {
 
-   public String message() default "Rg invalido";
+   public String message() default " invalido";
 
    public  Class<?>[] groups() default {};
 

@@ -3,6 +3,7 @@ package com.desafioestagio.Projeto_Estagio.entities;
 import com.desafioestagio.Projeto_Estagio.Validator.IRValidator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.io.Serializable;
@@ -16,19 +17,20 @@ public class Monitorador implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-  //  @CNPJ
+    @CNPJ
+    @IRValidator()
     private String cnpj = null;
     @CPF
+    @IRValidator()
     private String cpf = null;
     @NotEmpty
     private String nome;
     private String email = null;
 
-   // @IRValidator()
+     @IRValidator()
     private String rg;
     @IRValidator()
     private String inscricao = null;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.000'Z'", timezone = "GMT")
 
     private String Data_nascimento = null;
     private String tipo;

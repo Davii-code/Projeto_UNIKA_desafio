@@ -1,6 +1,7 @@
 package com.desafioestagio.Projeto_Estagio.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Endereco {
     private String telefone;
     private String cidade;
     private String estado;
+    private String bairro;
     private Boolean principal;
 
     @ManyToOne(optional = false)
@@ -31,7 +33,7 @@ public class Endereco {
 
     }
 
-    public Endereco(Long id, String endereco, String numero, String cep, String telefone, String cidade, String estado, Boolean principal,Monitorador monitorador) {
+    public Endereco(Long id, String endereco, String numero, String cep, String telefone, String cidade, String estado, Boolean principal,String bairro ,Monitorador monitorador) {
         this.id = id;
         this.endereco = endereco;
         this.numero = numero;
@@ -41,6 +43,15 @@ public class Endereco {
         this.estado = estado;
         this.principal = principal;
         this.monitorador = monitorador;
+        this.bairro = bairro;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
     public Long getId() {

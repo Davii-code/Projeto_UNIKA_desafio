@@ -5,17 +5,20 @@ import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,6 +129,97 @@ public class MonitoradorServices {
             return null;
         }
     }
+
+
+    public List<Monitorador> criarExcel() {
+        List<Monitorador> monitoradores = new ArrayList<>();
+
+        try (FileInputStream file = new FileInputStream("src/main/resources/monitoradoresModelo.xlsx");
+             Workbook workbook = new XSSFWorkbook(file)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            if (sheet.getLastRowNum() < 1) {
+                System.out.println("A planilha está vazia ou contém apenas o cabeçalho.");
+                return monitoradores;
+            }
+            Iterator<Row> iterator = sheet.iterator();
+
+
+
+            // Pular o cabeçalho
+
+            if (iterator.hasNext()) {
+                iterator.next(); // Avança para a próxima linha (cabeçalho)
+            }
+
+// Verifica se há pelo menos uma linha de dados
+            if (!iterator.hasNext()) {
+                System.out.println("A planilha não contém dados.");
+                return monitoradores;
+            }
+
+            while (iterator.hasNext()) {
+                Row currentRow = iterator.next();
+                Iterator<Cell> cellIterator = currentRow.iterator();
+                Monitorador monitorador = new Monitorador();
+
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    int columnIndex = cell.getColumnIndex();
+
+                    switch (columnIndex) {
+                        case 0:
+                            monitorador.setTipo(cell.getStringCellValue());
+                            break;
+                        case 1:
+                            monitorador.setCpf(cell.getStringCellValue());
+                            break;
+                        case 2:
+                            monitorador.setCnpj(cell.getStringCellValue());
+                            break;
+                        case 3:
+                            monitorador.setNome(cell.getStringCellValue());
+                            break;
+                        case 4:
+                            monitorador.setEmail(cell.getStringCellValue());
+                            break;
+                        case 5:
+                            monitorador.setRg(cell.getStringCellValue());
+                            break;
+                        case 6:
+                            monitorador.setInscricaol(cell.getStringCellValue());
+                            break;
+                        case 7:
+                            monitorador.setData_nascimento(cell.getStringCellValue());
+                            break;
+                        case 8:
+                            if (cell.getCellType() == CellType.STRING) {
+                                String ativoString = cell.getStringCellValue();
+                                monitorador.setAtivo(converterStringParaBooleano(ativoString));
+                            }
+                            break;
+                        // Adicione outros casos conforme necessário
+
+                        default:
+                            System.out.println("");
+                    }
+                }
+
+                insert(monitorador);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(); // Tratar exceções adequadamente
+        }
+
+        return monitoradores;
+    }
+
+    public boolean converterStringParaBooleano(String valorString) {
+        return "Sim".equalsIgnoreCase(valorString);
+    }
+
 
     public void updateData(Monitorador entity, Monitorador obj) {
         entity.setNome(obj.getNome());
