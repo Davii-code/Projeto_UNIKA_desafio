@@ -147,15 +147,5 @@ public class CadastroMonitorador extends Panel {
                 cpf.substring(6, 9) + "-" + cpf.substring(9, 11);
     }
 
-//    public static String formatarCNPJ(String cnpj) {
-//        cnpj = cnpj.replaceAll("[^0-14]", "");
-//        // Verificar se o CPF tem 11 dígitos
-//        if (cnpj.length() != 14) {
-//            throw new IllegalArgumentException("O CPF deve conter 11 dígitos numéricos.");
-//        }
-//
-//        // Formatando o CPF com pontos e traço
-//        return cnpj.substring(0, 2) + "." + cnpj.substring(2, 5) + "." +
-//                cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-";
-//    }
+
 }

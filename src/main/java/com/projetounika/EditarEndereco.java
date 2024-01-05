@@ -57,6 +57,7 @@ public class EditarEndereco extends Panel {
         form.add(new TextField<>("endereco"));
         form.add(new TextField<>("cep"));
         form.add(new TextField<>("numero"));
+        form.add(new TextField<>("bairro"));
         form.add(new TextField<>("telefone"));
         form.add(new TextField<>("cidade"));
 

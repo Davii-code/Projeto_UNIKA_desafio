@@ -14,6 +14,7 @@ public class Endereco implements Serializable {
     private String telefone;
     private String cidade;
     private String estado;
+    private String bairro;
     private Boolean principal = true;
 
 
@@ -23,7 +24,7 @@ public class Endereco implements Serializable {
 
     }
 
-    public Endereco(Long id, String endereco, String numero, String cep, String telefone, String cidade, String estado, Boolean principal,Monitorador monitorador) {
+    public Endereco(Long id, String endereco, String numero, String cep,String bairro, String telefone, String cidade, String estado, Boolean principal,Monitorador monitorador) {
         this.id = id;
         this.endereco = endereco;
         this.numero = numero;
@@ -33,6 +34,15 @@ public class Endereco implements Serializable {
         this.estado = estado;
         this.principal = principal;
         this.monitorador = monitorador;
+        this.bairro = bairro;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
     public Long getId() {

@@ -9,6 +9,14 @@
     <form wicket:id="edit">
         <div class="d-flex" id="formSpacing">
 
+            <div class="form-group col-md-3">
+                <label>CEP</label>
+                <input type="text" class="form-control" wicket:id="cep">
+            </div>
+            <div style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.3);border-left: white; margin-top: 25px; width: 50px; height: 35px; display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-search"></i>
+            </div>
+
             <div class="form-group col-md-2">
                 <label>Código</label>
                 <input type="text" class="form-control" wicket:id="id" readonly>
@@ -19,18 +27,15 @@
                 <input type="text" class="form-control " wicket:id="endereco">
             </div>
 
-
-            <div class="form-group col-md-3">
-                <label>Telefone</label>
-                <input type="text" class="form-control " wicket:id="telefone">
-            </div>
-
-            <div class="form-group col-md-3">
-                <label>CEP</label>
-                <input type="text" class="form-control" wicket:id="cep">
-            </div>
         </div>
-
+        <div class="form-group col-md-3">
+            <label>Telefone</label>
+            <input type="text" class="form-control " wicket:id="telefone">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Bairro</label>
+            <input type="text" class="form-control" wicket:id="bairro">
+        </div>
         <div class="d-flex" id="formSpacingId">
             <div class="form-group col-md-6">
                 <label>Numero</label>
@@ -61,7 +66,9 @@
         <div class="form-group  col-md-5">
             <button type="submit" class="btn btn-outline-primary" style="margin-top: 5%">Criar+</button>
         </div>
+
     </form>
+
 </wicket:panel>
 </body>
 </html>

@@ -47,6 +47,28 @@ public class EnderecoHttpClient implements Serializable {
         return null;
     }
 
+    public Endereco BuscaCep(String cep) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try {
+            HttpGet request = new HttpGet(baseUrl + cep);
+            CloseableHttpResponse response = httpClient.execute(request);
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity);
+
+            httpClient.close();
+            response.close();
+
+            return objectMapper.readValue(responseString, new TypeReference<Endereco>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
     public Endereco Criar (Endereco endereco,Long id) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost post = new HttpPost (baseUrl + "/" + id + "/" + "enderecos");
@@ -92,6 +114,9 @@ public class EnderecoHttpClient implements Serializable {
             }
         }
     }
+
+
+
 
     public Monitorador Atualizar(Endereco endereco) throws IOException {
 

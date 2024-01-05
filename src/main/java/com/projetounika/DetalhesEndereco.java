@@ -35,6 +35,7 @@ public class DetalhesEndereco extends Panel {
                 listItem.add(new Label("cep",endereco.getCep()));
                 listItem.add(new Label("est",endereco.getEstado()));
                 listItem.add(new Label("cid",endereco.getCidade()));
+                listItem.add(new Label("bairro",endereco.getBairro()));
                 listItem.add(new Label("principal",endereco.getPrincipal() ? "Sim" : "Não") );
 
 
@@ -69,10 +70,10 @@ public class DetalhesEndereco extends Panel {
                 modal.show(ajaxRequestTarget);
             }
         };
-        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/endereco/relatorio/pdfs");
+        ExternalLink linkPdf = new ExternalLink("pdf","http://localhost:8080/endereco/relatorio/pdfs?id=" +codigo);
         add(linkPdf);
 
-        ExternalLink linkExcel = new ExternalLink ("excel","http://localhost:8080/endereco/relatorio/excel");
+        ExternalLink linkExcel = new ExternalLink ("excel","http://localhost:8080/endereco/relatorio/excel?id=" +codigo);
         add(linkExcel);
 
         add(linkCadastro);

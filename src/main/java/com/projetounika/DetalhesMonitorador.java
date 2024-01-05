@@ -40,7 +40,7 @@ public class DetalhesMonitorador extends Panel {
         DropDownChoice<String> escolheAtivo = new DropDownChoice<>("escolheAtivo",
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
                 List.of("Sim", "Não"));
-        final TextField<String> cnpj = new TextField<>("cnpj",Model.of(formatarCNPJ(monitorador.getCnpj())));
+
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
             @Override
             protected void onSubmit() {
@@ -61,9 +61,9 @@ public class DetalhesMonitorador extends Panel {
                         String dataFormatada = formatarDataComBarra(dataNascimento);
                         monitorador.setData_nascimento(dataFormatada);
                     }
-                } else {
-                    String cnpjFormatado = cnpj.getModelObject();
-                    cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");  // Usando "\\D" para representar qualquer caractere não numérico
+                } else if (monitorador.getTipo().equals("Juridica")){
+                    String cnpjFormatado = monitorador.getCnpj();
+                    cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");
                     monitorador.setCnpj(cnpjFormatado);
                 }
                 try {
@@ -81,6 +81,7 @@ public class DetalhesMonitorador extends Panel {
         final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> cpf = new TextField<>("cpf");
+        final TextField<String> cnpj = new TextField<>("cnpj",Model.of(formatarCNPJ(monitorador.getCnpj())));
         final TextField<String> email = new TextField<>("email");
         final TextField<String> rg = new TextField<>("rg");
         final TextField<String> data = new TextField<>("Data_nascimento");
@@ -168,7 +169,9 @@ public class DetalhesMonitorador extends Panel {
     }
 
     public static String formatarCNPJ(String cnpj) {
-        cnpj = cnpj.replaceAll("[^0-9]", "");
+        if (cnpj == null){
+            return null;
+        }
         // Verificar se o CPF tem 11 dígitos
         if (cnpj.length() != 14) {
             throw new IllegalArgumentException("O Cnpj deve conter 14 dígitos numéricos.");
