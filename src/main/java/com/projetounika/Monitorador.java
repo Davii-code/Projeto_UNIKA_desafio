@@ -36,6 +36,12 @@ public class Monitorador extends WebPage {
         modal.setInitialWidth(850);
         add(modal);
 
+        //Modal
+        final ModalWindow modalImport = new ModalWindow("modalImport");
+        modalImport.setInitialHeight(250);
+        modalImport.setInitialWidth(450);
+        add(modalImport);
+
         // Obtém a lista de monitoradores usando o HttpClient
         List<com.projetounika.entities.Monitorador> list = monitoradorHttpClient.listarTodos();
 
@@ -110,7 +116,13 @@ public class Monitorador extends WebPage {
             }
         };
 
-
+        AjaxLink<Void>ImportArquivo = new AjaxLink<Void>("importExcel") {
+            @Override
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                modalImport.setContent(new ImportArquivo(modalImport.getContentId()));
+                modalImport.show(ajaxRequestTarget);
+            }
+        };
 
         AjaxLink<Void> linkCriarPessoaFisica = new AjaxLink<Void>("linkCriarF") {
             @Override
@@ -212,6 +224,7 @@ public class Monitorador extends WebPage {
         add(linkCriarPessoaFisica);
         add(linkCriarPessoaJuridica);
         add(form);
+        add(ImportArquivo);
 
 
     }

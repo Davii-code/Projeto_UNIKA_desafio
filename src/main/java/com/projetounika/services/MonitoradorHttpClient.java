@@ -12,10 +12,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 import java.io.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MonitoradorHttpClient implements Serializable {
@@ -146,10 +150,120 @@ public class MonitoradorHttpClient implements Serializable {
 
     }
 
+    public List<Monitorador> criarExcel(File excel) {
+        List<Monitorador> monitoradores = new ArrayList<>();
+
+        try (FileInputStream file = new FileInputStream(excel);
+             Workbook workbook = new XSSFWorkbook (file)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            if (sheet.getLastRowNum() < 1) {
+                System.out.println("A planilha está vazia ou contém apenas o cabeçalho.");
+                return monitoradores;
+            }
+            Iterator<Row> iterator = sheet.iterator();
 
 
 
-}
+            // Pular o cabeçalho
+
+            if (iterator.hasNext()) {
+                iterator.next(); // Avança para a próxima linha (cabeçalho)
+            }
+
+// Verifica se há pelo menos uma linha de dados
+            if (!iterator.hasNext()) {
+                System.out.println("A planilha não contém dados.");
+                return monitoradores;
+            }
+
+            while (iterator.hasNext()) {
+                Row currentRow = iterator.next();
+                Iterator<Cell> cellIterator = currentRow.iterator();
+                Monitorador monitorador = new Monitorador();
+
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    int columnIndex = cell.getColumnIndex();
+
+                    switch (columnIndex) {
+                        case 0:
+                            monitorador.setTipo(cell.getStringCellValue());
+                            break;
+                        case 1:
+                            monitorador.setCpf(cell.getStringCellValue());
+                            break;
+                        case 2:
+                            monitorador.setCnpj(cell.getStringCellValue());
+                            break;
+                        case 3:
+                            monitorador.setNome(cell.getStringCellValue());
+                            break;
+                        case 4:
+                            monitorador.setEmail(cell.getStringCellValue());
+                            break;
+                        case 5:
+                            monitorador.setRg(cell.getStringCellValue());
+                            break;
+                        case 6:
+                            monitorador.setInscricao(cell.getStringCellValue());
+                            break;
+                        case 7:
+                            monitorador.setData_nascimento(cell.getStringCellValue());
+                            break;
+                        case 8:
+                            if (cell.getCellType() == CellType.STRING) {
+                                String ativoString = cell.getStringCellValue();
+                                monitorador.setAtivo(converterStringParaBooleano(ativoString));
+                            }
+                            break;
+                        // Adicione outros casos conforme necessário
+
+                        default:
+                            System.out.println("");
+                    }
+
+                }
+                importMonitoradorToServer(monitorador);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace(); // Tratar exceções adequadamente
+        }
+
+        return monitoradores;
+    }
+
+
+    public boolean converterStringParaBooleano(String valorString) {
+        return "Sim".equalsIgnoreCase(valorString);
+    }
+
+    public void importMonitoradorToServer(Monitorador monitorador) throws IOException {
+
+
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost(baseUrl + "/import-excel");
+            String json = objectMapper.writeValueAsString(monitorador);
+            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
+
+            post.setEntity(entity);
+            post.setHeader("Content-type", "application/json");
+
+            CloseableHttpResponse response = httpClient.execute(post);
+
+            HttpEntity httpEntity = response.getEntity();
+            String obj = EntityUtils.toString(httpEntity);
+
+            httpClient.close();
+            response.close();
+
+        objectMapper.readValue (obj, new TypeReference<Monitorador> () {
+        });
+
+
+    }}
 
 
 

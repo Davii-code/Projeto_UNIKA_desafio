@@ -3,15 +3,22 @@ package com.projetounika;
 import com.projetounika.entities.Monitorador;
 import com.projetounika.services.MonitoradorHttpClient;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+
+
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -21,6 +28,8 @@ import java.util.List;
 
 
 public class CadastroMonitorador extends Panel {
+
+    FeedbackPanel feed;
     public CadastroMonitorador(String id, ModalWindow modalWindow,String valorTipo) {
         super(id);
 
@@ -43,9 +52,12 @@ public class CadastroMonitorador extends Panel {
         final Label RG = new Label("RG", "RG");
         final Label date = new Label("date", "Data de Nascimento");
 
+
+
         Form<Monitorador> form = new Form<>("edit", new CompoundPropertyModel<>(monitorador)) {
             @Override
             protected void onSubmit() {
+                AjaxRequestTarget target = null;
                 String valorAtivo = escolheAtivo.getModelObject();
                 if (valorAtivo.equals("Sim")) {
                     monitorador.setAtivo(true);
@@ -67,12 +79,14 @@ public class CadastroMonitorador extends Panel {
 
                 try {
                     monitoradorHttpClient.Criar(monitorador);
+
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
             }
         };
+
         add(form);
 
 
@@ -126,6 +140,10 @@ public class CadastroMonitorador extends Panel {
         form.add(RG);
         form.add(escolheAtivo);
     }
+
+
+
+
     private String formatarDataComBarra(String dataNascimento) {
         try {
             DateFormat formatoEntrada = new SimpleDateFormat("ddMMyyyy");

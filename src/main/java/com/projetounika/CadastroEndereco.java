@@ -9,7 +9,9 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
@@ -37,7 +39,6 @@ public class CadastroEndereco extends Panel {
                         "MG", "PA", "PB", "PR", "PE", "PI", "RJ",
                         "RN", "RS", "RO", "RR", "SC",
                         "SP", "SE", "TO"));
-
 
         Form<Endereco> form = new Form<>("edit", new CompoundPropertyModel<>(endereco)) {
 

@@ -24,6 +24,9 @@
             margin-right: 5px;
         }
 
+        body {
+            overflow: hidden;
+        }
 
     </style>
 </head>
@@ -56,13 +59,16 @@
         </div>
 
     </form>
-    <div class="fieldcontain col-lg-12 filtro" style="margin-top: 10px">
+
+    <div class="fieldcontain col-lg-12 " style="margin-top: -38px; margin-left: 70px">
         <button type="button" class="btn btn-outline-success" wicket:id="linkCriarJ">Criar Jurídica+</button>
         <button type="button" class="btn btn-outline-success" wicket:id="linkCriarF">Criar Física+</button>
         <button type="button" class="btn btn-outline-success" wicket:id="excel">EXCEL</button>
+        <button type="button" class="btn btn-outline-primary" wicket:id="pdf">PDF</button>
+        <button type="button" class="btn btn-outline-success" wicket:id="importExcel">Importa Arquivo</button>
 
-            <button type="button" class="btn btn-outline-primary" wicket:id="pdf">PDF</button>
     </div>
+
 </div>
 
 
@@ -96,6 +102,7 @@
 
     </table>
     <div wicket:id="modal"></div>
+    <div wicket:id="modalImport"></div>
 
 </div>
 
