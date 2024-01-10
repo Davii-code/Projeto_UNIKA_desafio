@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.file.File;
@@ -39,8 +40,9 @@ public class ImportArquivo extends Panel {
             }
         };
 
-
+        ExternalLink linkModelo = new ExternalLink("baixarModelo", "http://localhost:8080/monitorador/relatorio/excelModelo");
         form.add(fileUploadField);
+        add (linkModelo);
         add(form);
 
     }

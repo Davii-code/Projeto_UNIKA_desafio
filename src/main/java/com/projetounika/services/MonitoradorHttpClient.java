@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -207,9 +208,10 @@ public class MonitoradorHttpClient implements Serializable {
                             monitorador.setRg(cell.getStringCellValue());
                             break;
                         case 6:
-                            monitorador.setInscricao(cell.getStringCellValue());
+                            monitorador.setInscricao (String.valueOf (BigDecimal.valueOf (cell.getNumericCellValue ()).setScale (0)));
                             break;
                         case 7:
+
                             monitorador.setData_nascimento(cell.getStringCellValue());
                             break;
                         case 8:
@@ -225,7 +227,7 @@ public class MonitoradorHttpClient implements Serializable {
                     }
 
                 }
-                importMonitoradorToServer(monitorador);
+                Criar (monitorador);
             }
 
         } catch (IOException e) {
@@ -240,30 +242,9 @@ public class MonitoradorHttpClient implements Serializable {
         return "Sim".equalsIgnoreCase(valorString);
     }
 
-    public void importMonitoradorToServer(Monitorador monitorador) throws IOException {
 
 
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPost post = new HttpPost(baseUrl + "/import-excel");
-            String json = objectMapper.writeValueAsString(monitorador);
-            StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
-
-            post.setEntity(entity);
-            post.setHeader("Content-type", "application/json");
-
-            CloseableHttpResponse response = httpClient.execute(post);
-
-            HttpEntity httpEntity = response.getEntity();
-            String obj = EntityUtils.toString(httpEntity);
-
-            httpClient.close();
-            response.close();
-
-        objectMapper.readValue (obj, new TypeReference<Monitorador> () {
-        });
-
-
-    }}
+}
 
 
 

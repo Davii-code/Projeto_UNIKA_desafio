@@ -77,7 +77,6 @@ public class DetalhesMonitorador extends Panel {
         };
         add(form);
 
-
         final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> cpf = new TextField<>("cpf");
@@ -169,10 +168,16 @@ public class DetalhesMonitorador extends Panel {
     }
 
     public static String formatarCNPJ(String cnpj) {
+
+        if (cnpj!=null){
+            cnpj = cnpj.replaceAll("\\D", "");
+        }
+
         if (cnpj == null){
             return null;
+
         }
-        // Verificar se o CPF tem 11 dígitos
+
         if (cnpj.length() != 14) {
             throw new IllegalArgumentException("O Cnpj deve conter 14 dígitos numéricos.");
         }

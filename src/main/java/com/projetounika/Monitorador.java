@@ -4,6 +4,7 @@ import com.projetounika.entities.Endereco;
 import com.projetounika.services.EnderecoHttpClient;
 import com.projetounika.services.MonitoradorHttpClient;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebPage;
@@ -141,6 +142,9 @@ public class Monitorador extends WebPage {
         final TextField<String> Cnpj = new TextField<>("cnpjF",Model.of(""));
         String url;
 
+
+
+
         Form<com.projetounika.entities.Monitorador> form = new Form<>("filtro"){
             @Override
             protected void onSubmit() {
@@ -212,9 +216,6 @@ public class Monitorador extends WebPage {
 
 
 
-
-
-
         form.add(codigo);
         form.add(nome);
         form.add(cpf);
@@ -243,12 +244,13 @@ public class Monitorador extends WebPage {
 
 
     public static String formatarCNPJ(String cnpj) {
-        // Verificar se o CPF tem 11 dígitos
+
+        cnpj = cnpj.replaceAll("\\D", "");
         if (cnpj.length() != 14) {
             throw new IllegalArgumentException("O Cnpj deve conter 14 dígitos numéricos.");
         }
 
-        // Formatando o CPF com pontos e traço
+
         return cnpj.substring(0, 2) + "." + cnpj.substring(2, 5) + "." +
                 cnpj.substring(5, 8) + "/" + cnpj.substring(8, 12) + "-" + cnpj.substring(12,14);
     }

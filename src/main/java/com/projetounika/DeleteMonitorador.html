@@ -55,40 +55,46 @@
 
             <div class="form-group col-md-3">
                 <label>Nome/Razão Social</label>
-                <input type="text" class="form-control " wicket:id="nome">
+                <input type="text" class="form-control " wicket:id="nome" readonly>
             </div>
 
             <div class="form-group col-md-4">
                 <label>Email</label>
-                <input type="text" class="form-control" wicket:id="email">
+                <input type="text" class="form-control" wicket:id="email" readonly>
             </div>
         </div>
 
         <div class="d-flex" id="formSpacingId">
             <div class="form-group col-md-6">
-                <label>CPF</label>
-                <input type="text" class="form-control" wicket:id="cpf">
+                <label >CNPJ/CPF</label>
+                <input type="text" class="form-control" wicket:id="cpf" readonly>
+                <input type="text" class="form-control" wicket:id="cnpj" readonly>
             </div>
 
             <div class="form-group  col-md-5">
-                <label>RG</label>
-                <input type="text" class="form-control" wicket:id="rg">
+                <label wicket:id="ins"></label>
+                <label wicket:id="RG"></label>
+                <input type="text" class="form-control" wicket:id="rg" readonly>
+                <input type="text" class="form-control" wicket:id="inscricao" readonly>
             </div>
         </div>
-
+        <div class="form-group  col-md-5">
+            <label wicket:id="date"></label>
+            <input type="text" class="form-control" id="dataInput"  placeholder="DD/MM/YYYY" wicket:id="Data_nascimento" readonly>
+        </div>
 
         <div class="d-flex" id="formSpacingSelect">
             <div class="form-group  col-md-6">
                 <label>Tipo</label>
-                <select class="form-control  col-md-6" wicket:id="escolheTipo">
+                <select class="form-control  col-md-6" wicket:id="escolheTipo" readonly>
                     <option>Física</option>
                 </select>
             </div>
             <div class="form-group  col-md-5">
                 <label>Ativo</label>
-                <select class="form-control" wicket:id="escolheAtivo">
-                    <option>Sim</option>
-                    <option>Não</option>
+                <select class="form-control" wicket:id="escolheAtivo" readonly>
+                    <option value=true>Sim</option>
+                    <option value=false>Não</option>
                 </select>
             </div>
         </div>

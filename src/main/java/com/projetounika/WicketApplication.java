@@ -2,6 +2,8 @@ package com.projetounika;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.CompositeJavaScriptCompressor;
+import org.apache.wicket.resource.CssUrlReplacer;
 
 /**
  * Application object for your web application.
@@ -27,8 +29,8 @@ public class WicketApplication extends WebApplication
 	public void init()
 	{
 		super.init();
-
-
 		// add your configuration here
 	}
+
+
 }

@@ -1,14 +1,10 @@
 package com.projetounika;
 
+import com.projetounika.Mascara.Mask;
 import com.projetounika.entities.Monitorador;
 import com.projetounika.services.MonitoradorHttpClient;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -19,12 +15,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
 
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
 
 
 public class CadastroMonitorador extends Panel {
@@ -42,6 +38,7 @@ public class CadastroMonitorador extends Panel {
 
         final TextField<String> cpf = new TextField<>("cpf");
         final TextField<String> cnpj = new TextField<>("cnpj");
+        cnpj.add(new Mask ("00.000.000/0000-00"));
         final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> email = new TextField<>("email");
@@ -51,6 +48,7 @@ public class CadastroMonitorador extends Panel {
         final Label IE = new Label("ins", "Inscrição Estadual");
         final Label RG = new Label("RG", "RG");
         final Label date = new Label("date", "Data de Nascimento");
+
 
 
 
@@ -139,6 +137,9 @@ public class CadastroMonitorador extends Panel {
         form.add(date);
         form.add(RG);
         form.add(escolheAtivo);
+
+
+
     }
 
 
@@ -164,6 +165,17 @@ public class CadastroMonitorador extends Panel {
         return cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." +
                 cpf.substring(6, 9) + "-" + cpf.substring(9, 11);
     }
+
+//    @Override
+//    public void renderHead(IHeaderResponse response) {
+//        super.renderHead(response);
+//
+//        StringBuilder js = new StringBuilder("jQuery(function($){$('#")
+//                .append(getMarkupId())
+//                .append("').mask('00.000.000/0000-00');});");
+//
+//        response.render(OnDomReadyHeaderItem.forScript(js.toString()));
+//    }
 
 
 }
