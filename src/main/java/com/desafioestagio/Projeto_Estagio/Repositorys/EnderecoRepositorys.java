@@ -10,8 +10,9 @@ import java.util.List;
 public interface EnderecoRepositorys extends JpaRepository<Endereco,Long> {
 
 
-    boolean existsByCep(String obj);
     boolean existsByPrincipal(boolean obj);
+    boolean existsByEndereco(String obj);
+
 
     @Query(value = "SELECT monitorador_id FROM tb_endereco WHERE id = ?", nativeQuery = true)
     Long VerificaMonitorador(Long id);

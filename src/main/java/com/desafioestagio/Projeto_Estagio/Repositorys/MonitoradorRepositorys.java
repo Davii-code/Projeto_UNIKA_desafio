@@ -16,7 +16,12 @@ public interface MonitoradorRepositorys extends JpaRepository<Monitorador,Long> 
     boolean existsByRg(String Rg);
     boolean existsByInscricao(String inscricao);
 
+    boolean existsByEmail(String email);
+
     List<Monitorador> findByNomeStartingWith( String Name);
+
+    List<Monitorador> findByNome( String Name);
+
 
     Monitorador findBycnpj(String cnpj);
 

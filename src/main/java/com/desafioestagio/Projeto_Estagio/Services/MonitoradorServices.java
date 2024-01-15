@@ -1,8 +1,10 @@
 package com.desafioestagio.Projeto_Estagio.Services;
 
+import com.desafioestagio.Projeto_Estagio.Repositorys.EnderecoRepositorys;
 import com.desafioestagio.Projeto_Estagio.Repositorys.MonitoradorRepositorys;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
+import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.collections.IteratorUtils;
@@ -17,6 +19,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +32,10 @@ public class MonitoradorServices {
     private MonitoradorRepositorys repository;
 
 
+    @Autowired
+    private EnderecoRepositorys enderecoRepositorys;
+
+
     public List<Monitorador>findAll(){return repository.findAll();}
 
     public Monitorador findById(Long id){
@@ -36,8 +43,13 @@ public class MonitoradorServices {
         return obj.orElseThrow(()->new ResourceNotFoundException(id));
     }
 
-    public List<Monitorador>findByNome( String Name){
+    public List<Monitorador>findByNomeStartingWith( String Name){
         return repository.findByNomeStartingWith(Name);
+
+    }
+
+    public List<Monitorador>findByNome( String Name){
+        return repository.findByNome(Name);
 
     }
 
@@ -80,11 +92,15 @@ public class MonitoradorServices {
 
  public boolean ValidadorIgualID(Monitorador obj){
         if ("Juridica".equals(obj.getTipo())) {
-           return repository.existsByCnpj(obj.getCnpj()) && repository.existsByInscricao(obj.getInscricao());
+           return repository.existsByCnpj(obj.getCnpj()) && repository.existsByInscricao(obj.getInscricao()) && repository.existsByEmail (obj.getEmail ());
         }else{
-            return  repository.existsByCpf(obj.getCpf()) && repository.existsByRg(obj.getRg());
+            return  repository.existsByCpf(obj.getCpf()) && repository.existsByRg(obj.getRg())  && repository.existsByEmail (obj.getEmail ());
         }
     }
+    public boolean ValidadorIgualIDEnd(Endereco obj){
+        return enderecoRepositorys.existsByPrincipal (obj.getPrincipal ()) && enderecoRepositorys.existsByEndereco (obj.getEndereco ());
+    }
+
 
 
     public ByteArrayOutputStream exportarMonitoradoresParaExcel(List<Monitorador> monitoradores) {
@@ -131,10 +147,37 @@ public class MonitoradorServices {
     }
 
 
+    //Modelo para cadastro
+    public ByteArrayOutputStream ModeloCadastro () {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("MonitoradoresModeloCadastro");
+
+            // Crie o cabeçalho
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Tipo");
+            headerRow.createCell(1).setCellValue("CPF");
+            headerRow.createCell(2).setCellValue("CNPJ");
+            headerRow.createCell(3).setCellValue("Nome");
+            headerRow.createCell(4).setCellValue("Email");
+            headerRow.createCell(5).setCellValue("RG");
+            headerRow.createCell(6).setCellValue("Inscrição Estadual");
+            headerRow.createCell(7).setCellValue("Data Nascimento");
+            headerRow.createCell(8).setCellValue("Ativo");
+            workbook.write(out);
+            return out;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Lide com a exceção conforme necessário
+            return null;
+        }
+    }
+
+
     public List<Monitorador> criarExcel() {
         List<Monitorador> monitoradores = new ArrayList<>();
 
-        try (FileInputStream file = new FileInputStream("src/main/resources/monitoradoresModelo.xlsx");
+        try (FileInputStream file = new FileInputStream("src/main/resources/monitoradorModelo.xlsx");
              Workbook workbook = new XSSFWorkbook(file)) {
 
             Sheet sheet = workbook.getSheetAt(0);
@@ -188,7 +231,7 @@ public class MonitoradorServices {
                             monitorador.setRg(cell.getStringCellValue());
                             break;
                         case 6:
-                            monitorador.setInscricaol(cell.getStringCellValue());
+                            monitorador.setInscricaol(String.valueOf (BigDecimal.valueOf (cell.getNumericCellValue ()).setScale (0)));
                             break;
                         case 7:
                             monitorador.setData_nascimento(cell.getStringCellValue());

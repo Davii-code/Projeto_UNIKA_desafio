@@ -3,6 +3,7 @@ package com.desafioestagio.Projeto_Estagio.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,21 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "Endereço pode ser vazio")
     private String endereco;
     private String numero;
     private String cep;
+    @NotNull(message = "Telefone Não pode ser vazio")
     private String telefone;
+    @NotNull(message = " Cidade não pode ser vazio ")
     private String cidade;
+    @NotNull(message = " Estado Não pode ser vazio")
     private String estado;
+    @NotNull(message = "Bairro Não pode ser vazio")
     private String bairro;
+
+    @NotNull(message = "Principal Não pode ser vazio")
     private Boolean principal;
 
     @ManyToOne(optional = false)

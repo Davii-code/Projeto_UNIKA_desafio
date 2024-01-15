@@ -3,6 +3,7 @@ package com.desafioestagio.Projeto_Estagio.entities;
 import com.desafioestagio.Projeto_Estagio.Validator.IRValidator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Entity
 @Table(name = "tb_monitorador")
 public class Monitorador implements Serializable {
@@ -23,39 +25,38 @@ public class Monitorador implements Serializable {
     @CPF
     @IRValidator()
     private String cpf = null;
-    @NotEmpty
     private String nome;
     private String email = null;
 
-     @IRValidator()
+    @IRValidator()
     private String rg;
     @IRValidator()
     private String inscricao = null;
-
     private String Data_nascimento = null;
     private String tipo;
     private boolean Ativo;
 
     @OneToMany(mappedBy = "monitorador")
-    private List<Endereco> enderecos= new ArrayList<>();
+    private List<Endereco> enderecos = new ArrayList<> ();
 
-    public Monitorador(){}
+    public Monitorador() {
+    }
 
-    public Monitorador(Long id, String tipo ,String cnpj,String cpf, String nome, String email, String rg,String inscricao, String data_nascimento, boolean ativo) {
+    public Monitorador(Long id, String tipo, String cnpj, String cpf, String nome, String email, String rg, String inscricao, String data_nascimento, boolean ativo) {
         this.id = id;
         this.tipo = tipo;
         this.nome = nome;
 
-       if (tipo == "Fisica") {
-           this.cpf = cpf;
-           this.Data_nascimento = data_nascimento;
-           this.rg = rg;
+        if (tipo == "Fisica") {
+            this.cpf = cpf;
+            this.Data_nascimento = data_nascimento;
+            this.rg = rg;
 
-       }else {
-           this.cnpj = cnpj;
-           this.inscricao = inscricao;
+        } else {
+            this.cnpj = cnpj;
+            this.inscricao = inscricao;
 
-       }
+        }
         this.Ativo = ativo;
         this.email = email;
     }
@@ -88,7 +89,6 @@ public class Monitorador implements Serializable {
     }
 
 
-
     public String getNome() {
         return nome;
     }
@@ -114,7 +114,9 @@ public class Monitorador implements Serializable {
         return inscricao;
     }
 
-    public void setRg(String rg) {this.rg = rg;}
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
 
     public void setInscricaol(String inscricao_Estadual) {
         this.inscricao = inscricao_Estadual;
@@ -149,18 +151,17 @@ public class Monitorador implements Serializable {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass () != o.getClass ()) return false;
         Monitorador that = (Monitorador) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals (id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash (id);
     }
 
     @Override

@@ -15,10 +15,11 @@ public class EntitiesApiViaCep {
     private String cep;
 
     @JsonProperty("localidade")
-    private String localidade; // cidade
+    private String localidade;
 
     @JsonProperty("uf")
-    private String uf; // estado
+    private String uf;
+
 
     @JsonProperty("bairro")
     private String bairro;
