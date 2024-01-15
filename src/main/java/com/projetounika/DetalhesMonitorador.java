@@ -1,9 +1,13 @@
 package com.projetounika;
 
+import com.projetounika.JsCodigo.Mask;
+import com.projetounika.JsCodigo.ValidacaoInput;
 import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
 
 import com.projetounika.services.MonitoradorHttpClient;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,6 +19,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.validation.validator.EmailAddressValidator;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -31,7 +36,10 @@ public class DetalhesMonitorador extends Panel {
 
         IModel<Monitorador> monitoradorIModel = new CompoundPropertyModel<>(monitorador);
         MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient("http://localhost:8080/monitorador");
-
+        final ModalWindow modal = new ModalWindow ("modal");
+        modal.setInitialHeight (120);
+        modal.setInitialWidth (350);
+        add (modal);
 
         DropDownChoice<String> escolheTipo = new DropDownChoice<>("escolheTipo",
                 Model.of(monitorador.getTipo()),
@@ -41,9 +49,12 @@ public class DetalhesMonitorador extends Panel {
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
                 List.of("Sim", "Não"));
 
-        Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
+
+        AjaxButton editar = new AjaxButton ("EditarSubmit") {
             @Override
-            protected void onSubmit() {
+            protected void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit (target);
+
                 String valorAtivo = escolheAtivo.getModelObject();
 
                 if (valorAtivo.equals("Sim")) {
@@ -68,23 +79,41 @@ public class DetalhesMonitorador extends Panel {
                 }
                 try {
                     monitoradorHttpClient.Atualizar(monitorador);
+                    modal.setContent(new MenssagemFed(modal.getContentId(), true, "Editado com Sucesso"));
+                    modal.show(target);
+                    modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+                        @Override
+                        public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                            setResponsePage(com.projetounika.Monitorador.class);
+                        }
+                    });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    modal.setContent(new MenssagemFed(modal.getContentId(), false, "Erro ao editar: " + e.getMessage()));
+                    modal.show(target);
                 }
-
 
             }
         };
+        Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {};
+        form.add (editar);
         add(form);
 
         final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> cpf = new TextField<>("cpf");
+        cpf.add (new Mask ("000.000.000-00"));
         final TextField<String> cnpj = new TextField<>("cnpj",Model.of(formatarCNPJ(monitorador.getCnpj())));
+        cnpj.add (new Mask ("00.000.000/0000-00"));
         final TextField<String> email = new TextField<>("email");
+        email.add (EmailAddressValidator.getInstance ());
         final TextField<String> rg = new TextField<>("rg");
+        rg.add (new ValidacaoInput ());
         final TextField<String> data = new TextField<>("Data_nascimento");
+        data.add (new Mask ("00/00/0000"));
         final TextField<String> inscricao = new TextField<>("inscricao");
+        inscricao.add (new ValidacaoInput ());
+
+        //Label
         final Label IE = new Label("ins", "Inscrição Estadual");
         final Label RG = new Label("RG", "RG");
         final Label date = new Label("date", "Data de Nascimento");

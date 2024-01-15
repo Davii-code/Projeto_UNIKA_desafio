@@ -27,7 +27,6 @@ public class ImportArquivo extends Panel {
 
                 try {
                     File file = new File("src/main/resources/" +fileUpload.getClientFileName());
-                    System.out.println (fileUpload.getClientFileName ());
                     fileUpload.writeTo(file);
                     List<Monitorador> moni = monitoradorHttpClient.criarExcel(file);
                     info("Upload completed!");

@@ -15,7 +15,7 @@ public class Endereco implements Serializable {
     private String cidade;
     private String estado;
     private String bairro;
-    private Boolean principal = true;
+    private Boolean principal ;
 
 
     private  Monitorador monitorador;

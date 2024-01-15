@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projetounika.entities.Monitorador;
 import org.apache.flink.fs.azure.shaded.org.apache.http.HttpStatus;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -129,27 +130,31 @@ public class MonitoradorHttpClient implements Serializable {
     }
 
 
-    public Monitorador Criar (Monitorador monitorador) throws IOException {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPost post = new HttpPost (baseUrl);
-            String json = objectMapper.writeValueAsString(monitorador);
-            StringEntity entity = new StringEntity(json,ContentType.APPLICATION_JSON);
+    public Monitorador Criar(Monitorador monitorador) throws IOException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost post = new HttpPost(baseUrl);
+        String json = objectMapper.writeValueAsString(monitorador);
+        StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
-            post.setEntity(entity);
-            post.setHeader("Content-type","application/json");
+        post.setEntity(entity);
+        post.setHeader("Content-type", "application/json");
 
-            CloseableHttpResponse response = httpClient.execute(post);
+        CloseableHttpResponse response = httpClient.execute(post);
 
-            HttpEntity httpEntity = response.getEntity();
-            String obj = EntityUtils.toString(httpEntity);
+        try {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseMessage = EntityUtils.toString(response.getEntity());
 
+
+            // Sucesso
+            return objectMapper.readValue(responseMessage, new TypeReference<Monitorador>() {});
+
+        } finally {
             httpClient.close();
             response.close();
-
-            return objectMapper.readValue(obj, new TypeReference<Monitorador>(){});
-
-
+        }
     }
+
 
     public List<Monitorador> criarExcel(File excel) {
         List<Monitorador> monitoradores = new ArrayList<>();
@@ -212,7 +217,7 @@ public class MonitoradorHttpClient implements Serializable {
                             break;
                         case 7:
 
-                            monitorador.setData_nascimento(cell.getStringCellValue());
+                            monitorador.setData_nascimento(String.valueOf (cell.getDateCellValue ()));
                             break;
                         case 8:
                             if (cell.getCellType() == CellType.STRING) {
@@ -220,14 +225,14 @@ public class MonitoradorHttpClient implements Serializable {
                                 monitorador.setAtivo(converterStringParaBooleano(ativoString));
                             }
                             break;
-                        // Adicione outros casos conforme necessário
+
 
                         default:
                             System.out.println("");
                     }
 
                 }
-                Criar (monitorador);
+                Criar(monitorador);
             }
 
         } catch (IOException e) {

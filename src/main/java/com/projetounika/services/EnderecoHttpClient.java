@@ -7,6 +7,7 @@ import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
 import org.apache.flink.fs.azure.shaded.org.apache.http.HttpStatus;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -69,27 +70,34 @@ public class EnderecoHttpClient implements Serializable {
 
 
 
-    public Endereco Criar (Endereco endereco,Long id) throws IOException {
+    public Endereco Criar(Endereco endereco, Long id) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost post = new HttpPost (baseUrl + "/" + id + "/" + "enderecos");
+        HttpPost post = new HttpPost(baseUrl + "/" + id + "/" + "enderecos");
         String json = objectMapper.writeValueAsString(endereco);
         StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
         post.setEntity(entity);
-        post.setHeader("Content-type","application/json");
+        post.setHeader("Content-type", "application/json");
 
         CloseableHttpResponse response = httpClient.execute(post);
 
-        HttpEntity httpEntity = response.getEntity();
-        String obj = EntityUtils.toString(httpEntity);
+        try {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseMessage = EntityUtils.toString(response.getEntity());
 
-        httpClient.close();
-        response.close();
-
-        return objectMapper.readValue(obj, new TypeReference<Endereco>(){});
-
-
+            if (statusCode >= 200 && statusCode < 300) {
+                // Sucesso
+                return objectMapper.readValue(responseMessage, new TypeReference<Endereco>() {});
+            } else {
+                // Erro
+                throw new HttpResponseException (statusCode, responseMessage);
+            }
+        } finally {
+            httpClient.close();
+            response.close();
+        }
     }
+
 
     public int deletar(Long id) {
         CloseableHttpClient httpClient = HttpClients.createDefault();

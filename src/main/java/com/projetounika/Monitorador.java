@@ -3,6 +3,7 @@ package com.projetounika;
 import com.projetounika.entities.Endereco;
 import com.projetounika.services.EnderecoHttpClient;
 import com.projetounika.services.MonitoradorHttpClient;
+import lombok.SneakyThrows;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -18,6 +19,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
@@ -117,6 +120,15 @@ public class Monitorador extends WebPage {
             }
         };
 
+
+        AjaxLink<Void> linkCriarPessoaFisica = new AjaxLink<Void>("linkCriarF") {
+            @Override
+            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                modal.setContent(new CadastroMonitorador(modal.getContentId(), modal, "Fisica"));
+                modal.show(ajaxRequestTarget);
+
+            }
+        };
         AjaxLink<Void>ImportArquivo = new AjaxLink<Void>("importExcel") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
@@ -124,15 +136,6 @@ public class Monitorador extends WebPage {
                 modalImport.show(ajaxRequestTarget);
             }
         };
-
-        AjaxLink<Void> linkCriarPessoaFisica = new AjaxLink<Void>("linkCriarF") {
-            @Override
-            public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-                modal.setContent(new CadastroMonitorador(modal.getContentId(), modal, "Fisica"));
-                modal.show(ajaxRequestTarget);
-            }
-        };
-
         ExternalLink linkExcel = new ExternalLink("excel", "http://localhost:8080/monitorador/relatorio/excel");
         ExternalLink linkPdf = new ExternalLink("pdf", "http://localhost:8080/monitorador/relatorio/pdfs");
         add(linkPdf);
@@ -146,6 +149,7 @@ public class Monitorador extends WebPage {
 
 
         Form<com.projetounika.entities.Monitorador> form = new Form<>("filtro"){
+            @SneakyThrows
             @Override
             protected void onSubmit() {
                 String codigoValue = codigo.getModelObject();
@@ -154,7 +158,9 @@ public class Monitorador extends WebPage {
                 String CnpjValue = Cnpj.getModelObject();
 
                 if (nomeValue != null){
-                    MonitoradorHttpClient monitoradorHttpClient1 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtroNome/" +nomeValue );
+                    String encodedNome = URLEncoder.encode(nomeValue, StandardCharsets.UTF_8.toString ());
+                    encodedNome = encodedNome.replace("+", "%20");
+                    MonitoradorHttpClient monitoradorHttpClient1 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtroNome/" + encodedNome);
                     List<com.projetounika.entities.Monitorador> list1 = monitoradorHttpClient1.listarTodos();
                     final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>>listModel = new CompoundPropertyModel<>(list1);
                     monitoradorListView.setModel(listModel);

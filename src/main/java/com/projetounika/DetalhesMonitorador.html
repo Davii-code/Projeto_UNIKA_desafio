@@ -45,6 +45,7 @@
 <body>
 <wicket:panel>
     <h1 style="margin-top: 5px; color: #5656bb; padding: 20px">Detalhe Monitorador</h1>
+    <div wicket:id="modal"></div>
     <form wicket:id="edit">
         <div class="d-flex" id="formSpacing">
             <div class="form-group col-md-4">
@@ -99,7 +100,7 @@
         </div>
 
         <div class="form-group  col-md-5">
-            <button type="submit" class="btn btn-outline-primary" style="margin-top: 90%">Salvar</button>
+            <button type="submit" class="btn btn-outline-primary" style="margin-top: 90%" wicket:id="EditarSubmit">Salvar</button>
         </div>
     </form>
 </wicket:panel>
