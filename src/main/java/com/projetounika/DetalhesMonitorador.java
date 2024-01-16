@@ -6,6 +6,7 @@ import com.projetounika.entities.Endereco;
 import com.projetounika.entities.Monitorador;
 
 import com.projetounika.services.MonitoradorHttpClient;
+import lombok.SneakyThrows;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
@@ -40,6 +41,7 @@ public class DetalhesMonitorador extends Panel {
         modal.setInitialHeight (120);
         modal.setInitialWidth (350);
         add (modal);
+        Validacao validacao = new Validacao ();
 
         DropDownChoice<String> escolheTipo = new DropDownChoice<>("escolheTipo",
                 Model.of(monitorador.getTipo()),
@@ -50,34 +52,46 @@ public class DetalhesMonitorador extends Panel {
                 List.of("Sim", "Não"));
 
 
-        AjaxButton editar = new AjaxButton ("EditarSubmit") {
+        AjaxButton editar = new AjaxButton("EditarSubmit") {
+            @SneakyThrows
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                super.onSubmit (target);
+                super.onSubmit(target);
+                String cnpjFormatado = monitorador.getCnpj();
 
                 String valorAtivo = escolheAtivo.getModelObject();
-
-                if (valorAtivo.equals("Sim")) {
-                    monitorador.setAtivo(true);
-                } else {
-                    monitorador.setAtivo(false);
-                }
-
-                if (monitorador.getTipo().equals("Fisica")) {
-                    String cpf = monitorador.getCpf();
-                    String cpfFormatado = formatarCPF(cpf);
-                    monitorador.setCpf(cpfFormatado);
-                    String dataNascimento = monitorador.getData_nascimento();
-                    if (!dataNascimento.contains("/") && dataNascimento.length() == 8) {
-                        String dataFormatada = formatarDataComBarra(dataNascimento);
-                        monitorador.setData_nascimento(dataFormatada);
-                    }
-                } else if (monitorador.getTipo().equals("Juridica")){
-                    String cnpjFormatado = monitorador.getCnpj();
-                    cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");
-                    monitorador.setCnpj(cnpjFormatado);
-                }
                 try {
+                    monitorador.setAtivo(valorAtivo.equals ("Sim"));
+
+                    if (monitorador.getTipo().equals("Fisica")) {
+                        String cpf = monitorador.getCpf();
+                        String cpfFormatado = formatarCPF(cpf);
+                        monitorador.setCpf(cpfFormatado);
+                        String dataNascimento = monitorador.getData_nascimento();
+                        if (!dataNascimento.contains("/") && dataNascimento.length() == 8) {
+                            String dataFormatada = formatarDataComBarra(dataNascimento);
+                            monitorador.setData_nascimento(dataFormatada);
+                        }
+                    } else if (monitorador.getTipo().equals("Juridica")){
+
+                        cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");
+                        monitorador.setCnpj(cnpjFormatado);
+                    }
+
+                    if (monitorador.getCpf () != null) {
+                        if (!validacao.isCPF(monitorador.getCpf ())) {
+                            throw new Exception("Erro ao editar, verificar o CPF");
+                        }
+                    }
+
+                    // Validar CNPJ
+                    if (cnpjFormatado != null) {
+                        if (Validacao.isCNPJ (cnpjFormatado)) {
+                            throw new Exception("Erro ao editar, verificar o CNPJ");
+                        }
+                    }
+
+                    // Continue com a atualização apenas se as validações passarem
                     monitoradorHttpClient.Atualizar(monitorador);
                     modal.setContent(new MenssagemFed(modal.getContentId(), true, "Editado com Sucesso"));
                     modal.show(target);
@@ -87,18 +101,18 @@ public class DetalhesMonitorador extends Panel {
                             setResponsePage(com.projetounika.Monitorador.class);
                         }
                     });
-                } catch (IOException e) {
+                } catch (Exception e) {
                     modal.setContent(new MenssagemFed(modal.getContentId(), false, "Erro ao editar: " + e.getMessage()));
                     modal.show(target);
                 }
 
             }
         };
+
         Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {};
         form.add (editar);
         add(form);
 
-        final TextField<String> codigo = new TextField<>("id");
         final TextField<String> nome = new TextField<>("nome");
         final TextField<String> cpf = new TextField<>("cpf");
         cpf.add (new Mask ("000.000.000-00"));
@@ -157,7 +171,6 @@ public class DetalhesMonitorador extends Panel {
         }
 
 
-        form.add(codigo);
         form.add(nome);
         form.add(cpf);
         form.add(cnpj);

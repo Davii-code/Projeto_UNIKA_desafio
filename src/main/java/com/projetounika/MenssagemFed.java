@@ -21,6 +21,9 @@ public class MenssagemFed extends FeedbackPanel {
             add(new AttributeAppender ("class", "alert alert-danger"));
 
         }
+
+        add(new AttributeAppender("style", "position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; opacity : 0.5"));
+
     }
 
 }

@@ -19,7 +19,7 @@ public class DetalhesEndereco extends Panel {
         super(id);
 
         final ModalWindow modal = new ModalWindow("modal");
-        modal.setInitialHeight(400);
+        modal.setInitialHeight(450);
         modal.setInitialWidth(800);
         add(modal);
 
@@ -52,6 +52,8 @@ public class DetalhesEndereco extends Panel {
                 listItem.add( new AjaxLink<Void>("linkdeletar") {
                     @Override
                     public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+                        modal.setInitialHeight(273);
+                        modal.setInitialWidth(518);
                         modal.setContent(new DeletarEndereco(modal.getContentId(),modal,endereco));
                         modal.show(ajaxRequestTarget);
                     }

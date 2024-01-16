@@ -87,15 +87,20 @@ public class MonitoradorHttpClient implements Serializable {
                 response.close();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            // Imprima ou logue a exceção para diagnóstico
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao executar a requisição DELETE", e);
         } finally {
             try {
                 httpClient.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                // Imprima ou logue a exceção para diagnóstico
+                e.printStackTrace();
+                throw new RuntimeException("Erro ao fechar o cliente HTTP", e);
             }
         }
     }
+
 
     public Monitorador Atualizar(Monitorador monitorador) throws IOException {
 

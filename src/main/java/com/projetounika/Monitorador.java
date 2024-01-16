@@ -1,5 +1,7 @@
 package com.projetounika;
 
+import com.projetounika.JsCodigo.Mask;
+import com.projetounika.JsCodigo.ValidacaoInput;
 import com.projetounika.entities.Endereco;
 import com.projetounika.services.EnderecoHttpClient;
 import com.projetounika.services.MonitoradorHttpClient;
@@ -36,14 +38,14 @@ public class Monitorador extends WebPage {
 
         //Modal
         final ModalWindow modal = new ModalWindow("modal");
-        modal.setInitialHeight(350);
-        modal.setInitialWidth(850);
+        modal.setInitialHeight(600);
+        modal.setInitialWidth(800);
         add(modal);
 
         //Modal
         final ModalWindow modalImport = new ModalWindow("modalImport");
         modalImport.setInitialHeight(250);
-        modalImport.setInitialWidth(450);
+        modalImport.setInitialWidth(550);
         add(modalImport);
 
         // Obtém a lista de monitoradores usando o HttpClient
@@ -79,7 +81,8 @@ public class Monitorador extends WebPage {
                 listItem.add(new AjaxLink<Void>("editarLinkEndereco") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-
+                        modal.setInitialWidth (900);
+                        modal.setInitialHeight (408);
                         modal.setContent(new DetalhesEndereco(enderecoListModel, modal.getContentId(), modal, monitorador.getId()));
                         modal.show(target);
 
@@ -91,7 +94,8 @@ public class Monitorador extends WebPage {
                 listItem.add(new AjaxLink<Void>("LinkDeletar") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-
+                        modal.setInitialWidth (1143);
+                        modal.setInitialHeight (583);
                         modal.setContent(new DeleteMonitorador(monitorador, modal.getContentId(), modal));
                         modal.show(target);
 
@@ -132,6 +136,7 @@ public class Monitorador extends WebPage {
         AjaxLink<Void>ImportArquivo = new AjaxLink<Void>("importExcel") {
             @Override
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+
                 modalImport.setContent(new ImportArquivo(modalImport.getContentId()));
                 modalImport.show(ajaxRequestTarget);
             }
@@ -142,7 +147,11 @@ public class Monitorador extends WebPage {
         final TextField<String> codigo = new TextField<>("idF", Model.of(""));
         final TextField<String> nome = new TextField<>("nomeF",Model.of(""));
         final TextField<String> cpf = new TextField<>("cpfF",Model.of(""));
+        cpf.add (new Mask ("000.000.000-00"));
+
         final TextField<String> Cnpj = new TextField<>("cnpjF",Model.of(""));
+        Cnpj.add (new Mask ("00.000.000/0000-00"));
+
         String url;
 
 
@@ -240,7 +249,7 @@ public class Monitorador extends WebPage {
         cpf = cpf.replaceAll("[^0-9]", "");
         // Verificar se o CPF tem 11 dígitos
         if (cpf.length() != 11) {
-            throw new IllegalArgumentException("O CPF deve conter 11 dígitos numéricos.");
+
         }
 
         // Formatando o CPF com pontos e traço

@@ -46,7 +46,6 @@ public class CadastroEndereco extends Panel {
 
         final TextField<String> cep = new TextField<> ("cep");
         cep.add (new Mask ("99999-999"));
-        final TextField<String> cod = new TextField<> ("id");
         final TextField<String> end = new TextField<> ("endereco");
         final TextField<String> numero = new TextField<> ("numero");
         final TextField<String> bairro = new TextField<> ("bairro");
@@ -114,7 +113,6 @@ public class CadastroEndereco extends Panel {
         };
 
 
-        cod.setOutputMarkupId (true);
         end.setOutputMarkupId (true);
         numero.setOutputMarkupId (true);
         bairro.setOutputMarkupId (true);
@@ -138,7 +136,6 @@ public class CadastroEndereco extends Panel {
 
 
         form.add (cadastroEndereco);
-        form.add (cod);
         form.add (end);
         form.add (numero);
         form.add (bairro);

@@ -74,7 +74,7 @@ public class EditarEndereco extends Panel {
         Form<Endereco> form = new Form<>("edit", enderecoIModel){
 
         };
-        TextField<String> idTextField = new TextField<>("id");
+
         TextField<String> enderecoTextField = new TextField<>("endereco");
         TextField<String> cepTextField = new TextField<>("cep");
         cepTextField.add (new Mask ("99999-999"));
@@ -86,7 +86,6 @@ public class EditarEndereco extends Panel {
 
 // Adicione os text fields ao formulário
         form.add (editarEndereco);
-        form.add(idTextField);
         form.add(enderecoTextField);
         form.add(cepTextField);
         form.add(numeroTextField);

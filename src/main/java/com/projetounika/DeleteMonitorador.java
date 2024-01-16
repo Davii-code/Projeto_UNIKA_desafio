@@ -2,6 +2,8 @@ package com.projetounika;
 
 import com.projetounika.entities.Monitorador;
 import com.projetounika.services.MonitoradorHttpClient;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -31,11 +33,32 @@ public class DeleteMonitorador extends Panel {
         DropDownChoice<String> escolheAtivo = new DropDownChoice<>("escolheAtivo",
                 Model.of(monitorador.isAtivo() ? "Sim" : "Não"),
                 List.of("Sim", "Não"));
-        Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {
-            @Override
-            protected void onSubmit() {
 
-                monitoradorHttpClient.deletar(monitorador.getId());
+        final ModalWindow modal = new ModalWindow ("modal");
+        modal.setInitialHeight (120);
+        modal.setInitialWidth (350);
+        add (modal);
+        Form<Monitorador> form = new Form<>("edit", monitoradorIModel) {};
+        AjaxButton submitdeletar = new AjaxButton ("submit") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                super.onSubmit (target);
+                try{
+
+                    monitoradorHttpClient.deletar(monitorador.getId());
+                    modal.setContent(new MenssagemFed(modal.getContentId(), true, "Apagado com Sucesso"));
+                    modal.show(target);
+                    modal.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+                        @Override
+                        public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                            setResponsePage(com.projetounika.Monitorador.class);
+                        }
+                    });
+                }catch (Exception e){
+
+                    modal.setContent(new MenssagemFed(modal.getContentId(), false, "Erro ao Apagar: " + e.getMessage()));
+                    modal.show(target);
+                }
 
             }
         };
@@ -108,6 +131,7 @@ public class DeleteMonitorador extends Panel {
         form.add(RG);
         form.add(escolheTipo);
         form.add(escolheAtivo);
+        form.add (submitdeletar);
 
 
 
