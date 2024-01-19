@@ -17,6 +17,9 @@ import {MatDrawer, MatDrawerContainer} from "@angular/material/sidenav";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {MonitoradorService} from "../../services/monitorador.service";
 import {HttpClientModule} from "@angular/common/http";
+import {MatDialog} from "@angular/material/dialog";
+import {EnderecoComponent} from "../endereco/endereco.component";
+import {CadastroMonitoradorComponent} from "../cadastro-monitorador/cadastro-monitorador.component";
 
 
 export interface Monitorador {
@@ -27,6 +30,8 @@ export interface Monitorador {
 }
 
 export interface Monitorador extends Array<Monitorador>{}
+
+
 @Component({
   selector: 'app-monitorador',
   standalone: true,
@@ -49,18 +54,32 @@ export interface Monitorador extends Array<Monitorador>{}
   styleUrl: './monitorador.component.css'
 })
 
+
 export class MonitoradorComponent implements OnInit {
   form = false;
-  monitorador!: Monitorador;
-  displayedColumns: string[] = ['id', 'nome', 'cpf', 'cnpj'];
-  dataSource: MatTableDataSource<Monitorador> = new MatTableDataSource<Monitorador>();
+  monitorador!: Monitorador[];
+  displayedColumns: string[] = ['id', 'nome', 'cpf', 'cnpj', 'actions'];
+  dataSource: MatTableDataSource<Monitorador>;
 
-  constructor(private monitoradorServices: MonitoradorService) {}
+  constructor(private monitoradorService: MonitoradorService, public dialog: MatDialog) {
+    this.dataSource = new MatTableDataSource<Monitorador>();
+  }
 
   ngOnInit() {
-    this.monitoradorServices.getMonitorador().subscribe((monitorador) => {
+    this.monitoradorService.getMonitorador().subscribe((monitorador) => {
       this.monitorador = monitorador;
-      this.dataSource = new MatTableDataSource(this.monitorador);
+      this.dataSource.data = this.monitorador;
+    });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(CadastroMonitoradorComponent, {
+      width: '700px', // Defina a largura desejada
+      height: '650px', // Defina a altura desejada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 }
