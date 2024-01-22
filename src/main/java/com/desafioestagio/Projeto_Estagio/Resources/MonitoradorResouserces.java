@@ -28,6 +28,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/monitorador", produces = "application/json; charset=UTF-8")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MonitoradorResouserces {
 
     @Autowired
