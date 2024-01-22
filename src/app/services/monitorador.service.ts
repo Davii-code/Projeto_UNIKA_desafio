@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {BehaviorSubject, catchError, Observable, throwError} from "rxjs";
 import {MonitoradorModels} from "../Models/monitorador/monitorador.models";
 import {error} from "jquery";
+import {Endereco} from "../Models/monitorador/endereco.models";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,11 @@ export class MonitoradorService {
   public postMonitorador(dados: MonitoradorModels): Observable<MonitoradorModels> {
     const  urlPost: string = this.baseUrl;
     return this.http.post <MonitoradorModels>(urlPost,dados).pipe();
+
+  }
+  public postMonitoradorEndereco(dados: Endereco): Observable<Endereco> {
+    const  urlPost: string = "http://localhost:8080/endereco";
+    return this.http.post <Endereco>(urlPost,dados).pipe();
 
   }
 

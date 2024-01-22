@@ -43,6 +43,7 @@ export class CadastroMonitoradorComponent implements OnInit {
   formMonitorador !: FormGroup;
   formEndereco !: FormGroup;
   mostrarCamposEndereco: boolean = false;
+  mostrarCamposMoni: boolean = true;
 
   constructor(
     public dialogRef: MatDialogRef<MonitoradorComponent>,
@@ -73,27 +74,33 @@ export class CadastroMonitoradorComponent implements OnInit {
       numero: [, [Validators.required]],
       cep: [, [Validators.required, Validators.pattern(/^\d{8}-\d{1}$/)]],
       telefone: [, [Validators.required]],
-      Bairro: [, [Validators.required]],
+      bairro: [, [Validators.required]],
       cidade: [, [Validators.required]],
       estado: [, [Validators.required]],
       principal: [true, [Validators.required]],
     })
   }
 
-  toggleCamposEndereco() {
-    this.mostrarCamposEndereco = !this.mostrarCamposEndereco;
+  toggleCamposEndereco(dado: MonitoradorModels) {
+    this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
+
+    })
   }
 
-  CadastrarMonitorador(dado: MonitoradorModels, dadoEnd: Endereco) {
-    if (dadoEnd == null) {
-      this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
+  toggleCamposMonitorador() {
+    this.mostrarCamposMoni = !this.mostrarCamposMoni;
+    this.mostrarCamposEndereco = true;
+
+  }
+  CadastrarEnd( dadoEnd: Endereco) {
+    if (dadoEnd != null) {
+      this.monitoradorService.postMonitoradorEndereco(dadoEnd).subscribe(resposta=>{
         this.dialogRef.close()
-
       })
-    }else {
-
     }
 
-    console.log(dado)
+
+
+    console.log(dadoEnd)
   }
 }

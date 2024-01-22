@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="text-center mt-5">
-    <h1>Editar Monitorador</h1>
+    <h1>Cadastrar Monitorador</h1>
   </div>
 
   <div class="row">
@@ -13,91 +13,95 @@
         <div class="card-body bg-light">
           <div class="container">
             <form id="contact-form" role="form" [formGroup]="formMonitorador">
-              <div class="controls">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_name">Nome/Razão Social</label>
-                      <input id="form_name" type="text" name="name" class="form-control"
-                             placeholder="Nome" required="required"
-                             data-error="Nome é obrigatório." formControlName="nome">
+              <div>
+                <div class="controls" *ngIf="mostrarCamposMoni">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_name">Nome/Razão Social</label>
+                        <input id="form_name" type="text" name="name" class="form-control"
+                               placeholder="Nome" required="required"
+                               data-error="Nome é obrigatório." formControlName="nome">
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_cpf">CPF/CNPJ</label>
-                      <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
-                             name="cpf" class="form-control"
-                             placeholder="CPF" required="required"
-                             data-error="CPF é obrigatório." formControlName="cpf">
-                      <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
-                             name="cnpj" class="form-control"
-                             placeholder="CNPJ" required="required"
-                             data-error="CNPJ é obrigatório." formControlName="cnpj">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_cpf">CPF/CNPJ</label>
+                        <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
+                               name="cpf" class="form-control"
+                               placeholder="CPF" required="required"
+                               data-error="CPF é obrigatório." formControlName="cpf">
+                        <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
+                               name="cnpj" class="form-control"
+                               placeholder="CNPJ" required="required"
+                               data-error="CNPJ é obrigatório." formControlName="cnpj">
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_rg">RG/Inscrição</label>
-                      <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="rg"
-                             class="form-control"
-                             placeholder="RG" required="required"
-                             data-error="RG é obrigatório." formControlName="rg">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_rg">RG/Inscrição</label>
+                        <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
+                               name="rg"
+                               class="form-control"
+                               placeholder="RG" required="required"
+                               data-error="RG é obrigatório." formControlName="rg">
 
-                      <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
-                             name="inscricao" class="form-control"
-                             placeholder="Inscrição" required="required"
-                             data-error="Inscrição é obrigatória." formControlName="inscricao">
+                        <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
+                               name="inscricao" class="form-control"
+                               placeholder="Inscrição" required="required"
+                               data-error="Inscrição é obrigatória." formControlName="inscricao">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_email">Email</label>
+                        <input id="form_email" type="text" name="email" class="form-control"
+                               placeholder="Email" required="required"
+                               data-error="Email é obrigatório." formControlName="email">
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_email">Email</label>
-                      <input id="form_email" type="text" name="email" class="form-control"
-                             placeholder="Email" required="required"
-                             data-error="Email é obrigatório." formControlName="email">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_tipo">Tipo</label>
+                        <select id="form_tipo" name="tipo" class="form-control" required="required"
+                                data-error="Tipo é obrigatório." formControlName="tipo">
+                          <option value="" selected disabled>--Selecione o Tipo--</option>
+                          <option value="Fisica">Pessoa Física</option>
+                          <option value="Juridica">Pessoa Jurídica</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_ativo">Ativo</label>
+                        <select id="form_ativo" name="ativo" class="form-control" required="required"
+                                data-error="Ativo é obrigatório." formControlName="ativo">
+                          <option value="" selected disabled>--Selecione o Status--</option>
+                          <option value="true">Ativo</option>
+                          <option value="false">Inativo</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_tipo">Tipo</label>
-                      <select id="form_tipo" name="tipo" class="form-control" required="required"
-                              data-error="Tipo é obrigatório." formControlName="tipo">
-                        <option value="" selected disabled>--Selecione o Tipo--</option>
-                        <option value="Fisica">Pessoa Física</option>
-                        <option value="Juridica">Pessoa Jurídica</option>
-                      </select>
+                  <div class="row" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="form_data">Data Nascimento</label>
+                        <input id="form_data" type="text" name="Data" class="form-control"
+                               placeholder="Data de nascimento" required="required"
+                               data-error="Data Obrigatorio" formControlName="data_nascimento">
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_ativo">Ativo</label>
-                      <select id="form_ativo" name="ativo" class="form-control" required="required"
-                              data-error="Ativo é obrigatório." formControlName="ativo">
-                        <option value="" selected disabled>--Selecione o Status--</option>
-                        <option value="true">Ativo</option>
-                        <option value="false">Inativo</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_data">Data Nascimento</label>
-                      <input id="form_data" type="text" name="Data" class="form-control"
-                             placeholder="Data de nascimento" required="required"
-                             data-error="Data Obrigatorio" formControlName="data_nascimento">
-                    </div>
-                  </div>
-                </div>
 
+                  <button mat-raised-button color="primary" style="margin-top: 6px" (click)="toggleCamposEndereco(formMonitorador.value); toggleCamposMonitorador()" >
+                    Cadastrar Monitorador
+                  </button>
+                </div>
                 <!-- Botão para alternar a exibição dos campos de endereço -->
-                <button mat-raised-button color="primary" style="margin-top: 6px" (click)="toggleCamposEndereco()">
-                  Endereço
-                </button>
+
 
                 <!-- Campos do Endereço -->
                 <div *ngIf="mostrarCamposEndereco" [formGroup]="formEndereco">
@@ -137,9 +141,9 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label for="form_bairro">Telefone</label>
-                        <input id="form_bairro" type="text" name="Bairro" class="form-control"
-                               placeholder="Bairro" required="required" formControlName="Bairro">
+                        <label for="form_bairro">Bairro</label>
+                        <input id="form_bairro" type="text" name="bairro" class="form-control"
+                               placeholder="bairro" required="required" formControlName="bairro">
                       </div>
                     </div>
                     <div class="col-md-6">
@@ -157,14 +161,18 @@
                       </div>
                     </div>
                   </div>
+
+
+                  <div class="row" style="margin-top: 15px; margin-left: 10px">
+                    <div class="col-md-12">
+                      <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Cadastrar Endereço"
+                             (click)="CadastrarEnd(formEndereco.value)">
+                    </div>
+                  </div>
+
                 </div>
 
-                <div class="row" style="margin-top: 15px; margin-left: 10px">
-                  <div class="col-md-12">
-                    <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Cadastrar"
-                           (click)="CadastrarMonitorador(formMonitorador.value)">
-                  </div>
-                </div>
+
               </div>
             </form>
           </div>
