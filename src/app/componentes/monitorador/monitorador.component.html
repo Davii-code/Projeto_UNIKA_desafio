@@ -1,3 +1,5 @@
+
+
 <mat-toolbar color="primary">
   <mat-drawer-container autosize style="background: #3F51B5">
     <button mat-icon-button (click)="drawer.toggle()" class="example-icon"
@@ -76,7 +78,7 @@
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> Código</th>
-      <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+      <td mat-cell *matCellDef="let element" > {{ element.id }}</td>
     </ng-container>
 
     <!-- Name Column -->
@@ -88,13 +90,13 @@
     <!-- Weight Column -->
     <ng-container matColumnDef="cpf">
       <th mat-header-cell *matHeaderCellDef> CPF</th>
-      <td mat-cell *matCellDef="let element"> {{ element.cpf }}</td>
+      <td mat-cell *matCellDef="let element" class="table_cpf"> {{ element.cpf }}</td>
     </ng-container>
 
     <!-- Symbol Column -->
     <ng-container matColumnDef="cnpj">
       <th mat-header-cell *matHeaderCellDef class="cnpj-header"> CNPJ</th>
-      <td mat-cell *matCellDef="let element" class="cnpj-cell"> {{ element.cnpj }}</td>
+      <td mat-cell *matCellDef="let element" class="cnpj-cell" > {{ element.cnpj }}</td>
     </ng-container>
 
     <!-- Actions Column -->
@@ -102,8 +104,8 @@
       <th mat-header-cell *matHeaderCellDef class="actions-header"> Ações</th>
       <td mat-cell *matCellDef="let element" class="actions-cell">
         <div class="button-container">
-          <button mat-raised-button color="warn" class="action-button">Warn</button>
-          <button mat-raised-button color="primary" class="action-button">Primary</button>
+          <button  mat-raised-button color="warn" class="action-button" (click)="DeletarMonitorador(element)">Deletar</button>
+          <button (click)=" openDialogDetalhe(element)" mat-raised-button color="primary" class="action-button">Editar</button>
         </div>
       </td>
     </ng-container>

@@ -1,6 +1,4 @@
-<div style="margin-left: 96%; cursor: pointer">
-  <mat-icon (click)="onNoClick()">close</mat-icon>
-</div>
+<div style="margin-left: 96%; cursor: pointer"><mat-icon (click)="onNoClick()">close</mat-icon></div>
 
 <div class="container">
   <div class="text-center mt-5">
@@ -26,12 +24,10 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_cpf">CPF/CNPJ</label>
-                      <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
-                             name="cpf" class="form-control"
+                      <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="cpf" class="form-control"
                              placeholder="CPF" required="required"
                              data-error="CPF é obrigatório." formControlName="cpf">
-                      <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
-                             name="cnpj" class="form-control"
+                      <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="cnpj" class="form-control"
                              placeholder="CNPJ" required="required"
                              data-error="CNPJ é obrigatório." formControlName="cnpj">
                     </div>
@@ -39,13 +35,11 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_rg">RG/Inscrição</label>
-                      <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="rg"
-                             class="form-control"
+                      <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="rg" class="form-control"
                              placeholder="RG" required="required"
                              data-error="RG é obrigatório." formControlName="rg">
 
-                      <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
-                             name="inscricao" class="form-control"
+                      <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="inscricao" class="form-control"
                              placeholder="Inscrição" required="required"
                              data-error="Inscrição é obrigatória." formControlName="inscricao">
                     </div>
@@ -83,7 +77,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
+                <div class="row"  *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_data">Data Nascimento</label>
@@ -93,76 +87,9 @@
                     </div>
                   </div>
                 </div>
-
-                <!-- Botão para alternar a exibição dos campos de endereço -->
-                <button mat-raised-button color="primary" style="margin-top: 6px" (click)="toggleCamposEndereco()">
-                  Endereço
-                </button>
-
-                <!-- Campos do Endereço -->
-                <div *ngIf="mostrarCamposEndereco" [formGroup]="formEndereco">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_endereco">Endereço</label>
-                        <input id="form_endereco" type="text" name="endereco" class="form-control"
-                               placeholder="Endereço" required="required" formControlName="endereco">
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_numero">Número</label>
-                        <input id="form_numero" type="text" name="numero" class="form-control"
-                               placeholder="Número" required="required" formControlName="numero">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_cep">CEP</label>
-                        <input id="form_cep" type="text" name="cep" class="form-control"
-                               placeholder="CEP" required="required" formControlName="cep">
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_telefone">Telefone</label>
-                        <input id="form_telefone" type="text" name="telefone" class="form-control"
-                               placeholder="Telefone" required="required" formControlName="telefone">
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_bairro">Telefone</label>
-                        <input id="form_bairro" type="text" name="Bairro" class="form-control"
-                               placeholder="Bairro" required="required" formControlName="Bairro">
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_cidade">Cidade</label>
-                        <input id="form_cidade" type="text" name="cidade" class="form-control"
-                               placeholder="Cidade" required="required" formControlName="cidade">
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="form_estado">Estado</label>
-                        <input id="form_estado" type="text" name="estado" class="form-control"
-                               placeholder="Estado" required="required" formControlName="estado">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div class="row" style="margin-top: 15px; margin-left: 10px">
                   <div class="col-md-12">
-                    <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Cadastrar"
-                           (click)="CadastrarMonitorador(formMonitorador.value)">
+                    <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Editar" (click)="EditarMonitorador(formMonitorador.value)">
                   </div>
                 </div>
               </div>
