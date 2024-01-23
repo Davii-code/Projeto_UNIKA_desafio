@@ -196,24 +196,19 @@ public class MonitoradorResouserces {
     }
 
     @PostMapping("/importar-excel")
-    public String importarMonitoradoresDoExcel() {
+    public ResponseEntity<String> importarMonitoradoresDoExcel(@RequestParam("file") MultipartFile file) {
         try {
-            List<Monitorador> monitoradores = services.criarExcel ();
-            return "Importação bem-sucedida";
+            List<Monitorador> monitoradores = services.criarExcel(file);
+
+            return ResponseEntity.ok("Importação bem-sucedida");
         } catch (Exception e) {
-            e.printStackTrace (); // Tratar exceções adequadamente
-            return "Erro durante a importação: " + e.getMessage ();
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erro durante a importação: " + e.getMessage());
         }
     }
 
 
-    //Filtros
 
-//    @GetMapping(value = "/filtroNome/{nome}")
-//    public ResponseEntity<List<Monitorador>> findByNome(@PathVariable String nome) {
-//        List<Monitorador> obj = services.findByNome(nome);
-//        return ResponseEntity.ok ().body (obj);
-//    }
 
     @GetMapping(value = "/filtroNome/{nome}")
     public ResponseEntity<List<Monitorador>> findByNome(@PathVariable String nome) {
@@ -242,6 +237,30 @@ public class MonitoradorResouserces {
         Monitorador obj = services.findByCpf (cpf);
         return ResponseEntity.ok ().body (obj);
     }
+
+//    @GetMapping(value = "/filtro")
+//    public ResponseEntity<?> findByParam(@RequestParam String tipo, @RequestParam String valor) {
+//        List<Monitorador> objList;
+//
+//        if ("nome".equalsIgnoreCase(tipo)) {
+//            if (valor.contains(" ")) {
+//                objList = services.findByNome(valor);
+//            } else {
+//                objList = services.findByNomeStartingWith(valor);
+//            }
+//        } else if ("cnpj".equalsIgnoreCase(tipo)) {
+//            Monitorador obj = services.findBycnpj(valor);
+//            return ResponseEntity.ok().body(obj);
+//        } else if ("cpf".equalsIgnoreCase(tipo)) {
+//            Monitorador obj = services.findByCpf(valor);
+//            return ResponseEntity.ok().body(obj);
+//        } else {
+//            // Tipo de parâmetro desconhecido
+//            return ResponseEntity.badRequest().body("Tipo de parâmetro inválido");
+//        }
+//
+//        return ResponseEntity.ok().body(objList);
+//    }
 
 
 }

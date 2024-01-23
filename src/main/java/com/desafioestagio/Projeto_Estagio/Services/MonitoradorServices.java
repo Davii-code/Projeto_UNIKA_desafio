@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -174,11 +175,10 @@ public class MonitoradorServices {
     }
 
 
-    public List<Monitorador> criarExcel() {
+    public List<Monitorador> criarExcel(MultipartFile file) {
         List<Monitorador> monitoradores = new ArrayList<>();
 
-        try (FileInputStream file = new FileInputStream("src/main/resources/monitoradorModelo.xlsx");
-             Workbook workbook = new XSSFWorkbook(file)) {
+        try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
 
             Sheet sheet = workbook.getSheetAt(0);
 
@@ -231,10 +231,10 @@ public class MonitoradorServices {
                             monitorador.setRg(cell.getStringCellValue());
                             break;
                         case 6:
-                            monitorador.setInscricaol(String.valueOf (BigDecimal.valueOf (cell.getNumericCellValue ()).setScale (0)));
+                            monitorador.setInscricaol(String.valueOf(BigDecimal.valueOf (cell.getNumericCellValue ()).setScale (0)));
                             break;
                         case 7:
-                            monitorador.setData_nascimento(cell.getStringCellValue());
+                            monitorador.setData_nascimento(String.valueOf (cell.getNumericCellValue ()) );
                             break;
                         case 8:
                             if (cell.getCellType() == CellType.STRING) {
