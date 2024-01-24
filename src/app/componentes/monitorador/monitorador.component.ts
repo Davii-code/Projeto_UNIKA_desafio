@@ -26,7 +26,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import {DeletarMonitoradorComponent} from "../deletar-monitorador/deletar-monitorador.component";
 import {data} from "jquery";
 import {ImportaExcelComponent} from "../importa-excel/importa-excel.component";
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 
@@ -48,7 +48,7 @@ export interface Monitorador extends Array<Monitorador>{}
     MatDrawerContainer,
     MatDrawer, NgIf, RouterLink, RouterLinkActive, MatColumnDef, MatHeaderCell, MatCell, MatCellDef, MatHeaderCellDef, MatHeaderRowDef, MatRowDef,
     MatHeaderRow, MatRow, HttpClientModule,
-    NgxMaskDirective, FormsModule,
+    NgxMaskDirective, FormsModule, ReactiveFormsModule,
   ],
   providers:[
     MonitoradorService,
@@ -60,28 +60,39 @@ export interface Monitorador extends Array<Monitorador>{}
 
 export class MonitoradorComponent implements OnInit {
   form = false;
-
+  formMonitoradorFilter !: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'cpf', 'cnpj', 'actions'];
   dataSource: MatTableDataSource<MonitoradorModels>;
 
   private monitorador!: MonitoradorModels[];
-  private monitoradorFiltrado!: MonitoradorModels[];
 
 
   // Adicione propriedades para armazenar os valores dos campos de filtro
-  codigoFiltro: string = '';
-  nome: string = '';
-  cpf: string = '';
-  cnpj: string = '';
+
   constructor(private monitoradorService: MonitoradorService, public dialog: MatDialog,
-              private router: Router) {
+              private router: Router,
+              private formBuilder: FormBuilder,
+  ) {
     this.dataSource = new MatTableDataSource<MonitoradorModels>([]);
   }
 
   ngOnInit() {
-      this.carregarMonitorador()
+    this.carregarMonitorador();
+    this.formMonitoradorFilter = this.formBuilder.group({
+      cnpj: [null],
+      cpf: [null],
+      nome: [null],
+      id: [null]
+    });
+
+    // Adicione um ouvinte para o evento de mudança no formulário
+    this.formMonitoradorFilter.valueChanges.subscribe(() => {
+      this.applyFilter();
+    });
 
   }
+
+
 
   carregarMonitorador() {
     this.monitoradorService.getMonitorador().subscribe((monitorador) => {
@@ -91,34 +102,39 @@ export class MonitoradorComponent implements OnInit {
 
   }
 
+  applyFilter() {
+    const filterValue = this.formMonitoradorFilter.value;
 
-  filtro() {
+    // Lógica para aplicar o filtro
+    let filteredData = this.monitorador;
 
-    if (this.codigoFiltro == null && this.nome == null && this.cnpj == null && this.cpf == null) {
-      this.carregarMonitorador();
-    }
-    if (this.nome != null) {
-      this.monitoradorService.getFilterMonitoradorNome(this.nome).subscribe((monitoradorName) => {
-        this.monitorador= monitoradorName;
-        this.dataSource.data = this.monitorador
-      });
-    }
-    if (this.cnpj!= null){
-      this.monitoradorService.getFilterMonitoradorCnpj(this.cnpj).subscribe((monitoradorCnpj)=>{
-        this.monitorador = monitoradorCnpj;
-        this.dataSource.data = this.monitorador;
-
-      });
-    }
-    if (this.cpf != null){
-      this.monitoradorService.MonitoradorCPF(this.cpf).subscribe(monitoradorCpf=>{
-        this.monitorador = monitoradorCpf;
-        this.dataSource.data = this.monitorador;
-        console.log("Requisição feita")
-      });
+    if (filterValue.id != null) {
+      filteredData = filteredData.filter(item => item.id && item.id.toString().includes(filterValue.id));
     }
 
+    if (filterValue.nome != null) {
+      filteredData = filteredData.filter(item => item.nome.toLowerCase().includes(filterValue.nome.toLowerCase()));
+    }
+
+    if (filterValue.cpf !=null) {
+      filteredData = filteredData.filter(item => item.cpf && item.cpf.includes(filterValue.cpf));
+    }
+
+    if (filterValue.cnpj != null) {
+      filteredData = filteredData.filter(item => item.cnpj && item.cnpj.includes(filterValue.cnpj));
+    }
+
+
+    this.dataSource.data = filteredData;
   }
+
+  isvalidForm(): boolean {
+    const filterValue = this.formMonitoradorFilter.value;
+
+    return filterValue.id == null && filterValue.cpf == null && filterValue.cnpj == null && filterValue.nome== null;
+  }
+
+  //-------------------------------------------------------------------------------------------------------
   openDialog() {
     const dialogRef = this.dialog.open(CadastroMonitoradorComponent, {
       width: '700px',
@@ -182,29 +198,119 @@ export class MonitoradorComponent implements OnInit {
   }
 
   ExportarPDF() {
-    this.monitoradorService.getMonitoradorPDF().subscribe(
-      (resposta: Blob) => {
-        this.gerarPDF(resposta);
-        console.log('Exportado com sucesso');
-      },
-      (error) => {
-        console.error('Erro ao exportar PDF:', error);
-      }
-    );
+    const filterValue = this.formMonitoradorFilter.value;
+    if (filterValue.id == null && filterValue.nome == null && filterValue.cpf ==null && filterValue.cnpj ==null){
+      this.monitoradorService.getMonitoradorPDF().subscribe(
+        (resposta: Blob) => {
+          this.gerarPDF(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar PDF:', error);
+        }
+      );
+    }else if (filterValue.id != null){
+      this.monitoradorService.getMonitoradorPDFFilter("id",filterValue.id.toString()).subscribe(
+        (resposta: Blob) => {
+          this.gerarPDF(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar PDF:', error);
+        }
+      );
+
+    }else if (filterValue.nome != null){
+      this.monitoradorService.getMonitoradorPDFFilter("nome",filterValue.nome).subscribe(
+        (resposta: Blob) => {
+          this.gerarPDF(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar PDF:', error);
+        }
+      );
+    }else if (filterValue.cpf !=null){
+      this.monitoradorService.getMonitoradorPDFFilter("cpf",filterValue.cpf).subscribe(
+        (resposta: Blob) => {
+          this.gerarPDF(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar PDF:', error);
+        }
+      );
+    }else if (filterValue.cnpj !=null){
+      this.monitoradorService.getMonitoradorPDFFilter("cnpj",filterValue.cnpj).subscribe(
+        (resposta: Blob) => {
+          this.gerarPDF(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar PDF:', error);
+        }
+      );
+    }
+
   }
 
 
   ExportarExcel() {
-    this.monitoradorService.getMonitoradorExcel().subscribe(
-      (resposta: Blob) => {
-        this.gerarExcel(resposta);
-        console.log('Exportado com sucesso');
-      },
-      (error) => {
-        console.error('Erro ao exportar Excel:', error);
-      }
-    );
-  }
+    const filterValue = this.formMonitoradorFilter.value;
 
+    if (filterValue.id == null && filterValue.nome == null && filterValue.cpf == null && filterValue.cnpj == null) {
+      this.monitoradorService.getMonitoradorExcel().subscribe(
+        (resposta: Blob) => {
+          this.gerarExcel(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar excel:', error);
+        }
+      );
+    } else if (filterValue.id != null) {
+      this.monitoradorService.getMonitoradorExcelFilter("id", filterValue.id.toString()).subscribe(
+        (resposta: Blob) => {
+          this.gerarExcel(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar excel:', error);
+        }
+      );
+
+    } else if (filterValue.nome != null) {
+      this.monitoradorService.getMonitoradorExcelFilter("nome", filterValue.nome).subscribe(
+        (resposta: Blob) => {
+          this.gerarExcel(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar excel:', error);
+        }
+      );
+    } else if (filterValue.cpf != null) {
+      this.monitoradorService.getMonitoradorExcelFilter("cpf", filterValue.cpf).subscribe(
+        (resposta: Blob) => {
+          this.gerarExcel(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar excel:', error);
+        }
+      );
+    } else if (filterValue.cnpj != null) {
+      this.monitoradorService.getMonitoradorExcelFilter("cnpj", filterValue.cnpj).subscribe(
+        (resposta: Blob) => {
+          this.gerarExcel(resposta);
+          console.log('Exportado com sucesso');
+        },
+        (error) => {
+          console.error('Erro ao exportar excel:', error);
+        }
+      );
+    }
+
+  }
 }
 

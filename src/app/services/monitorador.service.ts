@@ -27,47 +27,50 @@ export class MonitoradorService {
         })
       );
   }
-  public getFilterMonitoradorNome(params: string): Observable<MonitoradorModels[]> {
-    const url: string = "http://localhost:8080/monitorador/filtroNome/" + params;
-    return this.http.get<MonitoradorModels[]>(url).pipe(
-      catchError((error) => {
-        console.error("Erro na requisição:", error);
-        return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-      })
-    );
-  }
+  //------------------------------------------------------
+  // public getFilterMonitoradorNome(params: string): Observable<MonitoradorModels[]> {
+  //   const url: string = "http://localhost:8080/monitorador/filtroNome/" + params;
+  //   return this.http.get<MonitoradorModels[]>(url).pipe(
+  //     catchError((error) => {
+  //       console.error("Erro na requisição:", error);
+  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
+  //     })
+  //   );
+  // }
+  //
+  // public MonitoradorCPF(params: string): Observable<MonitoradorModels[]> {
+  //   const url: string = "http://localhost:8080/monitorador/filtroCpf/" + params;
+  //   return this.http.get<MonitoradorModels[]>(url).pipe(
+  //     catchError((error) => {
+  //       console.error("Erro na requisição:", error);
+  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
+  //     })
+  //   );
+  // }
+  //
+  // public getFilterMonitoradorCnpj(params: string): Observable<MonitoradorModels[]> {
+  //   const url: string = "http://localhost:8080/monitorador/filtroCnpj/" + params;
+  //   return this.http.get<MonitoradorModels[]>(url).pipe(
+  //     catchError((error) => {
+  //       console.error("Erro na requisição:", error);
+  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
+  //     })
+  //   );
+  // }
+  //
+  // public getFilterMonitoradorID( params: string): Observable<MonitoradorModels[]> {
+  //   const ur: string = this.baseUrl + "/"+params;
+  //   console.log(ur)
+  //   return this.http.get <MonitoradorModels[]>(ur).pipe(
+  //     catchError((error)=>{
+  //       console.error("URL invalida", + ur)
+  //       return throwError(error())
+  //     })
+  //
+  //   );
+  // }
 
-  public MonitoradorCPF(params: string): Observable<MonitoradorModels[]> {
-    const url: string = "http://localhost:8080/monitorador/filtroCpf/" + params;
-    return this.http.get<MonitoradorModels[]>(url).pipe(
-      catchError((error) => {
-        console.error("Erro na requisição:", error);
-        return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-      })
-    );
-  }
-
-  public getFilterMonitoradorCnpj(params: string): Observable<MonitoradorModels[]> {
-    const url: string = "http://localhost:8080/monitorador/filtroCnpj/" + params;
-    return this.http.get<MonitoradorModels[]>(url).pipe(
-      catchError((error) => {
-        console.error("Erro na requisição:", error);
-        return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-      })
-    );
-  }
-
-  public getFilterMonitoradorID( params: string): Observable<MonitoradorModels[]> {
-    const ur: string = this.baseUrl + "/"+params;
-    console.log(ur)
-    return this.http.get <MonitoradorModels[]>(ur).pipe(
-      catchError((error)=>{
-        console.error("URL invalida", + ur)
-        return throwError(error())
-      })
-
-    );
-  }
+  //------------------------------------------------
 
   public putMonitorador( id: string ,dados: MonitoradorModels): Observable<MonitoradorModels> {
     const  urlPut: string = this.baseUrl+"/"+id;
@@ -101,6 +104,26 @@ export class MonitoradorService {
 
   getMonitoradorPDF(): Observable<Blob> {
     return this.http.get('http://localhost:8080/monitorador/relatorio/pdfs', { responseType: 'blob' })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  getMonitoradorPDFFilter(tipo: string, valor: string): Observable<Blob> {
+    return this.http.get('http://localhost:8080/monitorador/relatorio/pdfs?'+tipo+'='+valor, { responseType: 'blob' })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  getMonitoradorExcelFilter(tipo: string, valor: string): Observable<Blob> {
+    return this.http.get('http://localhost:8080/monitorador/relatorio/excel?'+tipo+'='+valor, { responseType: 'blob' })
       .pipe(
         catchError((error) => {
           console.error('Erro na solicitação getMonitorador:', error);
