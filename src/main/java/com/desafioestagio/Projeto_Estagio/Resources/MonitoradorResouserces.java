@@ -152,7 +152,10 @@ public class MonitoradorResouserces {
     }
 
     @GetMapping("/relatorio/excel")
-    public ResponseEntity<InputStreamResource> exportarMonitoradoresParaExcel(@RequestParam(required = false) String nome, @RequestParam(required = false) String cnpj, @RequestParam(required = false) String cpf, @RequestParam(required = false) Long id) {
+    public ResponseEntity<InputStreamResource> exportarMonitoradoresParaExcel(@RequestParam(required = false) String nome,
+                                                                              @RequestParam(required = false) String cnpj,
+                                                                              @RequestParam(required = false) String cpf,
+                                                                              @RequestParam(required = false) Long id) {
         ByteArrayOutputStream byteArrayOutputStream = null;
         if (nome != null) {
             List<Monitorador> monitoradores = services.findByNome (nome);
