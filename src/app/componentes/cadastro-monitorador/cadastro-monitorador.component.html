@@ -14,6 +14,7 @@
           <div class="container">
             <form id="contact-form" role="form"
                   [formGroup]="formMonitorador">
+              <p *ngIf="validacaoB" style="color:red;">{{msg}}</p>
               <div class="controls" *ngIf="mostrarCamposMoni">
                 <div class="row">
                   <div class="col-md-6">
@@ -22,7 +23,7 @@
                       <input id="form_name" type="text" name="name" class="form-control"
                              placeholder="Nome" required="required"
                              data-error="Nome é obrigatório." formControlName="nome">
-                      <div *ngIf="nome.invalid && validacao || validacaoJ">
+                      <div *ngIf="nome.invalid && validacao || validacaoJ" class="validation-error">
                         <p *ngIf="nome.errors?.['required']">Campo Nome Obrigatorio</p>
                       </div>
                     </div>
@@ -40,11 +41,18 @@
                              placeholder="CNPJ" required="required"
                              data-error="CNPJ é obrigatório." formControlName="cnpj">
 
-                      <div *ngIf="cpf.invalid && validacao">
+                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
                         <p *ngIf="cpf.errors?.['required']">Campo CPF Obrigatorio</p>
                       </div>
-                      <div *ngIf="cnpj.invalid && validacaoJ">
+
+                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
+                        <p *ngIf="cpf.errors?.['pattern']">Formato invalido, apenas números</p>
+                      </div>
+                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
                         <p *ngIf="cnpj.errors?.['required']">Campo CNPJ Obrigatorio</p>
+                      </div>
+                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="cnpj.errors?.['pattern']">Formato Invalido , apenas números</p>
                       </div>
                     </div>
                   </div>
@@ -61,12 +69,18 @@
                              name="inscricao" class="form-control"
                              placeholder="Inscrição" required="required"
                              data-error="Inscrição é obrigatória." formControlName="inscricao">
-                      <div *ngIf="rg.invalid && validacao">
+                      <div *ngIf="rg.invalid && validacao" class="validation-error">
                         <p *ngIf="rg.errors?.['required']">Campo RG Obrigatorio</p>
                       </div>
+                      <div *ngIf="rg.invalid && validacao" class="validation-error">
+                        <p *ngIf="rg.errors?.['pattern']">Formato invalido apneas números e pontos</p>
+                      </div>
 
-                      <div *ngIf="inscricao.invalid && validacaoJ">
+                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
                         <p *ngIf="inscricao.errors?.['required']">Campo Inscrição Obrigatorio</p>
+                      </div>
+                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="inscricao.errors?.['pattern']">Formato invalido apneas números e pontos</p>
                       </div>
                     </div>
                   </div>
@@ -77,7 +91,7 @@
                              placeholder="Email" required="required"
                              data-error="Email é obrigatório." formControlName="email">
 
-                      <div *ngIf="email.invalid &&validacao || validacaoJ" class="validation-error">
+                      <div *ngIf="email.invalid &&validacao || validacaoJ" class="validation-error" class="validation-error">
                         <p *ngIf="email.errors?.['required']">Campo email Obrigatorio</p>
                       </div>
                     </div>
@@ -104,7 +118,7 @@
                         <option value="true">Ativo</option>
                         <option value="false">Inativo</option>
                       </select>
-                      <div *ngIf="ativo.invalid && validacao || validacaoJ" class="validation-error">
+                      <div *ngIf="ativo.invalid && validacao || validacaoJ" class="validation-error" >
                         <p *ngIf="ativo.errors?.['required']">Campo Ativo Obrigatorio</p>
                       </div>
 
@@ -123,17 +137,18 @@
                       <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
                         <p *ngIf="data_nascimento.errors?.['required']">Campo Data Obrigatorio</p>
                       </div>
+                      <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
+                        <p *ngIf="data_nascimento.errors?.['pattern']">Formato invalido, somente números</p>
+                      </div>
                     </div>
 
                   </div>
                 </div>
-
-                <button type="submit" mat-raised-button color="primary" style="margin-top: 6px" (click)=" CadastrarMonitorador(formMonitorador.value)">
+                <button  mat-raised-button color="primary" style="margin-top: 6px" (click)=" CadastrarMonitorador(formMonitorador.value)">
                   Cadastrar Monitorador
                 </button>
               </div>
             </form>
-            <!-- Botão para alternar a exibição dos campos de endereço -->
 
             <form>
               <!-- Campos do Endereço -->
@@ -145,7 +160,7 @@
                       <input id="form_endereco" type="text" name="endereco" class="form-control"
                              placeholder="Endereço" required="required" formControlName="endereco">
 
-                      <div *ngIf="endereco.invalid && (endereco.dirty || endereco.touched)" class="validation-error">
+                      <div *ngIf="endereco.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="endereco.errors?.['required']">Campo endereço obrigatório</p>
                       </div>
                     </div>
@@ -156,7 +171,7 @@
                       <input id="form_numero" type="text" name="numero" class="form-control"
                              placeholder="Número" required="required" formControlName="numero">
 
-                      <div *ngIf="numero.invalid && (numero.dirty || numero.touched)" class="validation-error">
+                      <div *ngIf="numero.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="numero.errors?.['required']">Campo número obrigatório</p>
                       </div>
                     </div>
@@ -170,9 +185,11 @@
                       <input id="form_cep" type="text" name="cep" class="form-control"
                              placeholder="CEP" required="required" formControlName="cep">
 
-                      <div *ngIf="cep.invalid && (cep.dirty || cep.touched)" class="validation-error">
+                      <div *ngIf="cep.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="cep.errors?.['required']">Campo CEP obrigatório</p>
-
+                      </div>
+                      <div *ngIf="cep.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="cep.errors?.['pattern']">Formato invalido</p>
                       </div>
                     </div>
                   </div>
@@ -182,7 +199,7 @@
                       <input id="form_telefone" type="text" name="telefone" class="form-control"
                              placeholder="Telefone" required="required" formControlName="telefone">
 
-                      <div *ngIf="telefone.invalid && (telefone.dirty || telefone.touched)" class="validation-error">
+                      <div *ngIf="telefone.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="telefone.errors?.['required']">Campo telefone obrigatório</p>
                       </div>
                     </div>
@@ -196,7 +213,7 @@
                       <input id="form_bairro" type="text" name="bairro" class="form-control"
                              placeholder="Bairro" required="required" formControlName="bairro">
 
-                      <div *ngIf="bairro.invalid && (bairro.dirty || bairro.touched)" class="validation-error">
+                      <div *ngIf="bairro.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="bairro.errors?.['required']">Campo bairro obrigatório</p>
                       </div>
                     </div>
@@ -207,7 +224,7 @@
                       <input id="form_cidade" type="text" name="cidade" class="form-control"
                              placeholder="Cidade" required="required" formControlName="cidade">
 
-                      <div *ngIf="cidade.invalid && (cidade.dirty || cidade.touched)" class="validation-error">
+                      <div *ngIf="cidade.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="cidade.errors?.['required']">Campo cidade obrigatório</p>
                       </div>
                     </div>
@@ -215,10 +232,39 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_estado">Estado</label>
-                      <input id="form_estado" type="text" name="estado" class="form-control"
-                             placeholder="Estado" required="required" formControlName="estado">
+                      <select id="form_estado" name="estado" class="form-control" placeholder="Estado" required formControlName="estado">
+                        <option value="" disabled selected>Selecione o estado</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                        <option value="EX">Estrangeiro</option>
+                      </select>
 
-                      <div *ngIf="estado.invalid && (estado.dirty || estado.touched)" class="validation-error">
+                      <div *ngIf="estado.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="estado.errors?.['required']">Campo estado obrigatório</p>
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 import {Injectable, NgModule} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {BehaviorSubject, catchError, Observable, throwError} from "rxjs";
 import {MonitoradorModels} from "../Models/monitorador/monitorador.models";
 import {error} from "jquery";
@@ -27,50 +27,7 @@ export class MonitoradorService {
         })
       );
   }
-  //------------------------------------------------------
-  // public getFilterMonitoradorNome(params: string): Observable<MonitoradorModels[]> {
-  //   const url: string = "http://localhost:8080/monitorador/filtroNome/" + params;
-  //   return this.http.get<MonitoradorModels[]>(url).pipe(
-  //     catchError((error) => {
-  //       console.error("Erro na requisição:", error);
-  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-  //     })
-  //   );
-  // }
-  //
-  // public MonitoradorCPF(params: string): Observable<MonitoradorModels[]> {
-  //   const url: string = "http://localhost:8080/monitorador/filtroCpf/" + params;
-  //   return this.http.get<MonitoradorModels[]>(url).pipe(
-  //     catchError((error) => {
-  //       console.error("Erro na requisição:", error);
-  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-  //     })
-  //   );
-  // }
-  //
-  // public getFilterMonitoradorCnpj(params: string): Observable<MonitoradorModels[]> {
-  //   const url: string = "http://localhost:8080/monitorador/filtroCnpj/" + params;
-  //   return this.http.get<MonitoradorModels[]>(url).pipe(
-  //     catchError((error) => {
-  //       console.error("Erro na requisição:", error);
-  //       return throwError("Erro ao obter dados. Por favor, tente novamente mais tarde.");
-  //     })
-  //   );
-  // }
-  //
-  // public getFilterMonitoradorID( params: string): Observable<MonitoradorModels[]> {
-  //   const ur: string = this.baseUrl + "/"+params;
-  //   console.log(ur)
-  //   return this.http.get <MonitoradorModels[]>(ur).pipe(
-  //     catchError((error)=>{
-  //       console.error("URL invalida", + ur)
-  //       return throwError(error())
-  //     })
-  //
-  //   );
-  // }
 
-  //------------------------------------------------
 
   public putMonitorador( id: string ,dados: MonitoradorModels): Observable<MonitoradorModels> {
     const  urlPut: string = this.baseUrl+"/"+id;
@@ -86,7 +43,11 @@ export class MonitoradorService {
 
   public postMonitorador(dados: MonitoradorModels): Observable<MonitoradorModels> {
     const  urlPost: string = this.baseUrl;
-    return this.http.post <MonitoradorModels>(urlPost,dados).pipe();
+    return this.http.post <MonitoradorModels>(urlPost,dados).pipe(
+      catchError((error)=> {
+        return throwError(error.error);
+      })
+    );
 
   }
   public postMonitoradorEndereco(dados: Endereco): Observable<Endereco> {

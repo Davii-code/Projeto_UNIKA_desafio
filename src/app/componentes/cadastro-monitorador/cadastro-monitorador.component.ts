@@ -47,7 +47,8 @@ export class CadastroMonitoradorComponent implements OnInit {
   validacao: boolean = false;
   validacaoJ: boolean = false;
   validacaoEnd: boolean = false;
-
+  validacaoB: boolean = false;
+  msg: string = '' ;
 
   constructor(
     public dialogRef: MatDialogRef<MonitoradorComponent>,
@@ -64,30 +65,30 @@ export class CadastroMonitoradorComponent implements OnInit {
     this.formMonitorador = this.formBuilder.group({
       tipo: ['Fisica', [Validators.required]],
       nome: [, [Validators.required]],
-      cpf: [, [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      cnpj: [, [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      cpf: [, [Validators.required, Validators.pattern(/^[\d.-]{14}$/)]], // Permitir números, pontos e traços, com tamanho 11
+      cnpj: [, [Validators.required]], // Permitir números, pontos e traços, com tamanho 14
       email: [, [Validators.required, Validators.email]],
-      rg: [, [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/)]],
-      inscricao: [, [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/)]],
+      rg: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
+      inscricao: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
       ativo: [],
-      data_nascimento: [, [Validators.required]],
+      data_nascimento: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]],
+    });
 
-    })
     this.formEndereco = this.formBuilder.group({
       endereco: [, [Validators.required]],
       numero: [, [Validators.required]],
-      cep: [, [Validators.required, Validators.pattern(/^\d{8}-\d{1}$/)]],
-      telefone: [, [Validators.required]],
+      cep: [, [Validators.required, Validators.pattern(/^[\d.-]{11}$/)]], // Permitir números, pontos e traços, com tamanho 8
+      telefone: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
       bairro: [, [Validators.required]],
       cidade: [, [Validators.required]],
       estado: [, [Validators.required]],
       principal: [true, [Validators.required]],
-    })
+    });
   }
 
-  Onchange(event: any){
-      this.validacaoJ = false
-      this.validacao = false;
+  Onchange(event: any) {
+    this.validacaoJ = false
+    this.validacao = false;
 
   }
 
@@ -96,31 +97,31 @@ export class CadastroMonitoradorComponent implements OnInit {
     return this.formMonitorador.get('nome')!;
   }
 
-  get cpf(){
+  get cpf() {
     return this.formMonitorador.get('cpf')!;
   }
 
-  get cnpj(){
+  get cnpj() {
     return this.formMonitorador.get('cnpj')!;
   }
 
-  get email(){
+  get email() {
     return this.formMonitorador.get('email')!;
   }
 
-  get rg(){
+  get rg() {
     return this.formMonitorador.get('rg')!;
   }
 
-  get inscricao(){
+  get inscricao() {
     return this.formMonitorador.get('inscricao')!;
   }
 
-  get data_nascimento(){
+  get data_nascimento() {
     return this.formMonitorador.get('data_nascimento')!;
   }
 
-  get ativo(){
+  get ativo() {
     return this.formMonitorador.get('ativo')!;
   }
 
@@ -160,52 +161,65 @@ export class CadastroMonitoradorComponent implements OnInit {
   }
 
 //-----gets formGroup-----//
-  CadastrarMonitorador(dado: MonitoradorModels) {
-    if (this.formMonitorador.get('tipo')?.value === 'Fisica'){
-      if (!this.nome.invalid && !this.cpf.invalid && !this.rg.invalid && !this.email.invalid && !this.ativo.invalid && !this.data_nascimento.invalid) {
-        this.mostrarCamposMoni = !this.mostrarCamposMoni;
-        this.mostrarCamposEndereco = true;
-        this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
 
-        })
+
+  CadastrarMonitorador(dado: MonitoradorModels) {
+    console.log('Formulário:', this.formMonitorador.value);
+
+    if (this.formMonitorador.get('tipo')?.value === 'Fisica') {
+      console.log('Tipo Física selecionado');
+      if (!this.nome.invalid && !this.cpf.invalid && !this.rg.invalid && !this.email.invalid && !this.ativo.invalid && !this.data_nascimento.invalid) {
+        this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
+            this.mostrarCamposMoni = !this.mostrarCamposMoni;
+            this.mostrarCamposEndereco = true;
+          }, error => {
+            this.validacaoB = true;
+            this.msg = error.message;
+          }
+        );
       } else {
-        this.mostrarCamposMoni = this.mostrarCamposMoni;
+        this.mostrarCamposMoni = true;
         this.mostrarCamposEndereco = false;
         this.validacao = true;
 
       }
 
-    }else {
-      if (!this.nome.invalid && !this.cnpj.invalid && !this.inscricao.invalid && !this.email.invalid && !this.ativo.invalid) {
-        this.mostrarCamposMoni = !this.mostrarCamposMoni;
-        this.mostrarCamposEndereco = true;
-        this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
+    } else {
+      if (this.formMonitorador.get('tipo')?.value == 'Juridica') {
+        console.log('Tipo Jurídica selecionado');
+        if (!this.nome.invalid && !this.cnpj.invalid && !this.inscricao.invalid && !this.email.invalid && !this.ativo.invalid) {
+          this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
+            this.mostrarCamposMoni = !this.mostrarCamposMoni;
+            this.mostrarCamposEndereco = true;
+          }, errors => {
+            this.validacaoB = true;
+            this.msg = errors.message;
+          });
+        } else {
+          this.mostrarCamposMoni = true;
+          this.mostrarCamposEndereco = false;
+          this.validacaoJ = true;
 
-        })
-      } else {
-        this.mostrarCamposMoni = this.mostrarCamposMoni;
-        this.mostrarCamposEndereco = false;
-        this.validacaoJ = true;
-
+        }
       }
+
     }
 
 
   }
 
   CadastrarEnd(dadoEnd: Endereco) {
-    if (!this.endereco.invalid && !this.numero.invalid && !this.cep.invalid && !this.telefone.invalid && !this.bairro.invalid && !this.cidade.invalid && !this.estado.invalid && !this.principal.invalid){
-      if (dadoEnd != null) {
-        this.monitoradorService.postMonitoradorEndereco(dadoEnd).subscribe(resposta => {
-          this.dialogRef.close()
-        })
-      }
-    }else {
+    if (!this.endereco.invalid && !this.numero.invalid && !this.cep.invalid && !this.telefone.invalid && !this.bairro.invalid && !this.cidade.invalid && !this.estado.invalid && !this.principal.invalid) {
+
+      this.monitoradorService.postMonitoradorEndereco(dadoEnd).subscribe(resposta => {
+        this.dialogRef.close()
+      })
+
+    } else {
       this.validacaoEnd = true;
     }
 
 
-
-
   }
+
 }
