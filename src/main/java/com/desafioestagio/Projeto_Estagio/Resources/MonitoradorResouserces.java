@@ -8,6 +8,7 @@ import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.ErrorResponse;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,7 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
-
+@Validated
 @RestController
 @RequestMapping(value = "/monitorador", produces = "application/json; charset=UTF-8")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -70,13 +72,19 @@ public class MonitoradorResouserces {
 
     @PostMapping
     public ResponseEntity<?> insert(@Valid @RequestBody Monitorador obj) {
+try{
         if (!services.ValidadorIgualID (obj)) {
-            obj = services.insert (obj);
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest ().path ("/{id}").buildAndExpand (obj.getId ()).toUri ();
-            return ResponseEntity.created (uri).body (obj);
+                obj = services.insert (obj);
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest ().path ("/{id}").buildAndExpand (obj.getId ()).toUri ();
+                return ResponseEntity.created (uri).body (obj);
+
         } else {
             String errorMessage = "Dados ja cadastrados";
             return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
+        }}catch (ConstraintViolationException e){
+            ErrorResponse errorResponse = new ErrorResponse ().fromViolations (e.getConstraintViolations ());
+
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 
@@ -241,29 +249,6 @@ public class MonitoradorResouserces {
         return ResponseEntity.ok ().body (obj);
     }
 
-//    @GetMapping(value = "/filtro")
-//    public ResponseEntity<?> findByParam(@RequestParam String tipo, @RequestParam String valor) {
-//        List<Monitorador> objList;
-//
-//        if ("nome".equalsIgnoreCase(tipo)) {
-//            if (valor.contains(" ")) {
-//                objList = services.findByNome(valor);
-//            } else {
-//                objList = services.findByNomeStartingWith(valor);
-//            }
-//        } else if ("cnpj".equalsIgnoreCase(tipo)) {
-//            Monitorador obj = services.findBycnpj(valor);
-//            return ResponseEntity.ok().body(obj);
-//        } else if ("cpf".equalsIgnoreCase(tipo)) {
-//            Monitorador obj = services.findByCpf(valor);
-//            return ResponseEntity.ok().body(obj);
-//        } else {
-//            // Tipo de parâmetro desconhecido
-//            return ResponseEntity.badRequest().body("Tipo de parâmetro inválido");
-//        }
-//
-//        return ResponseEntity.ok().body(objList);
-//    }
 
 
 }

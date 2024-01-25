@@ -7,11 +7,7 @@ import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundEx
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -98,6 +94,10 @@ public class MonitoradorServices {
             return  repository.existsByCpf(obj.getCpf()) && repository.existsByRg(obj.getRg())  && repository.existsByEmail (obj.getEmail ());
         }
     }
+
+
+
+
     public boolean ValidadorIgualIDEnd(Endereco obj){
         return enderecoRepositorys.existsByPrincipal (obj.getPrincipal ()) && enderecoRepositorys.existsByEndereco (obj.getEndereco ());
     }

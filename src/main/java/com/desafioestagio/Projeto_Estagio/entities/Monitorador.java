@@ -19,10 +19,10 @@ public class Monitorador implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @CNPJ
+    @CNPJ(message = "CNPJ INVALIDO")
     @IRValidator()
     private String cnpj = null;
-    @CPF
+    @CPF(message = "CPF INVALIDO")
     @IRValidator()
     private String cpf = null;
     private String nome;
