@@ -3,7 +3,7 @@ export interface Endereco {
   numero: string;
   cep: string;
   telefone: string;
-  Bairro: string;
+  bairro: string;
   cidade: string;
   estado: string;
   principal: boolean;

@@ -65,12 +65,12 @@
 
     <div class="fieldcontain col-lg-2 filtro space">
       <label>CPF</label>
-      <input type="text" placeholder="CPF" class="form-control"  formControlName="cpf" name="cpf">
+      <input type="text" placeholder="CPF" class="form-control"  formControlName="cpf" name="cpf" mask="000.000.000-00">
     </div>
 
     <div class="fieldcontain col-lg-2 filtro space">
       <label>CNPJ</label>
-      <input type="text" placeholder="CNPJ" class="form-control" formControlName="cnpj" name="cnpj">
+      <input type="text" placeholder="CNPJ" class="form-control" formControlName="cnpj" name="cnpj" mask="00.000.000/0000-00">
     </div>
 
     <button type="submit" mat-raised-button color="primary"  style="margin-top: 20px" [disabled]="isvalidForm()" (click)="ngOnInit()">Reset</button>
@@ -101,13 +101,13 @@
     <!-- Weight Column -->
     <ng-container matColumnDef="cpf">
       <th mat-header-cell *matHeaderCellDef> CPF</th>
-      <td mat-cell *matCellDef="let element" class="table_cpf"> {{ element.cpf }}</td>
+      <td mat-cell *matCellDef="let element" class="table_cpf" > {{ element.cpf | mask: "000.000.000-00"}}</td>
     </ng-container>
 
     <!-- Symbol Column -->
     <ng-container matColumnDef="cnpj">
       <th mat-header-cell *matHeaderCellDef class="cnpj-header"> CNPJ</th>
-      <td mat-cell *matCellDef="let element" class="cnpj-cell" > {{ element.cnpj }}</td>
+      <td mat-cell *matCellDef="let element" class="cnpj-cell" > {{ element.cnpj | mask: "00.000.000/0000-00" }}</td>
     </ng-container>
 
     <!-- Actions Column -->

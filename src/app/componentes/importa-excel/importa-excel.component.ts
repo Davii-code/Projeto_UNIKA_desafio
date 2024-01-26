@@ -57,4 +57,21 @@ export class ImportaExcelComponent {
     this.dialogRef.close();
   }
 
+  private gerarExcel(blob: Blob) {
+    const file = new Blob([blob], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileURL = URL.createObjectURL(file);
+
+    window.open(fileURL, '_blank');
+  }
+
+
+  OnClickModeloExcel(){
+    this.monitoradorServices.getMonitoradorExcelModel().subscribe(
+      (resposta: Blob) => {
+        this.gerarExcel(resposta);
+        console.log('Exportado com sucesso');
+
+    });
+  }
+
 }

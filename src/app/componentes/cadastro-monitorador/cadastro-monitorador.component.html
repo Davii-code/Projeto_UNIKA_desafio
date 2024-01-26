@@ -31,12 +31,12 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_cpf">CPF/CNPJ</label>
-                      <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
+                      <input mask="000.000.000-00" id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
                              name="cpf" class="form-control"
                              placeholder="CPF" required="required"
                              data-error="CPF é obrigatório." formControlName="cpf">
 
-                      <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
+                      <input mask="00.000.000/0000-00" id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
                              name="cnpj" class="form-control"
                              placeholder="CNPJ" required="required"
                              data-error="CNPJ é obrigatório." formControlName="cnpj">
@@ -129,7 +129,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_data">Data Nascimento</label>
-                      <input id="form_data" type="text" name="Data" class="form-control"
+                      <input  id="form_data" type="date" name="Data" class="form-control"
                              placeholder="Data de nascimento" required="required"
                              data-error="Data Obrigatorio" formControlName="data_nascimento">
 
@@ -180,23 +180,22 @@
 
                 <div class="row">
                   <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group" >
                       <label for="form_cep">CEP</label>
-                      <input id="form_cep" type="text" name="cep" class="form-control"
-                             placeholder="CEP" required="required" formControlName="cep">
-
+                      <input id="form_cep" type="text" name="cep" class="form-control" placeholder="CEP" required="required" formControlName="cep">
+                      <mat-icon (click)="OnclickBucasCep(cep.value)" >search</mat-icon>
                       <div *ngIf="cep.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="cep.errors?.['required']">Campo CEP obrigatório</p>
-                      </div>
-                      <div *ngIf="cep.invalid && validacaoEnd" class="validation-error">
-                        <p *ngIf="cep.errors?.['pattern']">Formato invalido</p>
+                        <p *ngIf="cep.errors?.['pattern']">Formato inválido</p>
                       </div>
                     </div>
+
                   </div>
+
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_telefone">Telefone</label>
-                      <input id="form_telefone" type="text" name="telefone" class="form-control"
+                      <input id="form_telefone" type="text" name="telefone" class="form-control "
                              placeholder="Telefone" required="required" formControlName="telefone">
 
                       <div *ngIf="telefone.invalid && validacaoEnd" class="validation-error">

@@ -11,6 +11,7 @@
         <div class="card-body bg-light">
           <div class="container">
             <form id="contact-form" role="form" [formGroup]="formMonitorador">
+              <p *ngIf="validacaoB" style="color:red;">{{msg}}</p>
               <div class="controls">
                 <div class="row">
                   <div class="col-md-6">
@@ -19,17 +20,35 @@
                       <input id="form_name" type="text" name="name" class="form-control"
                              placeholder="Nome" required="required"
                              data-error="Nome é obrigatório." formControlName="nome">
+                      <div *ngIf="nome.invalid && validacao || validacaoJ" class="validation-error">
+                        <p *ngIf="nome.errors?.['required']">Campo Nome Obrigatorio</p>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_cpf">CPF/CNPJ</label>
-                      <input id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="cpf" class="form-control"
+                      <input mask="000.000.000-00" id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="cpf" class="form-control"
                              placeholder="CPF" required="required"
                              data-error="CPF é obrigatório." formControlName="cpf">
-                      <input id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="cnpj" class="form-control"
+                      <input mask="00.000.000/0000-00" id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="cnpj" class="form-control"
                              placeholder="CNPJ" required="required"
                              data-error="CNPJ é obrigatório." formControlName="cnpj">
+
+
+                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
+                        <p *ngIf="cpf.errors?.['required']">Campo CPF Obrigatorio</p>
+                      </div>
+
+                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
+                        <p *ngIf="cpf.errors?.['pattern']">Formato invalido, apenas números</p>
+                      </div>
+                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="cnpj.errors?.['required']">Campo CNPJ Obrigatorio</p>
+                      </div>
+                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="cnpj.errors?.['pattern']">Formato Invalido , apenas números</p>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -42,6 +61,19 @@
                       <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="inscricao" class="form-control"
                              placeholder="Inscrição" required="required"
                              data-error="Inscrição é obrigatória." formControlName="inscricao">
+                      <div *ngIf="rg.invalid && validacao" class="validation-error">
+                        <p *ngIf="rg.errors?.['required']">Campo RG Obrigatorio</p>
+                      </div>
+                      <div *ngIf="rg.invalid && validacao" class="validation-error">
+                        <p *ngIf="rg.errors?.['pattern']">Formato invalido apneas números e pontos</p>
+                      </div>
+
+                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="inscricao.errors?.['required']">Campo Inscrição Obrigatorio</p>
+                      </div>
+                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
+                        <p *ngIf="inscricao.errors?.['pattern']">Formato invalido apneas números e pontos</p>
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -50,6 +82,10 @@
                       <input id="form_email" type="text" name="email" class="form-control"
                              placeholder="Email" required="required"
                              data-error="Email é obrigatório." formControlName="email">
+
+                      <div *ngIf="email.invalid &&validacao || validacaoJ" class="validation-error" class="validation-error">
+                        <p *ngIf="email.errors?.['required']">Campo email Obrigatorio</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -63,6 +99,10 @@
                         <option value="Fisica">Pessoa Física</option>
                         <option value="Juridica">Pessoa Jurídica</option>
                       </select>
+                      <div *ngIf="tipo.invalid && validacao || validacaoJ" class="validation-error" >
+                        <p *ngIf="tipo.errors?.['required']">Campo Ativo Obrigatorio</p>
+                      </div>
+
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -74,6 +114,10 @@
                         <option value="true">Ativo</option>
                         <option value="false">Inativo</option>
                       </select>
+
+                      <div *ngIf="ativo.invalid && validacao || validacaoJ" class="validation-error" >
+                        <p *ngIf="ativo.errors?.['required']">Campo Ativo Obrigatorio</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -81,9 +125,15 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="form_data">Data Nascimento</label>
-                      <input id="form_data" type="text" name="Data" class="form-control"
+                      <input  id="form_data" type="date" name="Data" class="form-control"
                              placeholder="Data de nascimento" required="required"
                              data-error="Data Obrigatorio" formControlName="data_nascimento">
+                      <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
+                        <p *ngIf="data_nascimento.errors?.['required']">Campo Data Obrigatorio</p>
+                      </div>
+                      <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
+                        <p *ngIf="data_nascimento.errors?.['pattern']">Formato invalido, somente números</p>
+                      </div>
                     </div>
                   </div>
                 </div>

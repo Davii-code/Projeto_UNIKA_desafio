@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { data } from "jquery";
 import {CommonModule} from "@angular/common";
 import {update} from "@angular-devkit/build-angular/src/tools/esbuild/angular/compilation/parallel-worker";
-import {NgxMaskDirective} from "ngx-mask";
+import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 
 @Component({
   selector: 'app-editar-monitorador',
@@ -18,10 +18,11 @@ import {NgxMaskDirective} from "ngx-mask";
   imports: [
     MatIcon,
     ReactiveFormsModule, HttpClientModule,
-    CommonModule, NgxMaskDirective
+    CommonModule, NgxMaskDirective,NgxMaskPipe
   ],
   providers:[
     MonitoradorService,
+    provideNgxMask()
   ],
   templateUrl: './editar-monitorador.component.html',
   styleUrls: ['./editar-monitorador.component.css'] // Corrija 'styleUrl' para 'styleUrls'
@@ -29,6 +30,10 @@ import {NgxMaskDirective} from "ngx-mask";
 export class EditarMonitoradorComponent implements OnInit {
   moni!: MonitoradorModels;
   formMonitorador !: FormGroup;
+  validacao: boolean = false;
+  validacaoJ: boolean = false;
+  validacaoB: boolean = false;
+  msg: string = '' ;
 
 
   constructor(
@@ -48,11 +53,11 @@ export class EditarMonitoradorComponent implements OnInit {
     this.formMonitorador = this.formBuilder.group({
       id: [this.moni.id, [Validators.required]],
       nome: [this.moni.nome, [Validators.required]],
-      cpf: [this.moni.cpf, [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      cnpj: [this.moni.cnpj, [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      email: [this.moni.email, [Validators.required, Validators.email]],
-      rg: [this.moni.rg, [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/)]],
-      inscricao: [this.moni.inscricao, [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/)]],
+      cpf: [this.moni.cpf, [Validators.required,Validators.pattern(/^[\d.-]{14}$/)]],
+      cnpj: [this.moni.cnpj, [Validators.required, ]],
+      email: [this.moni.email, [Validators.required]],
+      rg: [this.moni.rg, [Validators.required,Validators.pattern(/^[\d.-]+$/)]],
+      inscricao: [this.moni.inscricao, [Validators.required,Validators.pattern(/^[\d.-]+$/)]],
       tipo: [this.moni.tipo, [Validators.required]],
       ativo: [this.moni.ativo],
       data_nascimento: [this.moni.data_nascimento, [Validators.required]],
@@ -63,11 +68,91 @@ export class EditarMonitoradorComponent implements OnInit {
 
   }
 
-  EditarMonitorador(dado: MonitoradorModels) {
-      this.monitoradorService.putMonitorador(dado.id.toString(),dado).subscribe(resposta =>{
-       this.dialogRef.close()
+  Onchange(event: any) {
+    this.validacaoJ = false
+    this.validacao = false;
 
-      })
+  }
+
+  //-----gets formGroup-----//
+  get nome() {
+    return this.formMonitorador.get('nome')!;
+  }
+
+  get cpf() {
+    return this.formMonitorador.get('cpf')!;
+  }
+
+  get cnpj() {
+    return this.formMonitorador.get('cnpj')!;
+  }
+
+  get email() {
+    return this.formMonitorador.get('email')!;
+  }
+
+  get rg() {
+    return this.formMonitorador.get('rg')!;
+  }
+
+  get inscricao() {
+    return this.formMonitorador.get('inscricao')!;
+  }
+
+  get data_nascimento() {
+    return this.formMonitorador.get('data_nascimento')!;
+  }
+
+  get ativo() {
+    return this.formMonitorador.get('ativo')!;
+  }
+  get tipo() {
+    return this.formMonitorador.get('tipo')!;
+  }
+
+
+
+  EditarMonitorador(dado: MonitoradorModels) {
+    if (this.formMonitorador.get('tipo')?.value === 'Fisica'){
+      if (!this.nome.invalid && !this.cpf.invalid && !this.rg.invalid && !this.email.invalid && !this.ativo.invalid && !this.data_nascimento.invalid){
+        this.monitoradorService.putMonitorador(dado.id.toString(),dado).subscribe(resposta =>{
+          this.dialogRef.close()
+
+        },error => {
+            if (error.status === 500){
+              this.validacaoB = true;
+              this.msg = "CPF/CNPJ Invalido";
+            }else{
+              this.validacaoB = true;
+              this.msg = error.message;
+            }
+        }
+        );
+      }else{
+        this.validacao = true;
+      }
+    }else if (this.formMonitorador.get('tipo')?.value == 'Juridica') {
+      console.log('Tipo Jurídica selecionado');
+      if (!this.nome.invalid && !this.cnpj.invalid && !this.inscricao.invalid && !this.email.invalid && !this.ativo.invalid){
+        this.monitoradorService.putMonitorador(dado.id.toString(),dado).subscribe(resposta =>{
+            this.dialogRef.close()
+
+          },error => {
+          if (error.status === 500){
+            this.validacaoB = true;
+            this.msg = "CPF/CNPJ Invalido";
+          }else{
+            this.validacaoB = true;
+            this.msg = error.message;
+          }
+
+          }
+        );
+      }else {
+        this.validacaoJ = true;
+      }
+
+    }
   }
 
 

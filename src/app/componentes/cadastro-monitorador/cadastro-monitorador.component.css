@@ -30,3 +30,9 @@ label {
 .validation-error {
   color: #ff5050;
 }
+
+.form-group mat-icon{
+  display: flex;
+  align-items: center;
+}
+

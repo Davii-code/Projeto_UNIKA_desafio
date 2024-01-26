@@ -28,10 +28,24 @@ export class MonitoradorService {
       );
   }
 
+  getEndCep(cep : string): Observable<Endereco> {
+    return this.http.get<Endereco>(`http://localhost:8080/endereco/buscarCEP/`+ cep)
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
 
   public putMonitorador( id: string ,dados: MonitoradorModels): Observable<MonitoradorModels> {
     const  urlPut: string = this.baseUrl+"/"+id;
-    return this.http.put <MonitoradorModels>(urlPut,dados).pipe();
+    return this.http.put <MonitoradorModels>(urlPut,dados).pipe(
+      catchError((error)=> {
+        return throwError(error.error);
+      })
+    );
 
   }
 
@@ -95,6 +109,16 @@ export class MonitoradorService {
 
   getMonitoradorExcel(): Observable<Blob> {
     return this.http.get('http://localhost:8080/monitorador/relatorio/excel', { responseType: 'blob' })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  getMonitoradorExcelModel(): Observable<Blob> {
+    return this.http.get('http://localhost:8080/monitorador/relatorio/excelModelo', { responseType: 'blob' })
       .pipe(
         catchError((error) => {
           console.error('Erro na solicitação getMonitorador:', error);

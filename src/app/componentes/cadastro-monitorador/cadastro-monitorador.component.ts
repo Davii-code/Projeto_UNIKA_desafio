@@ -17,10 +17,11 @@ import {MonitoradorService} from "../../services/monitorador.service";
 import {HttpClientModule} from "@angular/common/http";
 import {data} from "jquery";
 import {Endereco} from "../../Models/monitorador/endereco.models";
+import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import { IConfig } from 'ngx-mask'
+
 
 @Component({
-  selector: 'app-cadastro-monitorador',
-  standalone: true,
   imports: [
     MatDialogActions,
     MatButton,
@@ -30,30 +31,37 @@ import {Endereco} from "../../Models/monitorador/endereco.models";
     FormsModule,
     NgIf,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
   providers: [
     MonitoradorService,
+    provideNgxMask()
   ],
-  templateUrl: './cadastro-monitorador.component.html',
-  styleUrl: './cadastro-monitorador.component.css'
+  selector: 'app-cadastro-monitorador',
+  standalone: true,
+  styleUrl: './cadastro-monitorador.component.css',
+  templateUrl: './cadastro-monitorador.component.html'
 })
 export class CadastroMonitoradorComponent implements OnInit {
   moni!: MonitoradorModels;
   formMonitorador !: FormGroup;
   formEndereco !: FormGroup;
-  mostrarCamposEndereco: boolean = false;
+  mostrarCamposEndereco: boolean = true;
   mostrarCamposMoni: boolean = true;
   validacao: boolean = false;
   validacaoJ: boolean = false;
   validacaoEnd: boolean = false;
   validacaoB: boolean = false;
   msg: string = '' ;
+  end!: Endereco;
+
 
   constructor(
     public dialogRef: MatDialogRef<MonitoradorComponent>,
     private formBuilder: FormBuilder,
-    private monitoradorService: MonitoradorService
+    private monitoradorService: MonitoradorService,
   ) {
   }
 
@@ -65,7 +73,7 @@ export class CadastroMonitoradorComponent implements OnInit {
     this.formMonitorador = this.formBuilder.group({
       tipo: ['Fisica', [Validators.required]],
       nome: [, [Validators.required]],
-      cpf: [, [Validators.required, Validators.pattern(/^[\d.-]{14}$/)]], // Permitir números, pontos e traços, com tamanho 11
+      cpf: [, [Validators.required]], // Permitir números, pontos e traços, com tamanho 11
       cnpj: [, [Validators.required]], // Permitir números, pontos e traços, com tamanho 14
       email: [, [Validators.required, Validators.email]],
       rg: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
@@ -205,8 +213,26 @@ export class CadastroMonitoradorComponent implements OnInit {
 
     }
 
-
   }
+  OnclickBucasCep(cep: string) {
+    this.monitoradorService.getEndCep(cep).subscribe(
+      (resposta: Endereco) => {
+        this.end = resposta;
+        this.formEndereco = this.formBuilder.group({
+          endereco: [this.end.endereco, [Validators.required]],
+          numero: [this.end.numero, [Validators.required]],
+          bairro: [this.end.bairro, [Validators.required]],
+          cidade: [this.end.cidade, [Validators.required]],
+          estado: [this.end.estado, [Validators.required]],
+        });
+      },
+      (error) => {
+        console.error("Erro na busca de CEP", error);
+      }
+    );
+  }
+
+
 
   CadastrarEnd(dadoEnd: Endereco) {
     if (!this.endereco.invalid && !this.numero.invalid && !this.cep.invalid && !this.telefone.invalid && !this.bairro.invalid && !this.cidade.invalid && !this.estado.invalid && !this.principal.invalid) {
