@@ -37,7 +37,7 @@ public class ConsumoApi {
         }
 
 
-        // Use a URI válida aqui, não o corpo da resposta
+
         URI uri = URI.create(url);
 
         // Correção aqui

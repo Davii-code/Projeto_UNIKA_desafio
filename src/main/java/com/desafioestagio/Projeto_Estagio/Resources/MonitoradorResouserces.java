@@ -16,9 +16,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.ByteArrayInputStream;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+
 @Validated
 @RestController
 @RequestMapping(value = "/monitorador", produces = "application/json; charset=UTF-8")
@@ -72,20 +76,24 @@ public class MonitoradorResouserces {
 
     @PostMapping
     public ResponseEntity<?> insert(@Valid @RequestBody Monitorador obj) {
-try{
+
         if (!services.ValidadorIgualID (obj)) {
-                obj = services.insert (obj);
-                URI uri = ServletUriComponentsBuilder.fromCurrentRequest ().path ("/{id}").buildAndExpand (obj.getId ()).toUri ();
-                return ResponseEntity.created (uri).body (obj);
-
+            obj = services.insert (obj);
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest ().path ("/{id}")
+                    .buildAndExpand (obj.getId ()).toUri ();
+            return ResponseEntity.created (uri).body (obj);
         } else {
-            String errorMessage = "Dados ja cadastrados";
+            String errorMessage = "Dados já cadastrados";
             return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
-        }}catch (ConstraintViolationException e){
-            ErrorResponse errorResponse = new ErrorResponse ().fromViolations (e.getConstraintViolations ());
-
-             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult ().getFieldError ().getDefaultMessage ();
+
+        return ResponseEntity.status (HttpStatus.BAD_REQUEST).body (new ErrorResponse (errorMessage));
     }
 
     @PostMapping(value = "/{id}/enderecos")
@@ -111,9 +119,16 @@ try{
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Monitorador> update(@PathVariable Long id, @RequestBody Monitorador obj) {
-        obj = services.update (id, obj);
-        return ResponseEntity.ok ().body (obj);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Monitorador obj) {
+
+        if (!services.ValidadorIgualID (obj)) {
+            obj = services.update (id, obj);
+            return ResponseEntity.ok ().body (obj);
+        } else {
+            String errorMessage = "Dados ja cadastrados";
+            return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
+        }
+
     }
 
     @GetMapping(value = "/relatorio/pdfs")
@@ -209,31 +224,29 @@ try{
     @PostMapping("/importar-excel")
     public ResponseEntity<String> importarMonitoradoresDoExcel(@RequestParam("file") MultipartFile file) {
         try {
-            List<Monitorador> monitoradores = services.criarExcel(file);
+            List<Monitorador> monitoradores = services.criarExcel (file);
 
-            return ResponseEntity.ok("Importação bem-sucedida");
+            return ResponseEntity.ok ("Importação bem-sucedida");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Erro durante a importação: " + e.getMessage());
+            e.printStackTrace ();
+            return ResponseEntity.status (500).body ("Erro durante a importação: " + e.getMessage ());
         }
     }
-
-
 
 
     @GetMapping(value = "/filtroNome/{nome}")
     public ResponseEntity<List<Monitorador>> findByNome(@PathVariable String nome) {
         List<Monitorador> obj;
 
-        if (nome.contains(" ")) {
+        if (nome.contains (" ")) {
             // Se o nome contém um espaço, considera o nome completo
-            obj = services.findByNome(nome);
+            obj = services.findByNome (nome);
         } else {
             // Se não contém um espaço, considera o primeiro nome
-            obj = services.findByNomeStartingWith(nome);
+            obj = services.findByNomeStartingWith (nome);
         }
 
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok ().body (obj);
     }
 
 
@@ -248,7 +261,6 @@ try{
         Monitorador obj = services.findByCpf (cpf);
         return ResponseEntity.ok ().body (obj);
     }
-
 
 
 }
