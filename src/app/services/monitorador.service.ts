@@ -28,6 +28,16 @@ export class MonitoradorService {
       );
   }
 
+  getEndereco(id: string): Observable<Endereco[]> {
+    return this.http.get<Endereco[]>(this.baseUrl+"/"+id+"/enderecos")
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
   getEndCep(cep : string): Observable<Endereco> {
     return this.http.get<Endereco>(`http://localhost:8080/endereco/buscarCEP/`+ cep)
       .pipe(

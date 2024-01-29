@@ -152,7 +152,9 @@
 
             <form>
               <!-- Campos do Endereço -->
+
               <div *ngIf="mostrarCamposEndereco" [formGroup]="formEndereco">
+                <p *ngIf="validacaoB" style="color:red;">{{msg}}</p>
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
@@ -160,7 +162,7 @@
                       <input id="form_endereco" type="text" name="endereco" class="form-control"
                              placeholder="Endereço" required="required" formControlName="endereco">
 
-                      <div *ngIf="endereco.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="endereco?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="endereco.errors?.['required']">Campo endereço obrigatório</p>
                       </div>
                     </div>
@@ -171,7 +173,7 @@
                       <input id="form_numero" type="text" name="numero" class="form-control"
                              placeholder="Número" required="required" formControlName="numero">
 
-                      <div *ngIf="numero.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="numero?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="numero.errors?.['required']">Campo número obrigatório</p>
                       </div>
                     </div>
@@ -182,9 +184,14 @@
                   <div class="col-md-6">
                     <div class="form-group" >
                       <label for="form_cep">CEP</label>
-                      <input id="form_cep" type="text" name="cep" class="form-control" placeholder="CEP" required="required" formControlName="cep">
-                      <mat-icon (click)="OnclickBucasCep(cep.value)" >search</mat-icon>
-                      <div *ngIf="cep.invalid && validacaoEnd" class="validation-error">
+                      <div id="viacep" >
+                        <input id="form_cep" type="text" name="cep" class="form-control" placeholder="CEP"
+                                  required="required" formControlName="cep" style="height: 40px">
+                        <button mat-icon-button color="primary" (click)="OnclickBucasCep(cep.value)">
+                          <mat-icon>search</mat-icon>
+                        </button>
+                      </div>
+                      <div *ngIf="cep?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="cep.errors?.['required']">Campo CEP obrigatório</p>
                         <p *ngIf="cep.errors?.['pattern']">Formato inválido</p>
                       </div>
@@ -194,11 +201,11 @@
 
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label for="form_telefone">Telefone</label>
-                      <input id="form_telefone" type="text" name="telefone" class="form-control "
+                      <label for="form_telephone">Telefone</label>
+                      <input id="form_telephone" type="text" name="telefone" class="form-control"
                              placeholder="Telefone" required="required" formControlName="telefone">
 
-                      <div *ngIf="telefone.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="telefone?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="telefone.errors?.['required']">Campo telefone obrigatório</p>
                       </div>
                     </div>
@@ -212,7 +219,7 @@
                       <input id="form_bairro" type="text" name="bairro" class="form-control"
                              placeholder="Bairro" required="required" formControlName="bairro">
 
-                      <div *ngIf="bairro.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="bairro?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="bairro.errors?.['required']">Campo bairro obrigatório</p>
                       </div>
                     </div>
@@ -223,7 +230,7 @@
                       <input id="form_cidade" type="text" name="cidade" class="form-control"
                              placeholder="Cidade" required="required" formControlName="cidade">
 
-                      <div *ngIf="cidade.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="cidade?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="cidade.errors?.['required']">Campo cidade obrigatório</p>
                       </div>
                     </div>
@@ -263,8 +270,23 @@
                         <option value="EX">Estrangeiro</option>
                       </select>
 
-                      <div *ngIf="estado.invalid && validacaoEnd" class="validation-error">
+                      <div *ngIf="estado?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="estado.errors?.['required']">Campo estado obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_principal">Principal</label>
+                      <select id="form_principal" name="principal" class="form-control" placeholder="Principal" required formControlName="principal">
+                        <option value="" disabled selected>Principal</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                      </select>
+
+                      <div *ngIf="principal?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="principal.errors?.['required']">Campo Principal obrigatório</p>
                       </div>
                     </div>
                   </div>

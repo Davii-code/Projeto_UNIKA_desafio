@@ -32,9 +32,10 @@
 
 /* Style for action buttons */
 .action-button {
-  margin: 0 5px; /* Add some spacing between the buttons */
+  margin: 0 7px; /* Add some spacing between the buttons */
 }
 
 ng-container th{
   justify-content: center;
 }
+

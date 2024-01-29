@@ -12,6 +12,7 @@ export interface MonitoradorModels{
   ativo: boolean;
   tipo:string;
   endereco: Endereco;
+
 }
 
 export interface monitorador extends Array<MonitoradorModels>{}

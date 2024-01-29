@@ -8,7 +8,7 @@ import {
   MatDialogRef
 } from "@angular/material/dialog";
 import {MonitoradorComponent} from "../monitorador/monitorador.component";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgIf} from "@angular/common";
@@ -33,7 +33,8 @@ import { IConfig } from 'ngx-mask'
     ReactiveFormsModule,
     HttpClientModule,
     NgxMaskDirective,
-    NgxMaskPipe
+    NgxMaskPipe,
+    MatIconButton
   ],
   providers: [
     MonitoradorService,
@@ -48,7 +49,7 @@ export class CadastroMonitoradorComponent implements OnInit {
   moni!: MonitoradorModels;
   formMonitorador !: FormGroup;
   formEndereco !: FormGroup;
-  mostrarCamposEndereco: boolean = true;
+  mostrarCamposEndereco: boolean = false;
   mostrarCamposMoni: boolean = true;
   validacao: boolean = false;
   validacaoJ: boolean = false;
@@ -86,7 +87,7 @@ export class CadastroMonitoradorComponent implements OnInit {
       endereco: [, [Validators.required]],
       numero: [, [Validators.required]],
       cep: [, [Validators.required, Validators.pattern(/^[\d.-]{11}$/)]], // Permitir números, pontos e traços, com tamanho 8
-      telefone: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
+      telefone: [, [Validators.required]], // Permitir números, pontos e traços
       bairro: [, [Validators.required]],
       cidade: [, [Validators.required]],
       estado: [, [Validators.required]],
@@ -219,11 +220,14 @@ export class CadastroMonitoradorComponent implements OnInit {
       (resposta: Endereco) => {
         this.end = resposta;
         this.formEndereco = this.formBuilder.group({
-          endereco: [this.end.endereco, [Validators.required]],
-          numero: [this.end.numero, [Validators.required]],
-          bairro: [this.end.bairro, [Validators.required]],
-          cidade: [this.end.cidade, [Validators.required]],
-          estado: [this.end.estado, [Validators.required]],
+          endereco: [this.end.endereco ],
+          numero: [this.end.numero ],
+          bairro: [this.end.bairro ],
+          cidade: [this.end.cidade ],
+          estado: [this.end.estado ],
+          telefone: [this.end.telefone],
+          principal: [true],
+          cep: [this.end.cep]
         });
       },
       (error) => {
@@ -235,17 +239,17 @@ export class CadastroMonitoradorComponent implements OnInit {
 
 
   CadastrarEnd(dadoEnd: Endereco) {
-    if (!this.endereco.invalid && !this.numero.invalid && !this.cep.invalid && !this.telefone.invalid && !this.bairro.invalid && !this.cidade.invalid && !this.estado.invalid && !this.principal.invalid) {
-
+    if (!this.endereco?.invalid && !this.numero?.invalid && !this.cep?.invalid && !this.telefone?.invalid && !this.bairro?.invalid && !this.cidade?.invalid && !this.estado?.invalid && !this.principal?.invalid) {
       this.monitoradorService.postMonitoradorEndereco(dadoEnd).subscribe(resposta => {
         this.dialogRef.close()
-      })
-
+      }, error => {
+        this.validacaoB = true;
+        this.msg = error.message;
+      });
     } else {
       this.validacaoEnd = true;
     }
-
-
   }
+
 
 }

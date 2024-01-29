@@ -1,6 +1,7 @@
 <mat-toolbar color="primary">
   <mat-drawer-container autosize style="background: #3F51B5">
-    <button mat-icon-button (click)="drawer.toggle()" class="example-icon" aria-label="Example icon-button with menu icon" >
+    <button mat-icon-button (click)="drawer.toggle()" class="example-icon"
+            aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
     </button>
   </mat-drawer-container>
@@ -10,7 +11,8 @@
   <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
     <mat-icon>library_add</mat-icon>
   </button>
-  <button  (click)="form = !form" mat-raised-button  color="primary" class="example-icon" aria-label="Example icon-button with share icon">
+  <button (click)="form = !form" mat-raised-button color="primary" class="example-icon"
+          aria-label="Example icon-button with share icon">
     <mat-icon>filter_list</mat-icon>
   </button>
 
@@ -33,8 +35,8 @@
             </li>
 
             <li>
-              <a routerLink="/endereco"   class="nav-link px-0 align-middle">
-                <mat-icon > location_on</mat-icon>
+              <a routerLink="/endereco" class="nav-link px-0 align-middle">
+                <mat-icon> location_on</mat-icon>
               </a>
             </li>
 
@@ -74,34 +76,114 @@
 
 </div>
 
-<div style="display: flex; justify-content: center">
-  <table class="table  table-bordered p-3">
-    <thead class="thead-light">
-    <tr>
-      <th>Código</th>
-      <th>Cep</th>
-      <th>Endereco</th>
-      <th>Numero</th>
-      <th>Bairro</th>
-      <th>Estado</th>
-      <th>Cidade</th>
-      <th>Principal</th>
-      <th>Ações</th>
+<div style="display: flex; justify-content: center; margin-top: 50px">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
 
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    </tbody>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Código</th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef> Nome</th>
+      <td mat-cell *matCellDef="let element"> {{ element.nome }}</td>
+
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="cpf">
+      <th mat-header-cell *matHeaderCellDef> CPF</th>
+      <td mat-cell *matCellDef="let element" class="table_cpf"> {{ element.cpf | mask: "000.000.000-00" }}</td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="cnpj">
+      <th mat-header-cell *matHeaderCellDef class="cnpj-header"> CNPJ</th>
+      <td mat-cell *matCellDef="let element" class="cnpj-cell"> {{ element.cnpj | mask: "00.000.000/0000-00" }}
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="actions-header"> Cadastro Endereço</th>
+      <td mat-cell *matCellDef="let element" class="actions-cell">
+        <div class="button-container">
+          <button mat-raised-button color="primary" class="action-button">Cadastrar/Endereço</button>
+        </div>
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="visualizacao">
+      <th mat-header-cell *matHeaderCellDef class="actions-header"> Visualização</th>
+      <td mat-cell *matCellDef="let element" class="actions-cell">
+        <div class="button-container">
+          <button mat-raised-button color="war" class="action-button" (click)="carregarEndereco(element.id)">Visualizar</button>
+        </div>
+
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+</div>
+
+
+<div style="display: flex; justify-content: center; margin-top: 50px" *ngIf="MostraEnd">
+  <table mat-table [dataSource]="dataSourceEnd" class="mat-elevation-z8 ">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Código</th>
+      <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="cep">
+      <th mat-header-cell *matHeaderCellDef> CEP</th>
+      <td mat-cell *matCellDef="let element"> {{ element.cep }}</td>
+
+    </ng-container>
+
+    <ng-container matColumnDef="endereco">
+      <th mat-header-cell *matHeaderCellDef> Endereço</th>
+      <td mat-cell *matCellDef="let element"> {{ element.endereco }}</td>
+
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="cidade">
+      <th mat-header-cell *matHeaderCellDef> Cidade</th>
+      <td mat-cell *matCellDef="let element" > {{ element.cidade }}</td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef> Estado</th>
+      <td mat-cell *matCellDef="let element" > {{ element.estado }}
+
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="actions-header">Ações</th>
+      <td mat-cell *matCellDef="let element" class="actions-cell">
+        <div class="button-container">
+          <button mat-raised-button color="primary" class="action-button">Editar</button>
+          <button mat-raised-button color="primary" class="action-button">Excluir</button>
+        </div>
+
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsEnd"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsEnd;"></tr>
+
   </table>
 
 </div>

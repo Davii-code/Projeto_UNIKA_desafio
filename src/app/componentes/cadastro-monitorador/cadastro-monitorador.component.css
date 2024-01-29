@@ -31,8 +31,11 @@ label {
   color: #ff5050;
 }
 
-.form-group mat-icon{
+.col-md-6{
+  width: 100%;
+}
+
+#viacep{
   display: flex;
-  align-items: center;
 }
 

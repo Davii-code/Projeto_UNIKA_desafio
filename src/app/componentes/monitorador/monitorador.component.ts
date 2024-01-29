@@ -65,8 +65,6 @@ export class MonitoradorComponent implements OnInit {
   formMonitoradorFilter !: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'cpf', 'cnpj', 'actions'];
   dataSource: MatTableDataSource<MonitoradorModels>;
-  cpfFormater: string ='';
-  cnpjFormater: string ='';
   private monitorador!: MonitoradorModels[];
 
 
@@ -141,7 +139,7 @@ export class MonitoradorComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(CadastroMonitoradorComponent, {
       width: '700px',
-      height: '650px',
+      height: '750px',
     });
 
     dialogRef.afterClosed().subscribe(result => {
