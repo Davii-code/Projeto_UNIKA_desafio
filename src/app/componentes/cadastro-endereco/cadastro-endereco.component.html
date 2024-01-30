@@ -1,0 +1,170 @@
+<div style="margin-left: 96%; cursor: pointer">
+  <mat-icon (click)="onNoClick()">close</mat-icon>
+</div>
+
+<div class="container">
+  <div class="text-center mt-5">
+    <h1>Cadastrar Endereço</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card mt-5 mx-auto p-4 bg-light">
+        <div class="card-body bg-light">
+          <div class="container">
+            <form>
+              <!-- Campos do Endereço -->
+
+              <div [formGroup]="formEndereco">
+                <p *ngIf="validacaoB" style="color:red;">{{msg}}</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_endereco">Endereço</label>
+                      <input id="form_endereco" type="text" name="endereco" class="form-control"
+                             placeholder="Endereço" required="required" formControlName="endereco">
+
+                      <div *ngIf="endereco?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="endereco.errors?.['required']">Campo endereço obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_numero">Número</label>
+                      <input id="form_numero" type="text" name="numero" class="form-control"
+                             placeholder="Número" required="required" formControlName="numero">
+
+                      <div *ngIf="numero?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="numero.errors?.['required']">Campo número obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group" >
+                      <label for="form_cep">CEP</label>
+                      <div id="viacep" >
+                        <input id="form_cep" type="text" name="cep" class="form-control" placeholder="CEP"
+                               required="required" formControlName="cep" style="height: 40px" mask="00000-000">
+                        <button mat-icon-button color="primary" (click)="OnclickBucasCep(cep.value)">
+                          <mat-icon>search</mat-icon>
+                        </button>
+                      </div>
+                      <div *ngIf="cep?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="cep.errors?.['required']">Campo CEP obrigatório</p>
+                        <p *ngIf="cep.errors?.['pattern']">Formato inválido</p>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_telephone">Telefone</label>
+                      <input id="form_telephone" type="text" name="telefone" class="form-control"
+                             placeholder="Telefone" required="required" formControlName="telefone" mask="(00) 0 0000-0000">
+
+                      <div *ngIf="telefone?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="telefone.errors?.['required']">Campo telefone obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_bairro">Bairro</label>
+                      <input id="form_bairro" type="text" name="bairro" class="form-control"
+                             placeholder="Bairro" required="required" formControlName="bairro">
+
+                      <div *ngIf="bairro?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="bairro.errors?.['required']">Campo bairro obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_cidade">Cidade</label>
+                      <input id="form_cidade" type="text" name="cidade" class="form-control"
+                             placeholder="Cidade" required="required" formControlName="cidade">
+
+                      <div *ngIf="cidade?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="cidade.errors?.['required']">Campo cidade obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_estado">Estado</label>
+                      <select id="form_estado" name="estado" class="form-control" placeholder="Estado" required formControlName="estado">
+                        <option value="" disabled selected>Selecione o estado</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                        <option value="EX">Estrangeiro</option>
+                      </select>
+
+                      <div *ngIf="estado?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="estado.errors?.['required']">Campo estado obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="form_principal">Principal</label>
+                      <select id="form_principal" name="principal" class="form-control" placeholder="Principal" required formControlName="principal">
+                        <option value="" disabled selected>Principal</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                      </select>
+
+                      <div *ngIf="principal?.invalid && validacaoEnd" class="validation-error">
+                        <p *ngIf="principal.errors?.['required']">Campo Principal obrigatório</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px; margin-left: 10px">
+                  <div class="col-md-12">
+                    <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Cadastrar Endereço" (click)="CadastrarEnd(formEndereco.value )">
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

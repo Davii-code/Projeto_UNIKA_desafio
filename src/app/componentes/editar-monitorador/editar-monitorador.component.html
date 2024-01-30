@@ -94,7 +94,7 @@
                     <div class="form-group">
                       <label for="form_tipo">Tipo</label>
                       <select id="form_tipo" name="tipo" class="form-control" required="required"
-                              data-error="Tipo é obrigatório." formControlName="tipo">
+                              data-error="Tipo é obrigatório." formControlName="tipo" (change)="Onchange($event)">
                         <option value="" selected disabled>--Selecione o Tipo--</option>
                         <option value="Fisica">Pessoa Física</option>
                         <option value="Juridica">Pessoa Jurídica</option>

@@ -186,7 +186,7 @@
                       <label for="form_cep">CEP</label>
                       <div id="viacep" >
                         <input id="form_cep" type="text" name="cep" class="form-control" placeholder="CEP"
-                                  required="required" formControlName="cep" style="height: 40px">
+                                  required="required" formControlName="cep" style="height: 40px" mask="00000-000">
                         <button mat-icon-button color="primary" (click)="OnclickBucasCep(cep.value)">
                           <mat-icon>search</mat-icon>
                         </button>
@@ -203,7 +203,7 @@
                     <div class="form-group">
                       <label for="form_telephone">Telefone</label>
                       <input id="form_telephone" type="text" name="telefone" class="form-control"
-                             placeholder="Telefone" required="required" formControlName="telefone">
+                             placeholder="Telefone" required="required" formControlName="telefone" mask="(00) 0 0000-0000">
 
                       <div *ngIf="telefone?.invalid && validacaoEnd" class="validation-error">
                         <p *ngIf="telefone.errors?.['required']">Campo telefone obrigatório</p>

@@ -8,7 +8,7 @@
 
   <span>Endereço</span>
   <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" (click)="openDialogCadastroMoni()">
     <mat-icon>library_add</mat-icon>
   </button>
   <button (click)="form = !form" mat-raised-button color="primary" class="example-icon"
@@ -48,33 +48,33 @@
     </div>
   </div>
 </mat-drawer>
-<div style="display: flex; justify-content: center; margin-top:30px ">
-  <form class="d-flex flex-wrap justify-content-center " *ngIf="form">
+<div style="display: flex; justify-content: center; margin-top: 30px" *ngIf="form">
+  <form class="d-flex flex-wrap justify-content-center" [formGroup]="formMonitoradorFilter">
 
-    <div class="fieldcontain col-lg-3 filtro space">
+    <div class="fieldcontain col-lg-2 filtro space">
       <label>Código</label>
-      <input type="text" placeholder="Código" class="form-control" pattern="[0-9]+$">
-    </div>
-
-    <div class="fieldcontain col-lg-3 filtro space">
-      <label>Estado</label>
-      <input type="text" placeholder="Estado" class="form-control">
+      <input  type="text" placeholder="Código" class="form-control" pattern="[0-9]+$" formControlName="id"  name="id">
     </div>
 
     <div class="fieldcontain col-lg-2 filtro space">
-      <label>Cidade</label>
-      <input type="text" placeholder="Cidade" class="form-control" minlength="11">
+      <label>Nome</label>
+      <input type="text" placeholder="Nome" class="form-control"formControlName="nome" name="nome">
     </div>
 
-    <div class="fieldcontain col-lg-3 filtro space">
-      <label>CEP</label>
-      <input type="text" placeholder="CEP" id="CEP" class="form-control" minlength="14">
+    <div class="fieldcontain col-lg-2 filtro space">
+      <label>CPF</label>
+      <input type="text" placeholder="CPF" class="form-control"  formControlName="cpf" name="cpf" mask="000.000.000-00">
     </div>
 
+    <div class="fieldcontain col-lg-2 filtro space">
+      <label>CNPJ</label>
+      <input type="text" placeholder="CNPJ" class="form-control" formControlName="cnpj" name="cnpj" mask="00.000.000/0000-00">
+    </div>
 
+    <button type="submit" mat-raised-button color="primary"  style="margin-top: 20px" [disabled]="isvalidForm()" (click)="ngOnInit()">Reset</button>
   </form>
-
 </div>
+
 
 <div style="display: flex; justify-content: center; margin-top: 50px">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
@@ -109,7 +109,7 @@
       <th mat-header-cell *matHeaderCellDef class="actions-header"> Cadastro Endereço</th>
       <td mat-cell *matCellDef="let element" class="actions-cell">
         <div class="button-container">
-          <button mat-raised-button color="primary" class="action-button">Cadastrar/Endereço</button>
+          <button mat-raised-button color="primary" class="action-button" (click)="openDialog(element.id.toString())">Cadastrar/Endereço</button>
         </div>
 
       </td>
@@ -119,7 +119,7 @@
       <th mat-header-cell *matHeaderCellDef class="actions-header"> Visualização</th>
       <td mat-cell *matCellDef="let element" class="actions-cell">
         <div class="button-container">
-          <button mat-raised-button color="war" class="action-button" (click)="carregarEndereco(element.id)">Visualizar</button>
+          <button mat-raised-button  (click)="carregarEndereco(element.id)" [ngStyle]="{'background': botaoClicadoId === element.id ? '#4fabf3' : '#adf4ff'}">Visualizar</button>
         </div>
 
       </td>
@@ -133,8 +133,13 @@
 
 </div>
 
-
+<div  class="d-flex flex-row-reverse" style="margin-right: 15px; margin-top: 35px"   *ngIf="MostraEnd">
+  <button mat-raised-button color="primary" (click)="ExportarPDF(botaoClicadoId)" >Exporta PDF Endereço</button>
+  <button mat-raised-button  style="margin-right: 10px; " (click)="ExportarExcel(botaoClicadoId)">Gerar Excel Endereço</button>
+</div>
 <div style="display: flex; justify-content: center; margin-top: 50px" *ngIf="MostraEnd">
+
+
   <table mat-table [dataSource]="dataSourceEnd" class="mat-elevation-z8 ">
 
     <ng-container matColumnDef="id">
@@ -145,7 +150,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="cep">
       <th mat-header-cell *matHeaderCellDef> CEP</th>
-      <td mat-cell *matCellDef="let element"> {{ element.cep }}</td>
+      <td mat-cell *matCellDef="let element"> {{ element.cep  | mask: "00000-000"}}</td>
 
     </ng-container>
 
@@ -173,8 +178,8 @@
       <th mat-header-cell *matHeaderCellDef class="actions-header">Ações</th>
       <td mat-cell *matCellDef="let element" class="actions-cell">
         <div class="button-container">
-          <button mat-raised-button color="primary" class="action-button">Editar</button>
-          <button mat-raised-button color="primary" class="action-button">Excluir</button>
+          <button mat-raised-button color="primary" class="action-button" (click)="openDialogDetalheEnd(element)">Editar</button>
+          <button mat-raised-button color="warn" class="action-button" (click)="DeletarEndereco(element)">Excluir</button>
         </div>
 
       </td>

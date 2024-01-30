@@ -50,8 +50,20 @@ export class MonitoradorService {
 
 
   public putMonitorador( id: string ,dados: MonitoradorModels): Observable<MonitoradorModels> {
-    const  urlPut: string = this.baseUrl+"/"+id;
+    const  urlPut: string =this.baseUrl+"/"+id;
     return this.http.put <MonitoradorModels>(urlPut,dados).pipe(
+      catchError((error)=> {
+        return throwError(error.error);
+      })
+    );
+
+  }
+
+
+
+  public putEndereco( id: string ,dados: Endereco): Observable<Endereco> {
+    const  urlPut: string = "http://localhost:8080/endereco/"+id;
+    return this.http.put <Endereco>(urlPut,dados).pipe(
       catchError((error)=> {
         return throwError(error.error);
       })
@@ -63,6 +75,12 @@ export class MonitoradorService {
     const urlDeletar: string = this.baseUrl + "/" + id;
     return this.http.delete <MonitoradorModels>(urlDeletar).pipe();
   }
+
+  public deleteEndereco ( id: string): Observable<MonitoradorModels> {
+    const urlDeletar: string = " http://localhost:8080/endereco/"+ id;
+    return this.http.delete <MonitoradorModels>(urlDeletar).pipe();
+  }
+
 
 
   public postMonitorador(dados: MonitoradorModels): Observable<MonitoradorModels> {
@@ -80,6 +98,13 @@ export class MonitoradorService {
 
   }
 
+  public postMonitoradorEnderecoPorMonitorador(dados: Endereco, id: string): Observable<Endereco> {
+    const  urlPost: string =this.baseUrl+"/"+id+"/enderecos";
+    return this.http.post <Endereco>(urlPost,dados).pipe();
+
+  }
+
+
   uploadExcel(file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
@@ -96,6 +121,17 @@ export class MonitoradorService {
         })
       );
   }
+
+  getEnderecoPDF(id:string): Observable<Blob> {
+    return this.http.get('http://localhost:8080/endereco/relatorio/pdfs?id='+id, { responseType: 'blob' })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação:', error);
+          return throwError(error);
+        })
+      );
+  }
+
 
   getMonitoradorPDFFilter(tipo: string, valor: string): Observable<Blob> {
     return this.http.get('http://localhost:8080/monitorador/relatorio/pdfs?'+tipo+'='+valor, { responseType: 'blob' })
@@ -122,6 +158,17 @@ export class MonitoradorService {
       .pipe(
         catchError((error) => {
           console.error('Erro na solicitação getMonitorador:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+
+  getEnderecoExcel(id: string): Observable<Blob> {
+    return this.http.get('http://localhost:8080/endereco/relatorio/excel?id='+id, { responseType: 'blob' })
+      .pipe(
+        catchError((error) => {
+          console.error('Erro na solicitação:', error);
           return throwError(error);
         })
       );
