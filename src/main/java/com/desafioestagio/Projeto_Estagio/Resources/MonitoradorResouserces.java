@@ -121,7 +121,7 @@ public class MonitoradorResouserces {
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Monitorador obj) {
 
-        if (!services.ValidadorIgualID (obj)) {
+        if (!services.ValidadorIgualIDPUT (obj)) {
             obj = services.update (id, obj);
             return ResponseEntity.ok ().body (obj);
         } else {
@@ -222,14 +222,14 @@ public class MonitoradorResouserces {
     }
 
     @PostMapping("/importar-excel")
-    public ResponseEntity<String> importarMonitoradoresDoExcel(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> importarMonitoradoresDoExcel(@RequestParam("file") MultipartFile file) {
         try {
             List<Monitorador> monitoradores = services.criarExcel (file);
 
-            return ResponseEntity.ok ("Importação bem-sucedida");
+            return ResponseEntity.ok ().build ();
         } catch (Exception e) {
             e.printStackTrace ();
-            return ResponseEntity.status (500).body ("Erro durante a importação: " + e.getMessage ());
+            return ResponseEntity.badRequest ().body ("Erro durante a importação:"+ e);
         }
     }
 

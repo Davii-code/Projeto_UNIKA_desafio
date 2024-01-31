@@ -21,7 +21,7 @@ public class Endereco {
     private String endereco;
     private String numero;
     private String cep;
-    @NotNull(message = "Telefone Não pode ser vazio")
+
     private String telefone;
     @NotNull(message = " Cidade não pode ser vazio ")
     private String cidade;
