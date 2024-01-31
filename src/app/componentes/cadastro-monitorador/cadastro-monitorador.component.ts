@@ -19,6 +19,8 @@ import {data} from "jquery";
 import {Endereco} from "../../Models/monitorador/endereco.models";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import { IConfig } from 'ngx-mask'
+import {MensagemSucessoComponent} from "../mensagem-sucesso/mensagem-sucesso.component";
+import {MensagemErrorComponent} from "../mensagem-error/mensagem-error.component";
 
 
 @Component({
@@ -63,6 +65,7 @@ export class CadastroMonitoradorComponent implements OnInit {
     public dialogRef: MatDialogRef<MonitoradorComponent>,
     private formBuilder: FormBuilder,
     private monitoradorService: MonitoradorService,
+    public dialog: MatDialog
   ) {
   }
 
@@ -74,20 +77,20 @@ export class CadastroMonitoradorComponent implements OnInit {
     this.formMonitorador = this.formBuilder.group({
       tipo: ['Fisica', [Validators.required]],
       nome: [, [Validators.required]],
-      cpf: [, [Validators.required]], // Permitir números, pontos e traços, com tamanho 11
-      cnpj: [, [Validators.required]], // Permitir números, pontos e traços, com tamanho 14
-      email: [, [Validators.required, Validators.email]],
-      rg: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
-      inscricao: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]], // Permitir números, pontos e traços
+      cpf: [, [Validators.required]],
+      cnpj: [, [Validators.required]],
+      email: [, [Validators.required]],
+      rg: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]],
+      inscricao: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]],
       ativo: [],
-      data_nascimento: [, [Validators.required, Validators.pattern(/^[\d.-]+$/)]],
+      data_nascimento: [, [Validators.required,]],
     });
 
     this.formEndereco = this.formBuilder.group({
       endereco: [, [Validators.required]],
       numero: [, [Validators.required]],
-      cep: [, [Validators.required, Validators.pattern(/^[\d.-]{11}$/)]], // Permitir números, pontos e traços, com tamanho 8
-      telefone: [, [Validators.required]], // Permitir números, pontos e traços
+      cep: [, [Validators.required]],
+      telefone: [, [Validators.required]],
       bairro: [, [Validators.required]],
       cidade: [, [Validators.required]],
       estado: [, [Validators.required]],
@@ -181,9 +184,20 @@ export class CadastroMonitoradorComponent implements OnInit {
         this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
             this.mostrarCamposMoni = !this.mostrarCamposMoni;
             this.mostrarCamposEndereco = true;
+          const dialog = this.dialog.open(MensagemSucessoComponent)
           }, error => {
-            this.validacaoB = true;
+          if (error.message == null){
+            this.msg = error.errors;
+            const dialog = this.dialog.open(MensagemErrorComponent, {
+              data: this.msg
+            });
+          }else {
             this.msg = error.message;
+            const dialog = this.dialog.open(MensagemErrorComponent, {
+              data: this.msg
+            });
+          }
+
           }
         );
       } else {
@@ -200,9 +214,19 @@ export class CadastroMonitoradorComponent implements OnInit {
           this.monitoradorService.postMonitorador(dado).subscribe(resposta => {
             this.mostrarCamposMoni = !this.mostrarCamposMoni;
             this.mostrarCamposEndereco = true;
+            const dialog = this.dialog.open(MensagemSucessoComponent)
           }, errors => {
-            this.validacaoB = true;
-            this.msg = errors.message;
+            if (errors.message == null){
+              this.msg = errors.errors;
+              const dialog = this.dialog.open(MensagemErrorComponent, {
+                data: this.msg
+              });
+            }else {
+              this.msg = errors.message;
+              const dialog = this.dialog.open(MensagemErrorComponent, {
+                data: this.msg
+              });
+            }
           });
         } else {
           this.mostrarCamposMoni = true;
@@ -241,13 +265,22 @@ export class CadastroMonitoradorComponent implements OnInit {
   CadastrarEnd(dadoEnd: Endereco) {
     if (!this.endereco?.invalid && !this.numero?.invalid && !this.cep?.invalid && !this.telefone?.invalid && !this.bairro?.invalid && !this.cidade?.invalid && !this.estado?.invalid && !this.principal?.invalid) {
       this.monitoradorService.postMonitoradorEndereco(dadoEnd).subscribe(resposta => {
-        this.dialogRef.close()
+        const dialog = this.dialog.open(MensagemSucessoComponent)
+        dialog.afterClosed().subscribe(() => {
+          this.dialogRef.close();
+        });
       }, error => {
-        this.validacaoB = true;
-        this.msg = error.message;
+        console.error(error);
+        this.msg = error.error;
+        const dialog = this.dialog.open(MensagemErrorComponent, {
+          data: this.msg
+        });
       });
     } else {
       this.validacaoEnd = true;
+      const dialog = this.dialog.open(MensagemErrorComponent, {
+        data: this.msg
+      });
     }
   }
 

@@ -18,7 +18,6 @@ import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {MonitoradorService} from "../../services/monitorador.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
-import {EnderecoComponent} from "../endereco/endereco.component";
 import {CadastroMonitoradorComponent} from "../cadastro-monitorador/cadastro-monitorador.component";
 import {EditarMonitoradorComponent} from "../editar-monitorador/editar-monitorador.component";
 import {MonitoradorModels} from "../../Models/monitorador/monitorador.models";
@@ -143,15 +142,14 @@ export class MonitoradorComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // Atualize a tela aqui
       this.carregarMonitorador();
     });
   }
 
   openDialogDetalhe(monitorador1: MonitoradorModels) {
     const dialogRef = this.dialog.open(EditarMonitoradorComponent, {
-      width: '700px',
-      height: '650px',
+      width: '1100px',
+      height: '850px',
       data: { monitorador: monitorador1 }
     });
 
@@ -313,5 +311,7 @@ export class MonitoradorComponent implements OnInit {
     }
 
   }
+
+
 }
 

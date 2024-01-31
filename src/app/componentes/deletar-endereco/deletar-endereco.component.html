@@ -2,6 +2,6 @@
 <h1 mat-dialog-title>Deletar Endereço</h1>
 <div mat-dialog-content>Deseja deletar o endereço ?</div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="warn" >Não</button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Não</button>
   <button mat-raised-button color="primary"  (click)="DeletarEndereco()">Sim</button>
 </div>

@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {
-  MAT_DIALOG_DATA,
+  MAT_DIALOG_DATA, MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogRef,
@@ -10,7 +10,10 @@ import {
 import {MatIcon} from "@angular/material/icon";
 import {MonitoradorService} from "../../services/monitorador.service";
 import {MonitoradorComponent} from "../monitorador/monitorador.component";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, HttpHeaders, HttpStatusCode} from "@angular/common/http";
+import {MensagemSucessoComponent} from "../mensagem-sucesso/mensagem-sucesso.component";
+import {NgIf} from "@angular/common";
+import {MensagemErrorComponent} from "../mensagem-error/mensagem-error.component";
 
 @Component({
   selector: 'app-importa-excel',
@@ -21,7 +24,8 @@ import {HttpClientModule} from "@angular/common/http";
     MatDialogContent,
     MatDialogTitle,
     MatIcon,
-    HttpClientModule
+    HttpClientModule,
+    NgIf
   ],
   providers:[
     MonitoradorService,
@@ -30,22 +34,40 @@ import {HttpClientModule} from "@angular/common/http";
   styleUrl: './importa-excel.component.css'
 })
 export class ImportaExcelComponent {
-
+msg: string = '';
+validacao : boolean= false;
 
   constructor(private monitoradorServices: MonitoradorService,
               @Inject(MAT_DIALOG_DATA) public data: any,
-              public dialogRef: MatDialogRef<MonitoradorComponent>) {
+              public dialogRef: MatDialogRef<MonitoradorComponent>,
+              public dialog: MatDialog) {
   }
 
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.monitoradorServices.uploadExcel(file).subscribe(
-        response => {
-          console.log(response);
+        resposta => {
+
+            const dialog = this.dialog.open(MensagemSucessoComponent)
+          dialog.afterClosed().subscribe(() => {
+            this.dialogRef.close();
+          });
+
         },
         error => {
-          console.error(error);
+          if (error.status != 400){
+            const dialog = this.dialog.open(MensagemErrorComponent, {
+              data: "Formato de arquivo inválido. Apenas arquivos XLSX são suportados."
+            });
+          }else {
+            console.error(error);
+            this.msg = error.error;
+            const dialog = this.dialog.open(MensagemErrorComponent, {
+              data: this.msg
+            });
+          }
+
         }
       );
 
@@ -70,7 +92,7 @@ export class ImportaExcelComponent {
       (resposta: Blob) => {
         this.gerarExcel(resposta);
         console.log('Exportado com sucesso');
-
+        const dialog = this.dialog.open(MensagemSucessoComponent)
     });
   }
 

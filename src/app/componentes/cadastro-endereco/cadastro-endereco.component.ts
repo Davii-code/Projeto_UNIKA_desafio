@@ -6,9 +6,11 @@ import {NgIf} from "@angular/common";
 import {MonitoradorService} from "../../services/monitorador.service";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {HttpClientModule} from "@angular/common/http";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MonitoradorComponent} from "../monitorador/monitorador.component";
 import {Endereco} from "../../Models/monitorador/endereco.models";
+import {MensagemSucessoComponent} from "../mensagem-sucesso/mensagem-sucesso.component";
+import {MensagemErrorComponent} from "../mensagem-error/mensagem-error.component";
 
 @Component({
   selector: 'app-cadastro-endereco',
@@ -42,7 +44,8 @@ export class CadastroEnderecoComponent implements OnInit{
     public dialogRef: MatDialogRef<MonitoradorComponent>,
     private formBuilder: FormBuilder,
     private monitoradorService: MonitoradorService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialog: MatDialog
   ) {
   }
   ngOnInit() {
@@ -56,7 +59,7 @@ export class CadastroEnderecoComponent implements OnInit{
       estado: [, [Validators.required]],
       principal: [true, [Validators.required]],
     });
-    console.log(this.data.monitorador)
+    console.log(this.data)
   }
 
   //-----Endereco---//
@@ -121,11 +124,19 @@ export class CadastroEnderecoComponent implements OnInit{
 
   CadastrarEnd(dadoEnd: Endereco) {
     if (!this.endereco?.invalid && !this.numero?.invalid && !this.cep?.invalid && !this.telefone?.invalid && !this.bairro?.invalid && !this.cidade?.invalid && !this.estado?.invalid && !this.principal?.invalid) {
-      this.monitoradorService.postMonitoradorEnderecoPorMonitorador(dadoEnd, this.data.monitorador).subscribe(resposta => {
-        this.dialogRef.close()
+      this.monitoradorService.postMonitoradorEnderecoPorMonitorador(dadoEnd, this.data).subscribe(resposta => {
+        const dialog = this.dialog.open(MensagemSucessoComponent)
+
+        dialog.afterClosed().subscribe(() => {
+          this.dialogRef.close();
+        });
+
       }, error => {
-        this.validacaoB = true;
-        this.msg = error.message;
+        console.error(error);
+        this.msg = error.error;
+        const dialog = this.dialog.open(MensagemErrorComponent, {
+          data: this.msg
+        });
       });
     } else {
       this.validacaoEnd = true;

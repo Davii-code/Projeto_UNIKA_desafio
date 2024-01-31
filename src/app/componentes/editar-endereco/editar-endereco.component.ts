@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Endereco} from "../../Models/monitorador/endereco.models";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MonitoradorComponent} from "../monitorador/monitorador.component";
 import {MonitoradorService} from "../../services/monitorador.service";
 import {MatIcon} from "@angular/material/icon";
@@ -10,6 +10,8 @@ import {NgIf} from "@angular/common";
 import {HttpClientModule} from "@angular/common/http";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {MonitoradorModels} from "../../Models/monitorador/monitorador.models";
+import {MensagemSucessoComponent} from "../mensagem-sucesso/mensagem-sucesso.component";
+import {MensagemErrorComponent} from "../mensagem-error/mensagem-error.component";
 
 @Component({
   selector: 'app-editar-endereco',
@@ -43,7 +45,8 @@ export class EditarEnderecoComponent implements OnInit{
     public dialogRef: MatDialogRef<MonitoradorComponent>,
     private formBuilder: FormBuilder,
     private monitoradorService: MonitoradorService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialog: MatDialog
   ) {
   }
   ngOnInit() {
@@ -123,10 +126,16 @@ export class EditarEnderecoComponent implements OnInit{
   EditarEndereco(dadoEnd: Endereco) {
     if (!this.endereco?.invalid && !this.numero?.invalid && !this.cep?.invalid && !this.telefone?.invalid && !this.bairro?.invalid && !this.cidade?.invalid && !this.estado?.invalid && !this.principal?.invalid) {
       this.monitoradorService.putEndereco(this.data.endereco.id,dadoEnd).subscribe(resposta => {
-        this.dialogRef.close()
+        const dialog = this.dialog.open(MensagemSucessoComponent)
+        dialog.afterClosed().subscribe(() => {
+          this.dialogRef.close();
+        });
       }, error => {
-        this.validacaoB = true;
-        this.msg = error.message;
+        console.error(error);
+        this.msg = error.error;
+        const dialog = this.dialog.open(MensagemErrorComponent, {
+          data: this.msg
+        });
       });
     } else {
       this.validacaoEnd = true;

@@ -2,6 +2,6 @@
 <h1 mat-dialog-title>Deletar o Monitorador</h1>
 <div mat-dialog-content>Deseja deletar o monitorador ?</div>
 <div mat-dialog-actions>
-  <button mat-raised-button color="warn" >Não</button>
+  <button mat-raised-button color="warn" (click)="onNoClick()">Não</button>
   <button mat-raised-button color="primary"  (click)="DeletarMonitorador()">Sim</button>
 </div>

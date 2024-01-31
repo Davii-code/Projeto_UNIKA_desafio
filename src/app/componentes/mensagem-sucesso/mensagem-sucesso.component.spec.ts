@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EnderecoComponent } from './endereco.component';
+import { MensagemSucessoComponent } from './mensagem-sucesso.component';
 
-describe('EnderecoComponent', () => {
-  let component: EnderecoComponent;
-  let fixture: ComponentFixture<EnderecoComponent>;
+describe('MensagemSucessoComponent', () => {
+  let component: MensagemSucessoComponent;
+  let fixture: ComponentFixture<MensagemSucessoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EnderecoComponent]
+      imports: [MensagemSucessoComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(EnderecoComponent);
+    fixture = TestBed.createComponent(MensagemSucessoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

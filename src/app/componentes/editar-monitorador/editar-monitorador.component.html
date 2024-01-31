@@ -1,152 +1,229 @@
-<div style="margin-left: 96%; cursor: pointer"><mat-icon (click)="onNoClick()">close</mat-icon></div>
+<div style="margin-left: 96%; cursor: pointer">
+  <mat-icon (click)="onNoClick()">close</mat-icon>
+</div>
 
 <div class="container">
   <div class="text-center mt-5">
     <h1>Editar Monitorador</h1>
   </div>
+  <mat-tab-group >
+    <mat-tab label="Monitorador" >
 
-  <div class="row">
-    <div class="col-lg-10 mx-auto">
-      <div class="card mt-5 mx-auto p-4 bg-light">
-        <div class="card-body bg-light">
-          <div class="container">
-            <form id="contact-form" role="form" [formGroup]="formMonitorador">
-              <p *ngIf="validacaoB" style="color:red;">{{msg}}</p>
-              <div class="controls">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_name">Nome/Razão Social</label>
-                      <input id="form_name" type="text" name="name" class="form-control"
-                             placeholder="Nome" required="required"
-                             data-error="Nome é obrigatório." formControlName="nome">
-                      <div *ngIf="nome.invalid && validacao || validacaoJ" class="validation-error">
-                        <p *ngIf="nome.errors?.['required']">Campo Nome Obrigatorio</p>
+      <div class="row">
+        <div class="col-lg-12 mx-auto">
+          <div class="card mt-12 mx-auto p-8 bg-light">
+            <div class="card-body bg-light" style="height: 500px">
+              <div class="container">
+                <form id="contact-form" role="form" [formGroup]="formMonitorador">
+                  <p *ngIf="validacaoB" style="color:red;">{{ msg }}</p>
+                  <div class="controls">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_name">Nome/Razão Social</label>
+                          <input id="form_name" type="text" name="name" class="form-control"
+                                 placeholder="Nome" required="required"
+                                 data-error="Nome é obrigatório." formControlName="nome">
+                          <div *ngIf="nome.invalid && validacao || validacaoJ" class="validation-error">
+                            <p *ngIf="nome.errors?.['required']">Campo Nome Obrigatorio</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_cpf">CPF/CNPJ</label>
+                          <input mask="000.000.000-00" id="form_cpf"
+                                 *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="cpf"
+                                 class="form-control"
+                                 placeholder="CPF" required="required"
+                                 data-error="CPF é obrigatório." formControlName="cpf">
+                          <input mask="00.000.000/0000-00" id="form_cnpj"
+                                 *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="cnpj"
+                                 class="form-control"
+                                 placeholder="CNPJ" required="required"
+                                 data-error="CNPJ é obrigatório." formControlName="cnpj">
+
+
+                          <div *ngIf="cpf.invalid && validacao" class="validation-error">
+                            <p *ngIf="cpf.errors?.['required']">Campo CPF Obrigatorio</p>
+                          </div>
+
+                          <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
+                            <p *ngIf="cnpj.errors?.['required']">Campo CNPJ Obrigatorio</p>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_rg">RG/Inscrição</label>
+                          <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text"
+                                 name="rg" class="form-control"
+                                 placeholder="RG" required="required"
+                                 data-error="RG é obrigatório." formControlName="rg">
+
+                          <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text"
+                                 name="inscricao" class="form-control"
+                                 placeholder="Inscrição" required="required"
+                                 data-error="Inscrição é obrigatória." formControlName="inscricao">
+                          <div *ngIf="rg.invalid && validacao" class="validation-error">
+                            <p *ngIf="rg.errors?.['required']">Campo RG Obrigatorio</p>
+                          </div>
+                          <div *ngIf="rg.invalid && validacao" class="validation-error">
+                            <p *ngIf="rg.errors?.['pattern']">Formato invalido apneas números e pontos</p>
+                          </div>
+
+                          <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
+                            <p *ngIf="inscricao.errors?.['required']">Campo Inscrição Obrigatorio</p>
+                          </div>
+                          <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
+                            <p *ngIf="inscricao.errors?.['pattern']">Formato invalido apneas números e pontos</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_email">Email</label>
+                          <input id="form_email" type="text" name="email" class="form-control"
+                                 placeholder="Email" required="required"
+                                 data-error="Email é obrigatório." formControlName="email">
+
+                          <div *ngIf="email.invalid &&validacao || validacaoJ" class="validation-error"
+                               class="validation-error">
+                            <p *ngIf="email.errors?.['required']">Campo email Obrigatorio</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_tipo">Tipo</label>
+                          <select id="form_tipo" name="tipo" class="form-control" required="required"
+                                  data-error="Tipo é obrigatório." formControlName="tipo" (change)="Onchange($event)">
+                            <option value="" selected disabled>--Selecione o Tipo--</option>
+                            <option value="Fisica">Pessoa Física</option>
+                            <option value="Juridica">Pessoa Jurídica</option>
+                          </select>
+                          <div *ngIf="tipo.invalid && validacao || validacaoJ" class="validation-error">
+                            <p *ngIf="tipo.errors?.['required']">Campo Ativo Obrigatorio</p>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_ativo">Ativo</label>
+                          <select id="form_ativo" name="ativo" class="form-control" required="required"
+                                  data-error="Ativo é obrigatório." formControlName="ativo">
+                            <option value="" selected disabled>--Selecione o Status--</option>
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                          </select>
+
+                          <div *ngIf="ativo.invalid && validacao || validacaoJ" class="validation-error">
+                            <p *ngIf="ativo.errors?.['required']">Campo Ativo Obrigatorio</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="form_data">Data Nascimento</label>
+                          <input id="form_data" type="date" name="Data" class="form-control"
+                                 placeholder="Data de nascimento" required="required"
+                                 data-error="Data Obrigatorio" formControlName="data_nascimento">
+                          <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
+                            <p *ngIf="data_nascimento.errors?.['required']">Campo Data Obrigatorio</p>
+                          </div>
+                          <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
+                            <p *ngIf="data_nascimento.errors?.['pattern']">Formato invalido, somente números</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px; margin-left: 10px">
+                      <div class="col-md-12">
+                        <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Editar"
+                               (click)="EditarMonitorador(formMonitorador.value)">
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_cpf">CPF/CNPJ</label>
-                      <input mask="000.000.000-00" id="form_cpf" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="cpf" class="form-control"
-                             placeholder="CPF" required="required"
-                             data-error="CPF é obrigatório." formControlName="cpf">
-                      <input mask="00.000.000/0000-00" id="form_cnpj" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="cnpj" class="form-control"
-                             placeholder="CNPJ" required="required"
-                             data-error="CNPJ é obrigatório." formControlName="cnpj">
-
-
-                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
-                        <p *ngIf="cpf.errors?.['required']">Campo CPF Obrigatorio</p>
-                      </div>
-
-                      <div *ngIf="cpf.invalid && validacao" class="validation-error">
-                        <p *ngIf="cpf.errors?.['pattern']">Formato invalido, apenas números</p>
-                      </div>
-                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
-                        <p *ngIf="cnpj.errors?.['required']">Campo CNPJ Obrigatorio</p>
-                      </div>
-                      <div *ngIf="cnpj.invalid && validacaoJ" class="validation-error">
-                        <p *ngIf="cnpj.errors?.['pattern']">Formato Invalido , apenas números</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_rg">RG/Inscrição</label>
-                      <input id="form_rg" *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'" type="text" name="rg" class="form-control"
-                             placeholder="RG" required="required"
-                             data-error="RG é obrigatório." formControlName="rg">
-
-                      <input id="form_inscricao" *ngIf="formMonitorador.get('tipo')?.value === 'Juridica'" type="text" name="inscricao" class="form-control"
-                             placeholder="Inscrição" required="required"
-                             data-error="Inscrição é obrigatória." formControlName="inscricao">
-                      <div *ngIf="rg.invalid && validacao" class="validation-error">
-                        <p *ngIf="rg.errors?.['required']">Campo RG Obrigatorio</p>
-                      </div>
-                      <div *ngIf="rg.invalid && validacao" class="validation-error">
-                        <p *ngIf="rg.errors?.['pattern']">Formato invalido apneas números e pontos</p>
-                      </div>
-
-                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
-                        <p *ngIf="inscricao.errors?.['required']">Campo Inscrição Obrigatorio</p>
-                      </div>
-                      <div *ngIf="inscricao.invalid && validacaoJ" class="validation-error">
-                        <p *ngIf="inscricao.errors?.['pattern']">Formato invalido apneas números e pontos</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_email">Email</label>
-                      <input id="form_email" type="text" name="email" class="form-control"
-                             placeholder="Email" required="required"
-                             data-error="Email é obrigatório." formControlName="email">
-
-                      <div *ngIf="email.invalid &&validacao || validacaoJ" class="validation-error" class="validation-error">
-                        <p *ngIf="email.errors?.['required']">Campo email Obrigatorio</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_tipo">Tipo</label>
-                      <select id="form_tipo" name="tipo" class="form-control" required="required"
-                              data-error="Tipo é obrigatório." formControlName="tipo" (change)="Onchange($event)">
-                        <option value="" selected disabled>--Selecione o Tipo--</option>
-                        <option value="Fisica">Pessoa Física</option>
-                        <option value="Juridica">Pessoa Jurídica</option>
-                      </select>
-                      <div *ngIf="tipo.invalid && validacao || validacaoJ" class="validation-error" >
-                        <p *ngIf="tipo.errors?.['required']">Campo Ativo Obrigatorio</p>
-                      </div>
-
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_ativo">Ativo</label>
-                      <select id="form_ativo" name="ativo" class="form-control" required="required"
-                              data-error="Ativo é obrigatório." formControlName="ativo">
-                        <option value="" selected disabled>--Selecione o Status--</option>
-                        <option value="true">Ativo</option>
-                        <option value="false">Inativo</option>
-                      </select>
-
-                      <div *ngIf="ativo.invalid && validacao || validacaoJ" class="validation-error" >
-                        <p *ngIf="ativo.errors?.['required']">Campo Ativo Obrigatorio</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row"  *ngIf="formMonitorador.get('tipo')?.value === 'Fisica'">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label for="form_data">Data Nascimento</label>
-                      <input  id="form_data" type="date" name="Data" class="form-control"
-                             placeholder="Data de nascimento" required="required"
-                             data-error="Data Obrigatorio" formControlName="data_nascimento">
-                      <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
-                        <p *ngIf="data_nascimento.errors?.['required']">Campo Data Obrigatorio</p>
-                      </div>
-                      <div *ngIf="data_nascimento.invalid && validacao" class="validation-error">
-                        <p *ngIf="data_nascimento.errors?.['pattern']">Formato invalido, somente números</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row" style="margin-top: 15px; margin-left: 10px">
-                  <div class="col-md-12">
-                    <input type="submit" class="btn btn-success btn-send pt-2 btn-block" value="Editar" (click)="EditarMonitorador(formMonitorador.value)">
-                  </div>
-                </div>
+                </form>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </mat-tab>
+    <mat-tab label="Endereço">
+
+      <div  class="d-flex flex-row-reverse" style="margin-left: 15px; margin-top: 35px"   >
+        <button mat-raised-button color="primary" (click)="ExportarPDF()" >Exporta PDF Endereço</button>
+        <button mat-raised-button  style="margin-right: 10px; " (click)="ExportarExcel()">Gerar Excel Endereço</button>
+        <button mat-raised-button color="primary" class="action-button" (click)="openDialog()"  style="margin-right: 10px;">Cadastrar/Endereço</button>
+      </div>
+
+
+
+      <div style="display: flex; justify-content: center; margin-top: 50px" >
+
+
+        <table mat-table [dataSource]="dataSourceEnd" class="mat-elevation-z8 ">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> Código</th>
+            <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="cep">
+            <th mat-header-cell *matHeaderCellDef> CEP</th>
+            <td mat-cell *matCellDef="let element"> {{ element.cep  | mask: "00000-000"}}</td>
+
+          </ng-container>
+
+          <ng-container matColumnDef="endereco">
+            <th mat-header-cell *matHeaderCellDef> Endereço</th>
+            <td mat-cell *matCellDef="let element"> {{ element.endereco }}</td>
+
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="cidade">
+            <th mat-header-cell *matHeaderCellDef> Cidade</th>
+            <td mat-cell *matCellDef="let element" > {{ element.cidade }}</td>
+          </ng-container>
+
+          <!-- Symbol Column -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef> Estado</th>
+            <td mat-cell *matCellDef="let element" > {{ element.estado }}
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-header">Ações</th>
+            <td mat-cell *matCellDef="let element" class="actions-cell">
+              <div class="button-container">
+                <button mat-raised-button color="primary" class="action-button" (click)="openDialogDetalheEnd(element)"  style="margin-right: 10px;">Editar</button>
+                <button mat-raised-button color="warn" class="action-button" (click)="DeletarEndereco(element)">Excluir</button>
+              </div>
+
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsEnd"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsEnd;"></tr>
+
+        </table>
+
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
 </div>
