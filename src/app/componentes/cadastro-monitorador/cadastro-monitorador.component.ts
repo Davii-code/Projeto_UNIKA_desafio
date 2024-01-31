@@ -270,11 +270,17 @@ export class CadastroMonitoradorComponent implements OnInit {
           this.dialogRef.close();
         });
       }, error => {
-        console.error(error);
-        this.msg = error.error;
-        const dialog = this.dialog.open(MensagemErrorComponent, {
-          data: this.msg
-        });
+        if (error.message == null){
+          this.msg = error.errors;
+          const dialog = this.dialog.open(MensagemErrorComponent, {
+            data: this.msg
+          });
+        }else {
+          this.msg = error.message;
+          const dialog = this.dialog.open(MensagemErrorComponent, {
+            data: this.msg
+          });
+        }
       });
     } else {
       this.validacaoEnd = true;

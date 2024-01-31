@@ -132,11 +132,16 @@ export class CadastroEnderecoComponent implements OnInit{
         });
 
       }, error => {
-        console.error(error);
-        this.msg = error.error;
-        const dialog = this.dialog.open(MensagemErrorComponent, {
-          data: this.msg
-        });
+        if (error.status == 409){
+          const dialog = this.dialog.open(MensagemErrorComponent, {
+            data: "Dados Já Cadastrados: Validar campo Endereço"
+          });
+        }else {
+          this.msg = error.message;
+          const dialog = this.dialog.open(MensagemErrorComponent, {
+            data: this.msg
+          });
+        }
       });
     } else {
       this.validacaoEnd = true;
