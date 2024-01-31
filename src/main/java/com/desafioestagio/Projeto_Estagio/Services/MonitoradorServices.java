@@ -111,7 +111,7 @@ public class MonitoradorServices {
 
 
     public boolean ValidadorIgualIDEnd(Endereco obj) {
-        return enderecoRepositorys.existsByPrincipal (obj.getPrincipal ()) && enderecoRepositorys.existsByEndereco (obj.getEndereco ());
+        return  enderecoRepositorys.existsByEndereco (obj.getEndereco ());
     }
 
 
