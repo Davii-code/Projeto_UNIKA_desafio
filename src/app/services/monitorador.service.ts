@@ -168,8 +168,13 @@ export class MonitoradorService {
     return this.http.get('http://localhost:8080/endereco/relatorio/excel?id='+id, { responseType: 'blob' })
       .pipe(
         catchError((error) => {
-          console.error('Erro na solicitação:', error);
-          return throwError(error);
+          if (error.status == 400){
+            return throwError("Exportação invalida, sem dados")
+          }else {
+            console.error('Erro na solicitação:', error);
+            return throwError(error);
+          }
+
         })
       );
   }

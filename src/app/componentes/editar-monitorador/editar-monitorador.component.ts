@@ -269,7 +269,10 @@ export class EditarMonitoradorComponent implements OnInit {
         console.log('Exportado com sucesso', resposta);
       },
       (error) => {
-        console.error('Erro ao exportar PDF: ', error);
+        this.msg = "Exportação invalida, sem dados";
+        const dialog = this.dialog.open(MensagemErrorComponent, {
+          data: this.msg
+        });
       }
     );
   }
@@ -281,7 +284,10 @@ export class EditarMonitoradorComponent implements OnInit {
         console.log('Exportado com sucesso', resposta);
       },
       (error) => {
-        console.error('Erro ao exportar : ', error);
+        this.msg = error;
+        const dialog = this.dialog.open(MensagemErrorComponent, {
+          data: this.msg
+        });
       }
     );
   }
