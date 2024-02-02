@@ -1,10 +1,12 @@
 package com.desafioestagio.Projeto_Estagio.Services;
 
+import com.desafioestagio.Projeto_Estagio.Config.ConnectionGenerico;
 import com.desafioestagio.Projeto_Estagio.Repositorys.EnderecoRepositorys;
 import com.desafioestagio.Projeto_Estagio.Repositorys.MonitoradorRepositorys;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.DataBaseExeception;
 import com.desafioestagio.Projeto_Estagio.Services.exceptions.ResourceNotFoundException;
 import com.desafioestagio.Projeto_Estagio.entities.Endereco;
+import com.desafioestagio.Projeto_Estagio.entities.ErrorResponse;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.poi.poifs.filesystem.DirectoryEntry;
@@ -21,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.DataSource;
 import java.io.*;
 import java.math.BigDecimal;
+import java.sql.*;
 import java.util.*;
 
 @Service
@@ -36,6 +40,96 @@ public class MonitoradorServices {
     @Autowired
     private EnderecoRepositorys enderecoRepositorys;
 
+    @Autowired
+    private DataSource dataSource;
+    //Query validação Put
+
+    Connection conn = null;
+    Statement st = null;
+    ResultSet rs = null;
+
+    public List<Monitorador> Filtro(Monitorador monitoradorFiltro) throws SQLException {
+        List<Monitorador> monitoradorList = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM tb_monitorador ");
+        boolean whereClauseAdded = false;
+
+        if (monitoradorFiltro != null) {
+            sql.append("WHERE ");
+
+            if (monitoradorFiltro.getCpf() != null) {
+                if (whereClauseAdded) {
+                    sql.append("AND ");
+                }
+                sql.append("cpf LIKE ?");
+                whereClauseAdded = true;
+            }
+
+            if (monitoradorFiltro.getCnpj() != null) {
+                if (whereClauseAdded) {
+                    sql.append("AND ");
+                }
+                sql.append("cnpj LIKE ?");
+                whereClauseAdded = true;
+            }
+
+            if (monitoradorFiltro.getNome() != null) {
+                if (whereClauseAdded) {
+                    sql.append("AND ");
+                }
+                sql.append("nome LIKE ?");
+            }
+
+            if (monitoradorFiltro.getId() != null) {
+                if (whereClauseAdded) {
+                    sql.append("AND ");
+                }
+                sql.append("id = ?");
+            }
+        }
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+            int parameterIndex = 1;
+
+            if (monitoradorFiltro != null) {
+                if (monitoradorFiltro.getCpf() != null) {
+                    stmt.setString(parameterIndex++, monitoradorFiltro.getCpf());
+                }
+                if (monitoradorFiltro.getCnpj() != null) {
+                    stmt.setString(parameterIndex++, monitoradorFiltro.getCnpj());
+                }
+                if (monitoradorFiltro.getNome() != null) {
+                    stmt.setString(parameterIndex, monitoradorFiltro.getNome());
+                }
+                if (monitoradorFiltro.getId() != null) {
+                    stmt.setLong(parameterIndex, monitoradorFiltro.getId());
+                }
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Monitorador monitorador = new Monitorador();
+                    monitorador.setId(rs.getLong("id"));
+                    monitorador.setCpf(rs.getString("cpf"));
+                    monitorador.setCnpj(rs.getString("cnpj"));
+                    monitorador.setNome(rs.getString("nome"));
+                    monitorador.setEmail(rs.getString("email"));
+                    monitorador.setRg(rs.getString("rg"));
+                    monitorador.setInscricaol(rs.getString("inscricao"));
+                    monitorador.setData_nascimento(rs.getString("Data_nascimento"));
+                    monitorador.setTipo(rs.getString("tipo"));
+                    monitorador.setAtivo(rs.getBoolean("Ativo"));
+
+                    monitoradorList.add(monitorador);
+                }
+            }
+        }
+
+        return monitoradorList;
+    }
+
 
     public List<Monitorador> findAll() {
         return repository.findAll ();
@@ -48,7 +142,6 @@ public class MonitoradorServices {
 
     public List<Monitorador> findByNomeStartingWith(String Name) {
         return repository.findByNomeStartingWith (Name);
-
     }
 
     public List<Monitorador> findByNome(String Name) {
@@ -69,7 +162,15 @@ public class MonitoradorServices {
 
 
     public Monitorador insert(Monitorador obj) {
-        return repository.save (obj);
+        if (!ValidadorIgualID (obj)){
+            return repository.save (obj);
+        }else {
+            String errorMessage = "Dados já cadastrados";
+            throw  new ErrorResponse (errorMessage);
+        }
+
+
+
     }
 
     public void delete(Long id) {
@@ -87,9 +188,16 @@ public class MonitoradorServices {
     }
 
     public Monitorador update(Long id, Monitorador obj) throws EntityNotFoundException {
-        Monitorador entity = repository.getReferenceById (id);
-        updateData (entity, obj);
-        return repository.save (entity);
+        if (!ValidadorIgualIDPUT (obj)){
+            Monitorador entity = repository.getReferenceById (id);
+            updateData (entity, obj);
+            return repository.save (entity);
+        }else {
+            String errorMessage = "Dados ja cadastrados";
+            throw new ErrorResponse (errorMessage);
+        }
+
+
     }
 
 
@@ -279,7 +387,7 @@ public class MonitoradorServices {
                             } else if (cell.getCellType() == CellType.STRING) {
                                 monitorador.setInscricaol(cell.getStringCellValue());
                             } else {
-                                // Tratar outros tipos, se necessário
+
                             }
                             break;
                         case 7:

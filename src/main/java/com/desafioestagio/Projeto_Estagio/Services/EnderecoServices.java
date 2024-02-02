@@ -41,18 +41,42 @@ public class EnderecoServices {
     }
 
     public Endereco insert(Endereco obj){
-        return enderecoRepositorys.save(obj);
+         return enderecoRepositorys.save(obj);
+    }
+
+    public Endereco insertEnd(Endereco obj, Long id){
+        Endereco endereco = null;
+        if (!monitoradorServices.ValidadorIgualIDEnd (obj)){
+            Monitorador monitorador = monitoradorServices.findById (id);
+            obj.setMonitorador (monitorador);
+            endereco = insert (obj);
+        }
+        if (endereco == null){
+            try {
+                throw new Exception ("Dado Cadastrado");
+            } catch (Exception e) {
+                throw new RuntimeException ("Dado Cadastrado");
+            }
+        }else {
+            return endereco;
+        }
+
     }
 
 
-    public void delete(Long id ){
-        try {
-            enderecoRepositorys.deleteById(id);
-        }catch (EmptyResultDataAccessException e){
-            throw new ResourceNotFoundException(id);
-        } catch (DataIntegrityViolationException e){
-            throw new DataBaseExeception(e.getMessage());
+    public void delete(Long id ) throws Exception {
+        if (ValidadorMonitorador (id)){
+            try {
+                enderecoRepositorys.deleteById(id);
+            }catch (EmptyResultDataAccessException e){
+                throw new ResourceNotFoundException(id);
+            } catch (DataIntegrityViolationException e){
+                throw new DataBaseExeception(e.getMessage());
+            }
+        }else {
+            throw new Exception ("erro");
         }
+
     }
 
     public void deleteListEnd(Long id ){
@@ -94,6 +118,11 @@ public class EnderecoServices {
     public ByteArrayOutputStream exportaEnderecoParaExcel(Long id){
         Monitorador monitorador = monitoradorServices.findById(id);
         List<Endereco> enderecos =monitorador.getEnderecos();
+
+        if (enderecos.isEmpty()) {
+            return null;
+        }
+
         try(Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()){
             Sheet sheet = workbook.createSheet("Endereco");
             Row headerRow = sheet.createRow(0);

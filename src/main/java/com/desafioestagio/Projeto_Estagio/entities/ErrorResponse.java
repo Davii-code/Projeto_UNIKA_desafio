@@ -7,7 +7,7 @@ import jakarta.validation.ValidatorFactory;
 
 import java.util.Set;
 
-public class ErrorResponse {
+public class ErrorResponse  extends RuntimeException{
     private String message;
 
     public ErrorResponse(String message) {

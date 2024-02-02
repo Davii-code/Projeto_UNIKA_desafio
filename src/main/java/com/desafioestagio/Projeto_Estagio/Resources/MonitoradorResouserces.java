@@ -8,7 +8,6 @@ import com.desafioestagio.Projeto_Estagio.entities.Endereco;
 import com.desafioestagio.Projeto_Estagio.entities.ErrorResponse;
 import com.desafioestagio.Projeto_Estagio.entities.Monitorador;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -16,18 +15,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,18 +54,17 @@ public class MonitoradorResouserces {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Monitorador> findByid(@PathVariable Long id) {
-        Monitorador obj = services.findById (id);
-        return ResponseEntity.ok ().body (obj);
+        Monitorador obj = services.findById(id);
+        return ResponseEntity.ok ().body(obj);
     }
 
 
     @GetMapping(value = "/{id}/enderecos")
     public ResponseEntity<List<Endereco>> findByEnde(@PathVariable Long id) {
         Monitorador monitorador = services.findById (id);
-
         if (monitorador != null) {
             List<Endereco> enderecos = monitorador.getEnderecos ();
-            return ResponseEntity.ok ().body (enderecos);
+            return ResponseEntity.ok ().body(enderecos);
         } else {
             return ResponseEntity.notFound ().build ();
         }
@@ -76,16 +73,18 @@ public class MonitoradorResouserces {
 
     @PostMapping
     public ResponseEntity<?> insert(@Valid @RequestBody Monitorador obj) {
-
-        if (!services.ValidadorIgualID (obj)) {
+        try {
             obj = services.insert (obj);
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest ().path ("/{id}")
                     .buildAndExpand (obj.getId ()).toUri ();
             return ResponseEntity.created (uri).body (obj);
-        } else {
-            String errorMessage = "Dados já cadastrados";
-            return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
+        }catch (ErrorResponse errorResponse){
+            return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorResponse.getMessage ()));
         }
+
+
+
+
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -97,17 +96,13 @@ public class MonitoradorResouserces {
     }
 
     @PostMapping(value = "/{id}/enderecos")
-    public ResponseEntity<?> insertEnd(@PathVariable Long id, @Valid @RequestBody Endereco endereco) {
-        if (!services.ValidadorIgualIDEnd (endereco)) {
-            Monitorador monitorador = services.findById (id);
-            endereco.setMonitorador (monitorador);
-            Endereco end = enderecoServices.insert (endereco);
-            return ResponseEntity.ok (end);
-        } else {
-            String errorMessage = "Dados ja cadastrados";
-            return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
-        }
-
+    public ResponseEntity<?> insertEnd(@PathVariable Long id, @Valid @RequestBody Endereco endereco) throws Exception {
+         try{
+             Endereco end = enderecoServices.insertEnd (endereco, id);
+             return ResponseEntity.ok (end);
+         }catch (Exception e) {
+             return ResponseEntity.status (500).body (e.getMessage ());
+         }
     }
 
     @DeleteMapping(value = "/{id}")
@@ -120,14 +115,15 @@ public class MonitoradorResouserces {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Monitorador obj) {
+       try {
+           obj = services.update (id, obj);
+           return ResponseEntity.ok ().body (obj);
+       }catch (ErrorResponse errorResponse){
+           return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorResponse.getMessage ()));
+       }
 
-        if (!services.ValidadorIgualIDPUT (obj)) {
-            obj = services.update (id, obj);
-            return ResponseEntity.ok ().body (obj);
-        } else {
-            String errorMessage = "Dados ja cadastrados";
-            return ResponseEntity.status (HttpStatus.CONFLICT).body (new ErrorResponse (errorMessage));
-        }
+
+
 
     }
 
@@ -240,27 +236,40 @@ public class MonitoradorResouserces {
 
         if (nome.contains (" ")) {
             // Se o nome contém um espaço, considera o nome completo
-            obj = services.findByNome (nome);
+            obj = services.findByNome(nome);
         } else {
             // Se não contém um espaço, considera o primeiro nome
-            obj = services.findByNomeStartingWith (nome);
+            obj = services.findByNomeStartingWith(nome);
         }
 
-        return ResponseEntity.ok ().body (obj);
+        return ResponseEntity.ok().body(obj);
     }
 
 
     @GetMapping(value = "/filtroCnpj/{cnpj}")
     public ResponseEntity<Monitorador> findBycnpj(@PathVariable String cnpj) {
-        Monitorador obj = services.findBycnpj (cnpj);
-        return ResponseEntity.ok ().body (obj);
+        Monitorador obj = services.findBycnpj(cnpj);
+        return ResponseEntity.ok().body(obj);
     }
 
     @GetMapping(value = "/filtroCpf/{cpf}")
     public ResponseEntity<Monitorador> findByCpf(@PathVariable String cpf) {
-        Monitorador obj = services.findByCpf (cpf);
-        return ResponseEntity.ok ().body (obj);
+        Monitorador obj = services.findByCpf(cpf);
+        return ResponseEntity.ok().body(obj);
     }
 
+    @GetMapping(value = "/filtro")
+    public ResponseEntity<List<Monitorador>> filtroEndpoint(@RequestParam(required = false) String cpf,
+                                                            @RequestParam(required = false) String cnpj,
+                                                            @RequestParam(required = false) String nome,
+                                                            @RequestParam(required = false) Long id) throws SQLException {
+        Monitorador monitoradorFiltro = new Monitorador();
+        monitoradorFiltro.setId(id);
+        monitoradorFiltro.setCpf(cpf);
+        monitoradorFiltro.setCnpj(cnpj);
+        monitoradorFiltro.setNome(nome);
 
+        List<Monitorador> obj = services.Filtro(monitoradorFiltro);
+        return ResponseEntity.ok().body(obj);
+    }
 }

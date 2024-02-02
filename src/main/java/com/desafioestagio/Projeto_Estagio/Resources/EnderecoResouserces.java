@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+
 @RestController
 @RequestMapping(value = "/endereco",produces = "application/json; charset=UTF-8")
 public class EnderecoResouserces {
@@ -62,12 +63,14 @@ public class EnderecoResouserces {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (services.ValidadorMonitorador(id)) {
+    public ResponseEntity<Exception> delete(@PathVariable Long id) {
+        try  {
             services.delete(id);
             return ResponseEntity.noContent().build();
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body (e);
         }
-        return ResponseEntity.badRequest().build();
+
 
     }
 
@@ -86,6 +89,7 @@ public class EnderecoResouserces {
 
     @GetMapping(value = "/relatorio/pdfs")
     public void GerarPDFEndereco(@RequestParam (required = false) Long id, HttpServletResponse response) throws IOException {
+
         Monitorador monitorador1 = monitorador.findById(id);
         List<Endereco>  enderecos = monitorador1.getEnderecos();;
 
@@ -93,20 +97,23 @@ public class EnderecoResouserces {
             response.setContentType(MediaType.APPLICATION_PDF_VALUE);
             response.setHeader("Content-disposition", "attachment; filename=relatorioEndereco.pdf");
             response.getOutputStream().write(bytes);
-
-
-
     }
 
     @GetMapping(value = "/relatorio/excel")
-    public ResponseEntity<InputStreamResource> esportaEnderecoParaExcel(@RequestParam (required = false) Long id) {
-        ByteArrayOutputStream byteArrayOutputStream = services.exportaEnderecoParaExcel(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=monitoradores.xlsx");
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(new InputStreamResource(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
+    public ResponseEntity<?> esportaEnderecoParaExcel(@RequestParam (required = false) Long id) {
+       try {
+           ByteArrayOutputStream byteArrayOutputStream = services.exportaEnderecoParaExcel(id);
+           HttpHeaders headers = new HttpHeaders();
+           headers.add("Content-Disposition", "attachment; filename=monitoradores.xlsx");
+           return ResponseEntity.ok()
+                   .headers(headers)
+                   .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                   .body(new InputStreamResource(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
+       }catch (NullPointerException e){
+        return    ResponseEntity.badRequest ().body ("Exportação invalida, sem dados");
+       }
+
+
     }
 
 }

@@ -62,14 +62,23 @@ public class RelatoriosServices {
         JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(enderecos);
         params.put("dados", enderecos);
 
+        if (bytes == null) {
+            System.out.println("Error: PDF bytes are null");
+            return null;
+        }
+
         try {
             File file = ResourceUtils.getFile(Jasper_Diretorio.concat(Jasper_PrefixoEndereco).concat(Jasper_Sufixo));
             JasperPrint print = JasperFillManager.fillReport(file.getAbsolutePath(),params,  jrBeanCollectionDataSource);
             bytes = JasperExportManager.exportReportToPdf(print);
+
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (JRException e) {
             throw new RuntimeException(e);
+        }catch (NullPointerException e){
+            throw  new RuntimeException (e);
         }
         return bytes;
     }
