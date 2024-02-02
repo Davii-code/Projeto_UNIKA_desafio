@@ -28,6 +28,8 @@ public class CadastroMonitorador extends Panel implements IFeedback {
 
     public CadastroMonitorador(String id, ModalWindow modalWindow, String valorTipo) {
         super (id);
+
+
         Validacao validacao = new Validacao ();
         MonitoradorHttpClient monitoradorHttpClient = new MonitoradorHttpClient ("http://localhost:8080/monitorador");
         Monitorador monitorador = new Monitorador ();
@@ -126,7 +128,6 @@ public class CadastroMonitorador extends Panel implements IFeedback {
                             }
                         });
                     } catch (Exception e) {
-                        // Exibição de erro
                         modal.setContent(new MenssagemFed(modal.getContentId(), false, "Erro ao cadastrar: " + e.getMessage()));
                         modal.show(target);
                     }

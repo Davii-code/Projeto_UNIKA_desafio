@@ -60,7 +60,7 @@ public class Monitorador extends WebPage {
                 final com.projetounika.entities.Monitorador monitorador = listItem.getModelObject();
                 listItem.add(new Label("id", monitorador.getId()));
                 listItem.add(new Label("nome", monitorador.getNome()));
-                listItem.add(new Label("CPF", monitorador.getCpf()));
+                listItem.add(new Label("CPF", monitorador.getCpf() != null ? formatarCPF(monitorador.getCpf()) : ""));
                 listItem.add(new Label("CNPJ", monitorador.getCnpj() != null ? formatarCNPJ(monitorador.getCnpj()) : ""));
                 listItem.add(new Label("ativo", monitorador.isAtivo() ? "Sim" : "Não"));
 
@@ -161,70 +161,40 @@ public class Monitorador extends WebPage {
             @SneakyThrows
             @Override
             protected void onSubmit() {
-                String codigoValue = codigo.getModelObject();
-                String nomeValue = nome.getModelObject();
-                String cpfValue = cpf.getModelObject();
-                String CnpjValue = Cnpj.getModelObject();
+                String tipo = "";
+                String valor = "";
+                if (codigo.getModelObject() != null){
+                    tipo = "id";
+                    valor = codigo.getModelObject();
+                }
 
-                if (nomeValue != null){
-                    String encodedNome = URLEncoder.encode(nomeValue, StandardCharsets.UTF_8.toString ());
-                    encodedNome = encodedNome.replace("+", "%20");
-                    MonitoradorHttpClient monitoradorHttpClient1 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtroNome/" + encodedNome);
+                if (nome.getModelObject() != null){
+                    tipo = "nome";
+                    valor = nome.getModelObject();
+                }
+                if (cpf.getModelObject() != null){
+                    tipo = "cpf";
+                    valor = cpf.getModelObject().replaceAll("[.-]", "");
+                }
+                if (Cnpj.getModelObject() != null){
+                    tipo="cnpj";
+                    valor = Cnpj.getModelObject().replaceAll("[.-]", "");
+                }
+                if (Cnpj.getModelObject() != null || nome.getModelObject() != null || cpf.getModelObject() != null || codigo.getModelObject() != null){
+                    MonitoradorHttpClient monitoradorHttpClient1 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtro?"+tipo+"="+valor);
                     List<com.projetounika.entities.Monitorador> list1 = monitoradorHttpClient1.listarTodos();
                     final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>>listModel = new CompoundPropertyModel<>(list1);
                     monitoradorListView.setModel(listModel);
-                    linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs?nome=" + nomeValue);
-                    linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel?nome="+nomeValue);
-                }else {if (codigoValue != null){
-                    MonitoradorHttpClient monitoradorHttpClient2 = new MonitoradorHttpClient("http://localhost:8080/monitorador/" + codigoValue);
-                    com.projetounika.entities.Monitorador monitorador = monitoradorHttpClient2.listarPorID();
-                    if (monitorador != null) {
-                        // Cria uma lista com um único elemento (o monitorador encontrado)
-                        List<com.projetounika.entities.Monitorador> list2 = Collections.singletonList(monitorador);
-                        final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>> listModel = new CompoundPropertyModel<>(list2);
-                        monitoradorListView.setModel(listModel);
-                        linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs?id=" + codigoValue);
-                        linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel?id="+codigoValue);
-                    }
-                } else if (cpfValue != null){
-                    String cpfValueFormatado = formatarCPF(cpfValue);
-                    MonitoradorHttpClient monitoradorHttpClient3 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtroCpf/" + cpfValueFormatado);
-                    com.projetounika.entities.Monitorador monitorador = monitoradorHttpClient3.listarPorID();
-                    if (monitorador != null) {
-                        // Cria uma lista com um único elemento (o monitorador encontrado)
-                        List<com.projetounika.entities.Monitorador> list3 = Collections.singletonList(monitorador);
-                        final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>> listModel = new CompoundPropertyModel<>(list3);
-                        monitoradorListView.setModel(listModel);
-                        linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs?cpf=" + cpfValueFormatado);
-                        linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel?cpf="+cpfValueFormatado);
-                    }
-                }
-
-
-                }
-
-                if (CnpjValue != null) {
-                    String cnpjFormatado = CnpjValue;
-                    cnpjFormatado = cnpjFormatado.replaceAll("\\D", "");
-                    MonitoradorHttpClient monitoradorHttpClient4 = new MonitoradorHttpClient("http://localhost:8080/monitorador/filtroCnpj/" + cnpjFormatado);
-                    com.projetounika.entities.Monitorador monitorador = monitoradorHttpClient4.listarPorID();
-                    if (monitorador != null) {
-                        // Cria uma lista com um único elemento (o monitorador encontrado)
-                        List<com.projetounika.entities.Monitorador> list4 = Collections.singletonList(monitorador);
-                        final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>> listModel = new CompoundPropertyModel<>(list4);
-                        monitoradorListView.setModel(listModel);
-                        linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs?cnpj=" + cnpjFormatado);
-                        linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel?cnpj="+cnpjFormatado);
-                    }
-                }
-
-                if (CnpjValue==null && cpfValue == null && codigoValue == null && nomeValue ==null){
-                    monitoradorListView.setModel(monitoradorListModel);
+                    linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs?"+tipo+"="+valor);
+                    linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel?"+tipo+"="+valor);
+                }else {
+                    MonitoradorHttpClient monitoradorHttpClient1 = new MonitoradorHttpClient("http://localhost:8080/monitorador");
+                    List<com.projetounika.entities.Monitorador> list1 = monitoradorHttpClient1.listarTodos();
+                    final CompoundPropertyModel<List<com.projetounika.entities.Monitorador>>listModel = new CompoundPropertyModel<>(list1);
+                    monitoradorListView.setModel(listModel);
                     linkPdf.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/pdfs");
                     linkExcel.setDefaultModelObject("http://localhost:8080/monitorador/relatorio/excel");
                 }
-
-
 
             }
         };
